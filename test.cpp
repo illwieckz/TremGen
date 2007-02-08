@@ -18,11 +18,11 @@ int main(){
 	cout << titi.angle << endl;
 	
 	args tutu;
-	tutu.nom = "model";
-	tutu.val = "c:";
+	tutu.name = "model";
+	tutu.value = "c:";
 	titi.attr.push_back(tutu);
-	tutu.nom = "scale";
-	tutu.val = "7.0";
+	tutu.name = "scale";
+	tutu.value = "7.0";
 	titi.attr.push_back(tutu);
 	//titi.li.insert(++titi.li.begin(),1);
 	copy(titi.attr.begin(), titi.attr.end(), ostream_iterator<args>(cout, " "));

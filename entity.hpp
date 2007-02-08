@@ -5,13 +5,13 @@
 using namespace std;
 
 typedef struct{
-	string nom;
-	string val;
+	string name;
+	string value;
 }args;
 
 std::ostream& operator<< (std::ostream& out, args c)
 {
-  out << c.nom << " = " << c.val;
+  out << c.name << " = " << c.value;
   return out ;
 }
 
@@ -31,7 +31,7 @@ class Entity{
 		Entity(string _name, double _x, double _y, double _z, double _angle);
 		~Entity(void);
 		
-		void addAttr(void);
+		void addAttr(string name, string value);
 };
 
 Entity::Entity(string _name):name(_name){
@@ -48,3 +48,6 @@ Entity::Entity(string _name, double _x, double _y, double _z, double _angle):nam
 Entity::~Entity(void){
 }
 
+void Entity::addAttr(string name, string value){
+
+}
