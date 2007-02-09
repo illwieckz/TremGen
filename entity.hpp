@@ -155,7 +155,7 @@ class Entities{
 		int entityNbr(void);
 
 		Entity * entityAt(int pos);
-		//Entity * entityFind(string name);
+		Entity * entityFind(string name);
 };
 
 void Entities::entityAdd(Entity ent){
@@ -176,7 +176,7 @@ Entity * Entities::entityAt(int pos){
 	
 	return &(*iter);
 }
-/*
+
 Entity * Entities::entityFind(string name){
 	list<Entity>::iterator iter;
 
@@ -186,7 +186,7 @@ Entity * Entities::entityFind(string name){
 	}
 	return NULL;
 }
-*/
+
 void Entities::entityDelAll(void){
 	entities.clear();
 }

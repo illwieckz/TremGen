@@ -39,8 +39,11 @@ int main(){
 	titi.attrList();
 
 	Entity * test;
-	//if((test = objs.entityFind("titi")) != NULL){
 	if((test = objs.entityAt(0)) != NULL){
+		cout << endl;
+		test->attrMod("model","a:\\");	
+	}
+	if((test = objs.entityFind("titi")) != NULL){
 		cout << endl;
 		test->attrList();
 	}
