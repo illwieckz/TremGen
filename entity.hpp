@@ -128,7 +128,7 @@ int Entity::attrNbr(void){
 
 /* TODO 
 entityAt() -> Entity;
-entitiesFilter() -> Entities;
+OK: entitiesFilter() -> Entities;
 entitiesAddAttr() -> void (rajoute ou modifie un attribut tous les éléments) ;
 entitiesDelAttr() -> void (delete un attribut tous les éléments);
 entitiesTranslate(x,y,z);
@@ -147,19 +147,36 @@ struct findEntityName
 };
 
 class Entities{
-	public:
+	private:
 		list <Entity> entities;
-
+	public:
 		void entityAdd(Entity ent);
-		Entity * entityFind(string name);
 		void entityDelAll(void);
 		int entityNbr(void);
+
+		Entity * entityAt(int pos);
+		//Entity * entityFind(string name);
 };
 
 void Entities::entityAdd(Entity ent){
 		entities.push_back(ent);
 }
 
+Entity * Entities::entityAt(int pos){
+	if(entities.empty())
+		return NULL;
+
+	if(pos >= (int)entities.size())
+		return NULL;
+	
+	list<Entity>::iterator iter;
+
+	iter = entities.begin();
+	for(int i=0; i < pos; i++, iter++);
+	
+	return &(*iter);
+}
+/*
 Entity * Entities::entityFind(string name){
 	list<Entity>::iterator iter;
 
@@ -169,7 +186,7 @@ Entity * Entities::entityFind(string name){
 	}
 	return NULL;
 }
-
+*/
 void Entities::entityDelAll(void){
 	entities.clear();
 }

@@ -16,8 +16,10 @@ int main(){
 	
 	titi.attrAdd("model","c:\\");	
 	titi.attrAdd("vue","face");	
-	titi.attrAdd("scale","0.5");
+	titi.attrAdd("scale","0.3");
 
+	objs.entityAdd(titi);
+	titi.attrAdd("scale","0.5");
 	objs.entityAdd(titi);
 	cout << objs.entityNbr() << endl;
 	
@@ -37,7 +39,9 @@ int main(){
 	titi.attrList();
 
 	Entity * test;
-	if((test = objs.entityFind("titi")) != NULL){
+	//if((test = objs.entityFind("titi")) != NULL){
+	if((test = objs.entityAt(0)) != NULL){
+		cout << endl;
 		test->attrList();
 	}
 }
