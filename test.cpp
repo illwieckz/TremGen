@@ -7,13 +7,19 @@
 #include "entity.hpp"
 
 int main(){
-	Entity toto("toto");
-	Entity tata("tata",20,30,42.5);
+	
+	Entities objs;
+
+	//Entity toto("toto");
+	//Entity tata("tata",20,30,42.5);
 	Entity titi("titi",20,30,42.5,1.0);
 	
 	titi.attrAdd("model","c:\\");	
 	titi.attrAdd("vue","face");	
-	titi.attrAdd("scale","0.5");	
+	titi.attrAdd("scale","0.5");
+
+	objs.entityAdd(titi);
+	cout << objs.entityNbr() << endl;
 	
 	cout << titi.attrNbr() << endl;
 	titi.attrList();	
@@ -24,7 +30,14 @@ int main(){
 
 	titi.attrMod("scale","0.7");
 	titi.attrAdd("model","d:\\");	
+	titi.attrAdd("z",40);	
+	titi.attrAdd("angle",10);	
+	cout << titi.z << endl;
 	cout << titi.attrNbr() << endl;
 	titi.attrList();
-	
+
+	Entity * test;
+	if((test = objs.entityFind("titi")) != NULL){
+		test->attrList();
+	}
 }
