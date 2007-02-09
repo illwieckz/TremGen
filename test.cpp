@@ -15,7 +15,7 @@ int main(){
 
 	objs.entityAdd(tata);
 
-	Entity titi("titi",20,30,42.5,1.0);
+	Entity titi("titi",40,30,42.5,1.0);
 	
 	titi.attrAdd("model","c:\\");	
 	titi.attrAdd("vue","face");	
@@ -36,7 +36,8 @@ int main(){
 	titi.attrMod("scale","0.7");
 	titi.attrAdd("model","d:\\");	
 	titi.attrAdd("z",40);	
-	titi.attrAdd("angle",10);	
+	titi.attrAdd("angle",10);
+		
 	cout << titi.z << endl;
 	cout << titi.attrNbr() << endl;
 	titi.attrList();
@@ -52,15 +53,16 @@ int main(){
 
 	list<Entity*> elist;
 	elist = objs.entityFilter("tata");
-	cout << "test" << endl;
 
         list<Entity*>::iterator itest;
         for(itest = elist.begin(); itest != elist.end(); itest++){
                 cout << (*itest)->name << endl;
 		(*itest)->attrAdd("pouet",1);
 	}
-	if((test = objs.entityAt(1)) != NULL){
-		cout << endl;
-		test->attrList();
+
+	elist = objs.entityFilter("z",42.5);
+
+        for(itest = elist.begin(); itest != elist.end(); itest++){
+                cout << (*itest)->name << endl;
 	}
 }
