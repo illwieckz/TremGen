@@ -150,8 +150,9 @@ int Entity::attrNbr(void){
 OK: entityAt() -> Entity;
 OK: entityFind(name) -> Entity;
 OK: entitiesFilter(name) -> Entities;
-entitiesAddAttr() -> void (rajoute ou modifie un attribut tous les éléments) ;
-entitiesDelAttr() -> void (delete un attribut tous les éléments);
+OK: entitiesAddAttr() -> void (rajoute un attribut tous les éléments) ;
+OK: entitiesModAttr() -> void (modifie un attribut tous les éléments) ;
+OK: entitiesDelAttr(name) -> void (delete un attribut tous les éléments);
 entitiesTranslate(x,y,z);
 */
 
@@ -177,9 +178,16 @@ class Entities{
 
 		Entity * entityAt(int pos);
 		Entity * entityFind(string name);
-		list <Entity*> entityFilter(string name);
-		list <Entity*> entityFilter(string name, string value);
-		list <Entity*> entityFilter(string name, double value);
+		list <Entity*> entitiesFilter(string name);
+		list <Entity*> entitiesFilter(string name, string value);
+		list <Entity*> entitiesFilter(string name, double value);
+		
+		void entitiesAttrAdd(string name, string value);
+		void entitiesAttrAdd(string name, double value);
+		void entitiesAttrMod(string name, string value);
+		void entitiesAttrMod(string name, double value);
+		
+		void entitiesAttrDel(string name);
 };
 
 void Entities::entityAdd(Entity ent){
@@ -211,7 +219,7 @@ Entity * Entities::entityFind(string name){
 	return NULL;
 }
 
-list <Entity*> Entities::entityFilter(string name, string value){
+list <Entity*> Entities::entitiesFilter(string name, string value){
 	list<Entity>::iterator iter;
 	list<Entity*> elist;
 
@@ -223,7 +231,7 @@ list <Entity*> Entities::entityFilter(string name, string value){
 
 }
 
-list <Entity*> Entities::entityFilter(string name, double value){
+list <Entity*> Entities::entitiesFilter(string name, double value){
 	list<Entity>::iterator iter;
 	list<Entity*> elist;
 
@@ -252,10 +260,10 @@ list <Entity*> Entities::entityFilter(string name, double value){
 
 	stringstream _value;
 	_value << value;
-	return entityFilter(name,_value.str());
+	return entitiesFilter(name,_value.str());
 }
 
-list <Entity*> Entities::entityFilter(string name){
+list <Entity*> Entities::entitiesFilter(string name){
 	list<Entity>::iterator iter;
 	list<Entity*> elist;
 
@@ -264,6 +272,40 @@ list <Entity*> Entities::entityFilter(string name){
 			elist.push_back(&(*iter));
 	}
 	return elist;
+}
+
+void Entities::entitiesAttrAdd(string name, string value){
+        list<Entity>::iterator iter;
+        
+        for(iter = entities.begin(); iter != entities.end(); iter++){
+                (*iter).attrAdd(name, value);
+        }               
+        return ;
+}
+
+void Entities::entitiesAttrAdd(string name, double value){
+        list<Entity>::iterator iter;
+
+        for(iter = entities.begin(); iter != entities.end(); iter++){
+                (*iter).attrAdd(name, value);
+        }
+}
+
+void Entities::entitiesAttrMod(string name, string value){
+	entitiesAttrAdd(name,value);
+}
+
+void Entities::entitiesAttrMod(string name, double value){
+        entitiesAttrAdd(name,value);
+}
+
+void Entities::entitiesAttrDel(string name){
+        list<Entity>::iterator iter;
+        
+        for(iter = entities.begin(); iter != entities.end(); iter++){
+                (*iter).attrDel(name);
+        }               
+        return ;
 }
 
 void Entities::entityDelAll(void){
