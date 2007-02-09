@@ -11,19 +11,20 @@ int main(){
 	Entity tata("tata",20,30,42.5);
 	Entity titi("titi",20,30,42.5,1.0);
 	
-	cout << toto.name << endl;
-	cout << tata.name << endl;
-	cout << tata.x << endl;
-	cout << toto.x << endl;
-	cout << titi.angle << endl;
+	titi.attrAdd("model","c:\\");	
+	titi.attrAdd("vue","face");	
+	titi.attrAdd("scale","0.5");	
 	
-	args tutu;
-	tutu.name = "model";
-	tutu.value = "c:";
-	titi.attr.push_back(tutu);
-	tutu.name = "scale";
-	tutu.value = "7.0";
-	titi.attr.push_back(tutu);
-	//titi.li.insert(++titi.li.begin(),1);
-	copy(titi.attr.begin(), titi.attr.end(), ostream_iterator<args>(cout, " "));
+	cout << titi.attrNbr() << endl;
+	titi.attrList();	
+
+	titi.attrDel("vue");
+	cout << titi.attrNbr() << endl;
+	titi.attrList();
+
+	titi.attrMod("scale","0.7");
+	titi.attrAdd("model","d:\\");	
+	cout << titi.attrNbr() << endl;
+	titi.attrList();
+	
 }
