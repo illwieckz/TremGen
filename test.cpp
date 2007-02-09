@@ -11,7 +11,10 @@ int main(){
 	Entities objs;
 
 	//Entity toto("toto");
-	//Entity tata("tata",20,30,42.5);
+	Entity tata("tata",20,30,42.5);
+
+	objs.entityAdd(tata);
+
 	Entity titi("titi",20,30,42.5,1.0);
 	
 	titi.attrAdd("model","c:\\");	
@@ -39,11 +42,24 @@ int main(){
 	titi.attrList();
 
 	Entity * test;
-	if((test = objs.entityAt(0)) != NULL){
+	if((test = objs.entityAt(1)) != NULL){
 		cout << endl;
 		test->attrMod("model","a:\\");	
 	}
 	if((test = objs.entityFind("titi")) != NULL){
+		cout << endl;
+	}
+
+	list<Entity*> elist;
+	elist = objs.entityFilter("tata");
+	cout << "test" << endl;
+
+        list<Entity*>::iterator itest;
+        for(itest = elist.begin(); itest != elist.end(); itest++){
+                cout << (*itest)->name << endl;
+		(*itest)->attrAdd("pouet",1);
+	}
+	if((test = objs.entityAt(1)) != NULL){
 		cout << endl;
 		test->attrList();
 	}
