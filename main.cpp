@@ -6,12 +6,30 @@
 #include "altimap.hpp"
 //#include "entity.hpp"
 
-#define HINC 5 // Increment de hauteur
-#define TSIZE 100 // Taille d'un dalle
+#define HINC 10 //5 // Increment de hauteur
+#define TSIZE 150 // Taille d'un dalle
 
-#define MAPSIZE 100
+#define MAPSIZE 50
 
 #define t(a,b,c)  "( " << round(a) << " " << round(b) << " " << round(c) << " ) "
+
+#define FACE_BOTTOM 1
+#define FACE_FRONT 2
+#define FACE_RIGHT 4
+#define FACE_REAR 8
+#define FACE_LEFT 16
+#define FACE_UP 32
+#define TEXTURE_SKIP (-2)
+#define TEXTURE_CAULK (-1)
+#define TEXTURE_HINT 9
+
+#define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
+#define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
+
+#define rad(x) (x*M_PI/180)
+#define deg(x) (x*180/M_PI)
+
+#define random() ((double)rand()/RAND_MAX)
 
 using namespace std;
 
@@ -19,8 +37,12 @@ string getTexture(int i){
 	switch(i){
 		case 1:
 			return "example2/skybox 0 0 0 0.5 0.5 0 0 0";
-		case 2:
+		case 2:case TEXTURE_CAULK:
 			return "common/caulk 0 0 0 0 0 0 0 0";
+		case TEXTURE_HINT:
+			return "common/hint 0 0 0 0 0 0 0 0";
+		case TEXTURE_SKIP:
+			return "common/hint 0 0 0 0 0 0 0 0";
 		default:
 			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
@@ -43,7 +65,7 @@ string makeEntity(string name, double x, double y, double z, double angle){
 	return ret.str();
 }
 
-string makeFace(double x, double y, double z, double tx, double ty, double tz, int texture){
+/*string makeFace(double x, double y, double z, double tx, double ty, double tz, int texture){
 	stringstream ret;
 
 	ret << t(x+tx,y+ty,z+tz) << t(x+tx,y,z+tz) << t(x,y+ty,z+tz) << getTexture(texture) << endl; // iso-z
@@ -55,12 +77,46 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, i
 	ret << t(x,y,z) << t(x,y+ty,z) << t(x,y,z+tz) << getTexture(texture) << endl; // iso-x
 	return ret.str();
 }
+*/
+
+
+
+string makeFace(double x, double y, double z, double tx, double ty, double tz, double ax , double ay, double az, int texture, int face){
+        stringstream ret;
+double  dz=tx*tan(rad(az));
+double  dy=tx*tan(rad(ay));
+double  dx=ty*tan(rad(ax));
+
+
+//tx=abs(tx);
+//ty=abs(ty);
+//tz=abs(tz);
+int tdef=(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
+
+//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
+        ret << endl << "{" << endl;
+
+        ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face == FACE_UP ? texture: tdef)) << 
+endl; // iso-z
+        ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x-dx,y+ty,z+tz) << t(x+tx-dx,y+ty+dy,z) << getTexture((face == FACE_REAR ? texture: tdef)) << endl; // iso-y
+        ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x+tx-dx,y+ty+dy,z) << t(x+tx,y+dy,z+tz) << getTexture((face == FACE_RIGHT ? texture: tdef)) << endl; // iso-x
+
+        ret << t(x,y,z) << t(x+tx,y+dy,z+dz) << t(x-dx,y+ty,z) << getTexture((face == FACE_BOTTOM ? texture: tdef)) << endl; // iso-z
+        ret << t(x,y,z) << t(x,y,z+tz) << t(x+tx,y+dy,z) << getTexture((face == FACE_FRONT ? texture: tdef)) << endl; // iso-y
+        ret << t(x,y,z) << t(x-dx,y+ty,z) << t(x,y,z+tz) << getTexture((face == FACE_LEFT ? texture: tdef)) << endl; // iso-x
+        ret << endl << "}" << endl;
+        return ret.str();
+}
+
+
+
+
 
 string getHeader(int xsize, int ysize){
 	stringstream ret;
 	ret << "//entity 0\n";
 	ret << "{\n\"classname\" \"worldspawn\"\n";
-	ret << "\"_blocksize\" \"8192 8192 2048\"\n";
+//	ret << "\"_blocksize\" \"16384 16384 16384\"\n"; //useless
 	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << "\"\n";
 
 	return ret.str();
@@ -149,15 +205,34 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	double s = TSIZE;
 	int w = hmap->getxsize();
 	int h = hmap->getysize();
-	double max = hmap->getmaxalt() * 255 + 160 / sh;
+	double max = (hmap->getmaxalt() +0.5) * 255 + 160 / sh; //bootstrap pour lan
 
-	ret << "{\n" << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,1) << "\n}\n";
-	ret << "{\n" << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,1) << "\n}\n";
+	ret  << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,0,0,0,1,FACE_RIGHT) << endl;
+	ret  << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,0,0,0,1,FACE_REAR) << endl;
 
-	ret << "{\n" << makeFace((w-1)*s-10+5,0,0,10,(h-1)*s+5,max*sh,1) << "\n}\n";
-	ret << "{\n" << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,1) << "\n}\n";
+	ret  << makeFace((w-1)*s-10+5,0,0,10,(h-1)*s+5,max*sh,0,0,0,1,FACE_LEFT) << endl;
+	ret  << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,1,FACE_FRONT) << endl;
 
-	ret << "{\n" << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,1) << "\n}\n";
+	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,1,FACE_BOTTOM) << endl;
+	ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+
+for(double i=1;i<(w-1)*s;i++){
+
+	if((int)round(i)%500==0)
+	{
+ret << 	makeFace(i,-3,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_HINT,FACE_RIGHT);
+	}
+
+}
+
+for(double i=1;i<(h-1)*s;i++){
+
+	if((int)round(i)%500==0)
+	{
+ret <<	makeFace(0,i,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_HINT,FACE_FRONT);
+	}
+
+}
 
 	return ret.str();
 }
@@ -179,8 +254,10 @@ int main(int argc,char **argv)
 {
 	AltitudeMap hmap(MAPSIZE,MAPSIZE);
 
-	//hmap.randomize(0.1);
-        hmap.subdivision(0.85,0.4,0.4,0.2,0.1);
+	hmap.randomize(0.3);
+
+	srand(time(NULL));
+        hmap.subdivision(0.85,random(),random(),random(),random());
 	
 	hmap.erosion(2,1);
 	hmap.normalize();
