@@ -19,9 +19,12 @@
 #define FACE_REAR 8
 #define FACE_LEFT 16
 #define FACE_UP 32
+
 #define TEXTURE_SKIP (-2)
 #define TEXTURE_CAULK (-1)
 #define TEXTURE_HINT 9
+#define TEXTURE_DIRT 3
+#define TEXTURE_ROCK 4
 
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
@@ -29,9 +32,24 @@
 #define rad(x) (x*M_PI/180)
 #define deg(x) (x*180/M_PI)
 
+#define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
+
 #define random() ((double)rand()/RAND_MAX)
 
 using namespace std;
+
+int textZ(double z)
+{
+
+if(abs(z)< 70)//(255*HINC*0.2))
+{
+return TEXTURE_DIRT;
+}else{
+return TEXTURE_ROCK;
+}
+
+}
+
 
 string getTexture(int i){
 	switch(i){
@@ -41,8 +59,12 @@ string getTexture(int i){
 			return "common/caulk 0 0 0 0 0 0 0 0";
 		case TEXTURE_HINT:
 			return "common/hint 0 0 0 0 0 0 0 0";
-		case TEXTURE_SKIP:
+		case TEXTURE_SKIP: //dans trem c'est toujours hint
 			return "common/hint 0 0 0 0 0 0 0 0";
+		case TEXTURE_DIRT:
+			return "arkadia/eq2_rock_02 0 0 0 0 0 0 0 0";
+		case TEXTURE_ROCK:
+			return "arkadia/rock_1 0 0 0 0 0 0 0 0";
 		default:
 			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
@@ -126,12 +148,24 @@ string getFoot(AltitudeMap * hmap){
 	stringstream ret;
 	double max = hmap->getmaxalt() * 255 + 50 / HINC;
 
+double w = (MAPSIZE-1)*TSIZE;
+double h = (MAPSIZE-1)*TSIZE;
+
 	ret << "\n}\n";
-	ret << makeEntity("team_human_spawn",144,280,max*HINC,0);
-	ret << makeEntity("team_alien_spawn",280,248,max*HINC,0);
-	ret << makeEntity("info_alien_intermission",272,360,max*HINC,8.33);
-	ret << makeEntity("info_human_intermission",1056,360,max*HINC,180);
-	ret << makeEntity("info_player_intermission",424,944,max*HINC,0);
+	ret << makeEntity("team_human_spawn",w-100,h-200,max*HINC,0);
+	ret << makeEntity("team_human_mgturret",w-200,h-200,max*HINC,0);
+	ret << makeEntity("team_human_reactor",w-100,h-100,max*HINC,0);
+	ret << makeEntity("team_human_armoury",w-200,h-100,max*HINC,0);
+
+	ret << makeEntity("team_alien_spawn",150,300,max*HINC,0);
+	ret << makeEntity("team_alien_overmind",150,150,max*HINC,0);
+
+	ret << makeEntity("team_alien_acid_tube",300,300,max*HINC,0);
+	//ret << makeEntity("team_alien_acid_tube",240,240,max*HINC,0);
+
+	ret << makeEntity("info_alien_intermission",200,200,max*HINC,8.33);
+	ret << makeEntity("info_human_intermission",w-200,h-200,max*HINC,180);
+	ret << makeEntity("info_player_intermission",w/2.0,h/2.0,max*HINC,0);
 	return ret.str();
 }
 
@@ -157,7 +191,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		
 		if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
 
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(0) << endl; // iso-z
+			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(2) << endl; // iso-y
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; // iso-x
 
@@ -166,7 +200,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 			ret << "\n}\n";
 
 			ret << "{\n";
-			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(0) << endl; // iso-z
+			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
 			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; 
 
 			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(2) << endl; // iso-z
@@ -177,13 +211,13 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		}else{ if(dc - da !=db ){
 
 
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(0) << endl; // iso-z
+			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
 			}
 			else{
 			
 				ret << "//pave" << endl;
 			}
-			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(0) << endl; // iso-z
+			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(2) << endl; // iso-y
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; // iso-x
 
@@ -254,11 +288,13 @@ int main(int argc,char **argv)
 {
 	AltitudeMap hmap(MAPSIZE,MAPSIZE);
 
-	hmap.randomize(0.3);
+	hmap.randomize(0.5);
 
 	srand(time(NULL));
         hmap.subdivision(0.85,random(),random(),random(),random());
-	
+		
+	hmap.randomize(0.2);
+
 	hmap.erosion(2,1);
 	hmap.normalize();
 	
