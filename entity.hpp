@@ -11,7 +11,7 @@ typedef struct{
 
 std::ostream& operator<< (std::ostream& out, args c)
 {
-	out << "(" << c.name << " = \"" << c.value << "\")";
+	out << "\"" << c.name << "\" = \"" << c.value << "\"";
 	return out ;
 }
 
@@ -35,7 +35,9 @@ class Entity{
 		void attrDel(string name);
 		void attrDelAll(void);
 		int attrNbr(void);
-		void attrList(void);
+		string attrList(void);
+		
+		string toStr(void);
 };
 
 Entity::Entity(string _name):name(_name){
@@ -47,6 +49,18 @@ Entity::Entity(string _name, double _x, double _y, double _z):name(_name), x(_x)
 
 Entity::Entity(string _name, double _x, double _y, double _z, double _angle):name(_name), x(_x), y(_y), z(_z){
 	attrMod("angle",_angle);
+}
+
+string Entity::toStr(void){
+        stringstream ret;
+
+        ret << "{" << endl;
+        ret << "\"classname\" \"" << name << "\"" << endl;
+        ret << "\"origin\" \"" << x << " " << y << " " << z << "\"" << endl;
+       	ret << this->attrList(); 
+	ret << "}" << endl;
+
+        return ret.str();
 }
 
 struct findAttrName
@@ -98,8 +112,10 @@ void Entity::attrAdd(string name, double value){
 	attrAdd(name, _value.str());
 }
 
-void Entity::attrList(void){
-	copy(attr.begin(), attr.end(), ostream_iterator<args>(cout, "\n"));
+string Entity::attrList(void){
+	stringstream ret;
+	copy(attr.begin(), attr.end(), ostream_iterator<args>(ret, "\n"));
+	return ret.str();
 }
 
 void Entity::attrMod(string name, string value){
@@ -188,6 +204,8 @@ class Entities{
 		void entitiesAttrMod(string name, double value);
 		
 		void entitiesAttrDel(string name);
+		
+		string entitiesDump(void);
 };
 
 void Entities::entityAdd(Entity ent){
@@ -314,5 +332,18 @@ void Entities::entityDelAll(void){
 
 int Entities::entityNbr(void){
 	return entities.size();
+}
+
+string Entities::entitiesDump(void){
+	int id=1;
+	stringstream ret;
+	list<Entity>::iterator iter;
+
+        for(iter = entities.begin(); iter != entities.end(); iter++, id++){
+		ret << "// entity " << id << endl ;
+                ret << (*iter).toStr();
+        }
+
+	return ret.str();
 }
 

@@ -24,37 +24,37 @@ int main(){
 	objs.entityAdd(titi);
 	titi.attrAdd("scale","0.5");
 	objs.entityAdd(titi);
-	cout << objs.entityNbr() << endl;
+	//cout << objs.entityNbr() << endl;
 	
 	objs.entitiesAttrAdd("tada",1.2);
 	objs.entitiesAttrAdd("tapouet",4);
 	objs.entitiesAttrMod("x",1);
 	objs.entitiesAttrDel("tapouet");
 	
-	cout << titi.attrNbr() << endl;
-	titi.attrList();	
+	//cout << titi.attrNbr() << endl;
+	//cout << titi.attrList();	
 
 	titi.attrDel("vue");
-	cout << titi.attrNbr() << endl;
-	titi.attrList();
+	//cout << titi.attrNbr() << endl;
+	//cout << titi.attrList();
 
 	titi.attrMod("scale","0.7");
 	titi.attrAdd("model","d:\\");	
 	titi.attrAdd("z",40);	
 	titi.attrAdd("angle",10);
 		
-	cout << titi.z << endl;
-	cout << titi.attrNbr() << endl;
-	titi.attrList();
+	//cout << titi.z << endl;
+	//cout << titi.attrNbr() << endl;
+	//cout << titi.attrList();
 
 	Entity * test;
 	if((test = objs.entityAt(1)) != NULL){
-		cout << endl;
+		//cout << endl;
 		test->attrMod("model","a:\\");	
 	}
 	if((test = objs.entityFind("titi")) != NULL){
-                (*test).attrList();
-		cout << endl;
+                //cout << (*test).attrList();
+		//cout << endl;
 	}
 
 	list<Entity*> elist;
@@ -62,15 +62,17 @@ int main(){
 
         list<Entity*>::iterator itest;
         for(itest = elist.begin(); itest != elist.end(); itest++){
-                cout << (*itest)->name << endl;
+                //cout << (*itest)->name << endl;
 		(*itest)->attrAdd("pouet",1);
 	}
 
 	elist = objs.entitiesFilter("z",42.5);
 
         for(itest = elist.begin(); itest != elist.end(); itest++){
-                cout << (*itest)->name << endl;
-		cout << "x: " << (*itest)->x << endl;
+                //cout << (*itest)->name << endl;
+		//cout << "x: " << (*itest)->x << endl;
 	}
+
+	cout << objs.entitiesDump();
 
 }
