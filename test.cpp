@@ -70,7 +70,7 @@ int main(){
 
         for(itest = elist.begin(); itest != elist.end(); itest++){
                 cout << (*itest)->name << endl;
-		cout << (*itest)->x << endl;
+		cout << "x: " << (*itest)->x << endl;
 	}
 
 }

@@ -3,7 +3,6 @@
 #include <ctime>
 
 #define ALT(x,y) (map[(x)*ysize+(y)])
-//#define getRnd(X) (double)((X*2) * (random() / (RAND_MAX + 1.0)) - X)
 #define getRnd(X) (double)(X*2 * ((random()+0.0) / (RAND_MAX ) - 0.5))
 
 using namespace std;
@@ -11,20 +10,16 @@ using namespace std;
 class AltitudeMap{
 	private:
 		double * map;
-		int xsize,ysize;
-		double sealevel;
 
 		void subdiv_private(double coeff, int x1, int y1, int x2, int y2);
 
 	public:
+		int xsize,ysize;
+		double sealevel;
+
 		AltitudeMap(int _xsize, int _ysize);
 		~AltitudeMap(void);
 
-		int getxsize();
-		int getysize();
-		double getsealevel();
-
-		void setsealevel(double sl);
 		double getaltitude(int x, int y);
 
 		double getmaxalt(void);
@@ -43,30 +38,11 @@ AltitudeMap::AltitudeMap(int _xsize, int _ysize):xsize(_xsize),ysize(_ysize),sea
 
 	for(int x=0; x < xsize; ++x)
 		for(int y=0; y < ysize; ++y)
-			//	{
 			ALT(x,y) = 0.0;
-	//	printf("%f\n",getRnd(0.5));
-	//	}
 }
 
 AltitudeMap::~AltitudeMap(void){
 	delete [] map;
-}
-
-int AltitudeMap::getxsize(){
-	return xsize;
-}
-
-int AltitudeMap::getysize(){
-	return ysize;
-}
-
-double AltitudeMap::getsealevel(){
-	return sealevel;
-}
-
-void AltitudeMap::setsealevel(double sl){
-	sealevel = sl;
 }
 
 	double AltitudeMap::getaltitude(int x, int y){
@@ -97,6 +73,9 @@ void AltitudeMap::subdivision(double coeff, double lt, double rt, double lb, dou
 	ALT(xsize-1,0) = rt;
 	ALT(0,ysize-1) = lb;
 	ALT(xsize-1,ysize-1) = rb;
+
+	srand(time(NULL));
+
 	subdiv_private(coeff,0,0,xsize-1,ysize-1);
 	for(int x=0; x < xsize; ++x)
 		for(int y=0; y < ysize; ++y){
@@ -107,6 +86,7 @@ void AltitudeMap::subdivision(double coeff, double lt, double rt, double lb, dou
 }
 
 void AltitudeMap::subdiv_private(double coeff, int x1, int y1, int x2, int y2){
+
 	if(abs(double(x1-x2)) <= 1 || abs(double(y1-y2)) <= 1) return;
 
 	int xmiddle = x1 + (int)floor(double(x2-x1)/2.0);
@@ -143,27 +123,24 @@ void AltitudeMap::erosion(int r, int iter){
 		for(int x=0; x < xsize; x++)
 			for(int y =0; y < ysize; y++){
 				double sum=0.0;
-				int offx,offy,p;
-				p=0;
-				//int debug=0;
-				//printf("%d %d \n",x,y);
+				int offx,offy,p=0;
+
 				for(offx=-r;offx<=r;offx++){
 					for(offy=-r;offy<=r;offy++){
-					int X=x+offx;
-					int Y=y+offy;
-					//debug++; printf(" %d %d %d",X,Y,r);
+						int X=x+offx;
+						int Y=y+offy;
+
 						if(X<0 || Y <0 || X>=xsize|| Y>= ysize ) 
 							continue;
 						sum += ALT(X,Y);
-					p++;
+						p++;
 					}
 
-					}
-					//printf("%d %f %d\n",p,sum,debug);
-					if(p!=0)
+				}
+				if(p!=0)
 					copy[x*ysize+y] = (sum+0.0)/(p);
-					else
-					
+				else
+
 					copy[x*ysize+y] = 0.0;
 
 			}
@@ -178,6 +155,7 @@ void AltitudeMap::erosion(int r, int iter){
 
 void AltitudeMap::normalize(){
 	double min = getminalt();
+
 	for(int x=0; x < xsize; x++)
 		for(int y =0; y < ysize; y++){
 			ALT(x,y) = ALT(x,y) - min;
