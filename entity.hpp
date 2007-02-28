@@ -187,7 +187,7 @@ class Entities{
 		void entityDelAll(void);
 		int entityNbr(void);
 
-		Entity * entityAt(int pos);
+		Entity * entityAt(int pos); // Pos = -1 : Last entity, -2, etc..
 		Entity * entityFind(string name);
 		list <Entity*> entitiesFilter(string name);
 		list <Entity*> entitiesFilter(string name, string value);
@@ -211,13 +211,18 @@ void Entities::entityAdd(Entity ent){
 		if(entities.empty())
 			return NULL;
 
-		if(pos >= (int)entities.size())
+		if(abs(pos) >= (int) (entities.size() + (pos < 0 ? 1:0)))
 			return NULL;
 
 		list<Entity>::iterator iter;
 
-		iter = entities.begin();
-		for(int i=0; i < pos; i++, iter++);
+		if(pos >= 0){
+			iter = entities.begin();
+			for(int i=0; i < pos; i++, iter++);
+		}else{
+			iter = entities.end();
+			for(int i=0; i > pos; i--, iter--);
+		}
 
 		return &(*iter);
 	}

@@ -52,6 +52,10 @@ int main(){
 		//cout << endl;
 		test->attrMod("model","a:\\");	
 	}
+	if((test = objs.entityAt(0)) != NULL){
+		//cout << endl;
+		//cout << test->toStr();	
+	}
 	if((test = objs.entityFind("titi")) != NULL){
                 //cout << (*test).attrList();
 		//cout << endl;
