@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <list>
+#include <iterator>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ typedef struct{
 
 std::ostream& operator<< (std::ostream& out, args c)
 {
-	out << "\"" << c.name << "\" = \"" << c.value << "\"";
+	out << "\"" << c.name << "\" \"" << c.value << "\"";
 	return out ;
 }
 
@@ -163,12 +164,6 @@ int Entity::attrNbr(void){
 }
 
 /* TODO 
-OK: entityAt() -> Entity;
-OK: entityFind(name) -> Entity;
-OK: entitiesFilter(name) -> Entities;
-OK: entitiesAddAttr() -> void (rajoute un attribut tous les éléments) ;
-OK: entitiesModAttr() -> void (modifie un attribut tous les éléments) ;
-OK: entitiesDelAttr(name) -> void (delete un attribut tous les éléments);
 entitiesTranslate(x,y,z);
 */
 
@@ -335,12 +330,12 @@ int Entities::entityNbr(void){
 }
 
 string Entities::entitiesDump(void){
-	int id=1;
+	static int e_id=1;
 	stringstream ret;
 	list<Entity>::iterator iter;
 
-        for(iter = entities.begin(); iter != entities.end(); iter++, id++){
-		ret << "// entity " << id << endl ;
+        for(iter = entities.begin(); iter != entities.end(); iter++, e_id++){
+		ret << "// entity " << e_id << endl ;
                 ret << (*iter).toStr();
         }
 

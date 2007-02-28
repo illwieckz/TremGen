@@ -4,7 +4,7 @@
 #include <cstring>
 
 #include "altimap.hpp"
-//#include "entity.hpp"
+#include "entity.hpp"
 
 #define HINC 10 //5 // Increment de hauteur
 #define TSIZE 150 // Taille d'un dalle
@@ -38,6 +38,12 @@
 
 using namespace std;
 
+typedef struct _Entities_group{
+	Entities aliens;
+	Entities humans;
+	Entities infos;
+}Entities_group;
+
 int textZ(double z)
 {
 
@@ -70,22 +76,6 @@ string getTexture(int i){
 	}
 }
 
-string makeEntity(string name, double x, double y, double z, double angle){
-	stringstream ret;
-	static int id=0;
-
-	id++;
-
-	ret << "// entity " << id << endl << "{" << endl; 
-	ret << "\"classname\" \"" << name << "\"" << endl;
-	ret << "\"origin\" \"" << x << " " << y << " " << z << "\"" << endl;
-	if(angle != 0.0)
-		ret << "\"angle\" \"" << angle << "\"" << endl;
-	ret << "}" << endl;
-
-	return ret.str();
-}
-
 /*string makeFace(double x, double y, double z, double tx, double ty, double tz, int texture){
   stringstream ret;
 
@@ -115,7 +105,7 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	int tdef=(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
 
 	//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
-	ret << endl << "{" << endl;
+	ret << "{" << endl;
 
 	ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face == FACE_UP ? texture: tdef)) << 
 		endl; // iso-z
@@ -125,7 +115,7 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	ret << t(x,y,z) << t(x+tx,y+dy,z+dz) << t(x-dx,y+ty,z) << getTexture((face == FACE_BOTTOM ? texture: tdef)) << endl; // iso-z
 	ret << t(x,y,z) << t(x,y,z+tz) << t(x+tx,y+dy,z) << getTexture((face == FACE_FRONT ? texture: tdef)) << endl; // iso-y
 	ret << t(x,y,z) << t(x-dx,y+ty,z) << t(x,y,z+tz) << getTexture((face == FACE_LEFT ? texture: tdef)) << endl; // iso-x
-	ret << endl << "}" << endl;
+	ret << "}" << endl;
 	return ret.str();
 }
 
@@ -143,28 +133,15 @@ string getHeader(int xsize, int ysize){
 	return ret.str();
 }
 
-string getFoot(AltitudeMap * hmap){
+string getFoot(Entities_group * egp){
 	stringstream ret;
-	double max = hmap->getmaxalt() * 255 + 50 / HINC;
-
-	double w = (MAPSIZE-1)*TSIZE;
-	double h = (MAPSIZE-1)*TSIZE;
 
 	ret << "\n}\n";
-	ret << makeEntity("team_human_spawn",w-100,h-200,max*HINC,0);
-	ret << makeEntity("team_human_mgturret",w-200,h-200,max*HINC,0);
-	ret << makeEntity("team_human_reactor",w-100,h-100,max*HINC,0);
-	ret << makeEntity("team_human_armoury",w-200,h-100,max*HINC,0);
 
-	ret << makeEntity("team_alien_spawn",150,300,max*HINC,0);
-	ret << makeEntity("team_alien_overmind",150,150,max*HINC,0);
+	ret << egp->aliens.entitiesDump();
+	ret << egp->humans.entitiesDump();
+	ret << egp->infos.entitiesDump();
 
-	ret << makeEntity("team_alien_acid_tube",300,300,max*HINC,0);
-	//ret << makeEntity("team_alien_acid_tube",240,240,max*HINC,0);
-
-	ret << makeEntity("info_alien_intermission",200,200,max*HINC,8.33);
-	ret << makeEntity("info_human_intermission",w-200,h-200,max*HINC,180);
-	ret << makeEntity("info_player_intermission",w/2.0,h/2.0,max*HINC,0);
 	return ret.str();
 }
 
@@ -196,7 +173,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 
 			ret << t(x+tx,y+ty,z+tz+dc-10) << t(x,y+ty,z+tz+db-10) << t(x+tx,y,z+tz+da-10) << getTexture(2) << endl; // iso-z
 			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da) << t(x+tx,y,z+tz+da-10) << getTexture(2) << endl; 
-			ret << "\n}\n";
+			ret << "}\n";
 
 			ret << "{\n";
 			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
@@ -205,7 +182,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(2) << endl; // iso-z
 			ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+da+tz-10) << getTexture(2) << endl; // iso-y
 			ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(2) << endl; // iso-x
-			ret << "\n}\n";
+			ret << "}\n";
 
 		}else{ if(dc - da !=db ){
 
@@ -225,7 +202,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 
 		ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+tz+da-10) << getTexture(2) << endl; // iso-y
 		ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(2) << endl; // iso-x
-		ret  <<  "\n}\n";
+		ret  <<  "}\n";
 
 		}
 	}
@@ -253,7 +230,7 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 
 		if((int)round(i)%500==0)
 		{
-			ret << 	makeFace(i,-3,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_HINT,FACE_RIGHT);
+			ret << 	makeFace(i,-3,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_HINT,FACE_RIGHT) << endl;
 		}
 
 	}
@@ -262,7 +239,7 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 
 		if((int)round(i)%500==0)
 		{
-			ret <<	makeFace(0,i,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_HINT,FACE_FRONT);
+			ret <<	makeFace(0,i,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_HINT,FACE_FRONT) << endl;
 		}
 
 	}
@@ -282,24 +259,48 @@ string makeGrid(AltitudeMap * hmap, int sh){
 	return ret.str();
 }
 
+void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
+        double max = hmap->getmaxalt() * 255 + 50 / HINC;
+
+        double w = (MAPSIZE-1)*TSIZE;
+        double h = (MAPSIZE-1)*TSIZE;
+
+        egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
+        egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
+        egp->infos.entityAdd(Entity("info_player_intermission",w/2.0,h/2.0,max*HINC));
+
+
+        egp->humans.entityAdd(Entity("team_human_spawn",w-100,h-200,max*HINC));
+        egp->humans.entityAdd(Entity("team_human_mgturret",w-200,h-200,max*HINC));
+        egp->humans.entityAdd(Entity("team_human_reactor",w-100,h-100,max*HINC));
+        egp->humans.entityAdd(Entity("team_human_armoury",w-200,h-100,max*HINC));
+
+	
+	egp->aliens.entityAdd(Entity("team_alien_spawn",150,300,max*HINC));
+	egp->aliens.entityAdd(Entity("team_alien_overmind",150,150,max*HINC));
+	egp->aliens.entityAdd(Entity("team_alien_acid_tube",300,300,max*HINC));
+	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
+}
+        
 
 int main(int argc,char **argv)
 {
+	Entities_group egp;	
+
 	AltitudeMap hmap(MAPSIZE,MAPSIZE);
 
 	hmap.randomize(0.5);
-
 	hmap.subdivision(0.85,random(),random(),random(),random());
-
 	hmap.randomize(0.2);
-
 	hmap.erosion(2,1);
 	hmap.normalize();
+
+	makeBasicEntities(&hmap,&egp);
 
 	cout << getHeader(MAPSIZE,MAPSIZE);
 	cout << makeSkybox(&hmap,HINC);
 	cout << makeGrid(&hmap,HINC);
-	cout << getFoot(&hmap);
+	cout << getFoot(&egp);
 
 	return 0;
 }
