@@ -25,6 +25,7 @@
 #define TEXTURE_HINT 9
 #define TEXTURE_DIRT 3
 #define TEXTURE_ROCK 4
+#define TEXTURE_WATER 10 
 
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
@@ -70,6 +71,8 @@ string getTexture(int i){
 			return "arkadia/eq2_rock_02 0 0 0 0 0 0 0 0";
 		case TEXTURE_ROCK:
 			return "arkadia/rock_1 0 0 0 0 0 0 0 0";
+		case TEXTURE_WATER:
+			return "example2/water 0 0 0 0.0 0.0 0 0 0";
 		default:
 			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
