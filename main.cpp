@@ -20,6 +20,18 @@
 #define FACE_LEFT 16
 #define FACE_UP 32
 
+#define GREEN "\033[32m"
+#define RED "\033[31m"
+#define BLUE "\033[34m"
+#define NORM "\033[0m"
+
+#define CENTER 1 
+#define TWATER 6 
+#define TOP 2
+#define BOTTOM 3
+#define RIGHT 4
+#define LEFT 5
+
 #define TEXTURE_SKIP (-2)
 #define TEXTURE_CAULK (-1)
 #define TEXTURE_HINT 9
@@ -30,6 +42,9 @@
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 
+#define WATERL 1 // Variable qui definit la hauteur des lacs et leur etendu
+#define WATER(x,y) (water[(x)*ysize+(y)])
+
 #define rad(x) (x*M_PI/180)
 #define deg(x) (x*180/M_PI)
 
@@ -39,11 +54,23 @@
 
 using namespace std;
 
-typedef struct _Entities_group{
+typedef struct tagEntities_group{
 	Entities aliens;
 	Entities humans;
 	Entities infos;
 }Entities_group;
+
+typedef struct tagVECTOR2D{
+	int x, y;
+}VECTOR2D;
+
+typedef struct tagCUBE{
+	VECTOR2D lt;
+	VECTOR2D rt;
+	VECTOR2D lb;
+	VECTOR2D rb;
+	char modflag;
+}CUBE; 
 
 int textZ(double z)
 {
@@ -244,10 +271,143 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	return ret.str();
 }
 
-/*
-string makeWater(AltitudeMap * hmap){
-	
-}*/
+CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int level, double max, CUBE mvect){
+	int xsize = hmap->xsize;
+	int ysize = hmap->ysize;
+
+	int alt = (int) (hmap->getaltitude(x,y)*10/max);
+	alt = alt < 9 ? alt:9;
+
+
+	if(from == CENTER){
+		mvect.lt.x = xsize + 1;
+		mvect.lt.y = ysize + 1;
+
+		mvect.lb.x = xsize + 1;
+		mvect.lb.y = 0;
+
+		mvect.rt.x = 0;
+		mvect.rt.y = ysize + 1;
+
+		mvect.rb.x = 0;
+		mvect.rb.y = 0;
+
+		mvect.modflag = 0;
+	}
+
+	if(WATER(x,y) > 0)
+		return mvect;
+
+	if(alt > (level + WATERL)){
+		if(x < mvect.lt.x)
+			mvect.lt.x = x + 1;
+		if(y < mvect.lt.y)
+			mvect.lt.y = y + 1;
+
+		if(x > mvect.rb.x)
+			mvect.rb.x = x - 1;
+		if(y > mvect.rb.y)
+			mvect.rb.y = y - 1;
+
+		if(x < mvect.lb.x)
+			mvect.lb.x = x + 1;
+		if(y > mvect.lb.y)
+			mvect.lb.y = y - 1;
+
+		if(x > mvect.rt.x)
+			mvect.rt.x = x - 1;
+		if(y < mvect.rt.y)
+			mvect.rt.y = y + 1;
+
+		if(from != CENTER)
+			mvect.modflag = 1;
+
+		return mvect;
+	}
+
+	if(from == CENTER)
+		WATER(x,y) = CENTER;
+	else
+		WATER(x,y) = TWATER;
+
+	if(x > 0 && from != LEFT)
+		mvect = markAsWater(hmap,water,x-1,y,RIGHT,level,max,mvect);
+	if(y > 0 && from != TOP)
+		mvect = markAsWater(hmap,water,x,y-1,BOTTOM,level,max,mvect);
+	if(x < xsize - 1 && from != RIGHT)
+		mvect = markAsWater(hmap,water,x+1,y,LEFT,level,max,mvect);
+	if(y < ysize - 1 && from != BOTTOM)
+		mvect = markAsWater(hmap,water,x,y+1,TOP,level,max, mvect);
+
+	return mvect;
+}
+
+
+void markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
+	double max = hmap->getmaxalt();
+	int ysize = hmap->ysize;
+	CUBE mvect;
+
+	mvect = markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
+
+	if(mvect.modflag == 1){
+		WATER(mvect.lt.x,mvect.lt.y) = TOP;
+		WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
+		WATER(mvect.lb.x,mvect.lb.y) = LEFT;
+		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
+	}
+}
+
+string makeWater(AltitudeMap * hmap, int sh){
+	stringstream ret;
+
+	//double s = TSIZE;
+	//double max = (hmap->getmaxalt() +0.5) * 255 + 160 / sh; //bootstrap pour lan
+
+	int xsize = hmap->xsize;
+	int ysize = hmap->ysize;
+
+	int xcrop = xsize*10/100;
+	int ycrop = ysize*10/100;
+	double vmax = hmap->getmaxalt();
+	int min = 10;
+
+	char * water = new char[xsize*ysize];
+	for(int x=0;x<xsize;x++)
+		for(int y=0;y<ysize;y++)
+			WATER(x,y) = 0;
+
+	for(int x=xcrop; x < xsize - (xcrop/2); ++x){
+		for(int y=ycrop; y < ysize - (ycrop/2); ++y){
+			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
+			alt = alt < 9 ? alt:9; 
+			if(alt < min)
+				min = alt;
+		}
+	}
+
+	for(int x=xcrop; x < xsize - (xcrop/2); ++x){
+		for(int y=ycrop; y < ysize - (ycrop/2); ++y){
+			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
+			alt = alt < 9 ? alt:9;
+			if(alt == min)
+				markAsWater(&(*hmap),water,x,y,alt);
+		}
+	}
+	/*
+	   ret  << makeFace(-3,0,0,10,(ysize-1)*s+5,max*sh,0,0,0,1,FACE_RIGHT) << endl;
+	   ret  << makeFace(0,-3,0,(xsize-1)*s+5,10,max*sh,0,0,0,1,FACE_REAR) << endl;
+
+	   ret  << makeFace((xsize-1)*s-10+5,0,0,10,(ysize-1)*s+5,max*sh,0,0,0,1,FACE_LEFT) << endl;
+	   ret  << makeFace(0,(ysize-1)*s-5,0,(xsize-1)*s+5,10,max*sh,0,0,0,1,FACE_FRONT) << endl;
+
+	   ret  << makeFace(-3,-3,sh*max-10,(xsize-1)*s+5,(ysize-1)*s+5,16,0,0,0,1,FACE_BOTTOM) << endl;
+	   ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(xsize-1)*s+5,(ysize-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+	   */
+
+	delete [] water;
+	return ret.str();
+}
 
 string makeGrid(AltitudeMap * hmap, int sh){
 	stringstream ret;
@@ -262,20 +422,20 @@ string makeGrid(AltitudeMap * hmap, int sh){
 }
 
 void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
-        double max = hmap->getmaxalt() * 255 + 50 / HINC;
+	double max = hmap->getmaxalt() * 255 + 50 / HINC;
 
-        double w = (MAPSIZE-1)*TSIZE;
-        double h = (MAPSIZE-1)*TSIZE;
+	double w = (MAPSIZE-1)*TSIZE;
+	double h = (MAPSIZE-1)*TSIZE;
 
-        egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
-        egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
-        egp->infos.entityAdd(Entity("info_player_intermission",w/2.0,h/2.0,max*HINC));
+	egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
+	egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
+	egp->infos.entityAdd(Entity("info_player_intermission",w/2.0,h/2.0,max*HINC));
 
 
-        egp->humans.entityAdd(Entity("team_human_spawn",w-100,h-200,max*HINC));
-        egp->humans.entityAdd(Entity("team_human_mgturret",w-200,h-200,max*HINC));
-        egp->humans.entityAdd(Entity("team_human_reactor",w-100,h-100,max*HINC));
-        egp->humans.entityAdd(Entity("team_human_armoury",w-200,h-100,max*HINC));
+	egp->humans.entityAdd(Entity("team_human_spawn",w-100,h-200,max*HINC));
+	egp->humans.entityAdd(Entity("team_human_mgturret",w-200,h-200,max*HINC));
+	egp->humans.entityAdd(Entity("team_human_reactor",w-100,h-100,max*HINC));
+	egp->humans.entityAdd(Entity("team_human_armoury",w-200,h-100,max*HINC));
 
 
 	egp->aliens.entityAdd(Entity("team_alien_spawn",150,300,max*HINC));
@@ -283,7 +443,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",300,300,max*HINC));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
 }
-        
+
 
 int main(int argc,char **argv)
 {
@@ -302,6 +462,7 @@ int main(int argc,char **argv)
 	cout << getHeader(MAPSIZE,MAPSIZE);
 	cout << makeSkybox(&hmap,HINC);
 	cout << makeGrid(&hmap,HINC);
+	cout << makeWater(&hmap,HINC);
 	cout << getFoot(&egp);
 
 	return 0;

@@ -12,11 +12,12 @@
 #define BLUE "\033[34m"
 #define NORM "\033[0m"
 
-#define CENTER -1 
-#define TOP 0
-#define BOTTOM 1 
-#define RIGHT 2
-#define LEFT 3
+#define CENTER 1 
+#define TWATER 6 
+#define TOP 2
+#define BOTTOM 3
+#define RIGHT 4
+#define LEFT 5
 
 
 #define WATERL 2 
@@ -71,7 +72,10 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 		mvect.modflag = 0;
 	}
 
-	if(WATER(x,y) > 0 || alt > (level + WATERL)){
+	if(WATER(x,y) > 0)
+		return mvect;
+
+	if(alt > (level + WATERL)){
 		if(x < mvect.lt.x)
 			mvect.lt.x = x + 1;
 		if(y < mvect.lt.y)
@@ -99,17 +103,17 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 	}
 
 	if(from == CENTER)
-		WATER(x,y) = 1;
+		WATER(x,y) = CENTER;
 	else
-		WATER(x,y) = 2;
+		WATER(x,y) = TWATER;
 
-	if(x > 0)
+	if(x > 0 && from != LEFT)
 		mvect = markAsWater(hmap,water,x-1,y,RIGHT,level,max,mvect);
-	if(y > 0)
+	if(y > 0 && from != TOP)
 		mvect = markAsWater(hmap,water,x,y-1,BOTTOM,level,max,mvect);
-	if(x < xsize)
+	if(x < xsize - 1 && from != RIGHT)
 		mvect = markAsWater(hmap,water,x+1,y,LEFT,level,max,mvect);
-	if(y < ysize)
+	if(y < ysize - 1 && from != BOTTOM)
 		mvect = markAsWater(hmap,water,x,y+1,TOP,level,max, mvect);
 		
 	return mvect;
@@ -123,10 +127,10 @@ void markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	mvect = markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
 
 	if(mvect.modflag == 1){
-		WATER(mvect.lt.x,mvect.lt.y) = 3;
-		WATER(mvect.rt.x,mvect.rt.y) = 3;
-		WATER(mvect.lb.x,mvect.lb.y) = 3;
-		WATER(mvect.rb.x,mvect.rb.y) = 3;
+		WATER(mvect.lt.x,mvect.lt.y) = TOP;
+		WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
+		WATER(mvect.lb.x,mvect.lb.y) = LEFT;
+		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
 	}
 
 	cout << mvect << endl;
@@ -140,7 +144,6 @@ int main(){
 	hmap.randomize(0.2);
 	hmap.erosion(2,1);
 	hmap.normalize();
-
 
 	int xsize = hmap.xsize;
 	int ysize = hmap.ysize;
@@ -174,19 +177,22 @@ int main(){
 	}
 
 	for(int y=0; y < ysize; ++y){
-		printf("%d ",y);
+		printf("%2d ",y);
 		for(int x=0; x < xsize; ++x){
 			int alt = (int) (hmap.getaltitude(x,y)*10/max);
 			alt = alt < 9 ? alt:9;
 
 			switch(WATER(x,y)){
-				case 1:
+				case CENTER:
 					printf(RED"%d"NORM,alt);
 					break;
-				case 2:
+				case TWATER:
 					printf(BLUE"%d"NORM,alt);
 					break;
-				case 3:
+				case TOP:
+				case BOTTOM:
+				case LEFT:
+				case RIGHT:
 					printf(GREEN"%d"NORM,alt);
 					break;
 				default:
@@ -195,4 +201,5 @@ int main(){
 		}
 		printf("\n");
 	}
+	delete [] water;
 }

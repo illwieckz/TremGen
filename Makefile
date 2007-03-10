@@ -1,2 +1,2 @@
 all:
-	g++ -Wall main.cpp -o altimap
+	g++ -g -Wall main.cpp -o altimap
