@@ -93,8 +93,6 @@ string getTexture(int i){
   }
   */
 
-
-
 string makeFace(double x, double y, double z, double tx, double ty, double tz, double ax , double ay, double az, int texture, int face){
 	stringstream ret;
 	double  dz=tx*tan(rad(az));
@@ -121,10 +119,6 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	ret << "}" << endl;
 	return ret.str();
 }
-
-
-
-
 
 string getHeader(int xsize, int ysize){
 	stringstream ret;
@@ -250,6 +244,10 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	return ret.str();
 }
 
+string makeWater(AltitudeMap * hmap){
+	
+}
+
 string makeGrid(AltitudeMap * hmap, int sh){
 	stringstream ret;
 	int i,j;
@@ -278,7 +276,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
         egp->humans.entityAdd(Entity("team_human_reactor",w-100,h-100,max*HINC));
         egp->humans.entityAdd(Entity("team_human_armoury",w-200,h-100,max*HINC));
 
-	
+
 	egp->aliens.entityAdd(Entity("team_alien_spawn",150,300,max*HINC));
 	egp->aliens.entityAdd(Entity("team_alien_overmind",150,150,max*HINC));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",300,300,max*HINC));
