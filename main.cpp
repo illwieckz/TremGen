@@ -343,7 +343,7 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 }
 
 
-void markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
+CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	double max = hmap->getmaxalt();
 	int ysize = hmap->ysize;
 	CUBE mvect;
@@ -356,6 +356,7 @@ void markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 		WATER(mvect.lb.x,mvect.lb.y) = LEFT;
 		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
 	}
+	return mvect;
 }
 
 string makeWater(AltitudeMap * hmap, int sh){
@@ -371,6 +372,8 @@ string makeWater(AltitudeMap * hmap, int sh){
 	int ycrop = ysize*10/100;
 	double vmax = hmap->getmaxalt();
 	int min = 10;
+
+	CUBE mvect;
 
 	char * water = new char[xsize*ysize];
 	for(int x=0;x<xsize;x++)
@@ -390,8 +393,12 @@ string makeWater(AltitudeMap * hmap, int sh){
 		for(int y=ycrop; y < ysize - (ycrop/2); ++y){
 			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
 			alt = alt < 9 ? alt:9;
-			if(alt == min)
-				markAsWater(&(*hmap),water,x,y,alt);
+			if(alt == min){
+				mvect = markAsWater(&(*hmap),water,x,y,alt);
+				if(mvect.modflag == 1){
+					// le code
+				}
+			}
 		}
 	}
 	/*

@@ -119,7 +119,7 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 	return mvect;
 }
 
-void markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
+CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	double max = hmap->getmaxalt();
 	int ysize = hmap->ysize;
 	CUBE mvect;
@@ -133,7 +133,7 @@ void markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
 	}
 
-	cout << mvect << endl;
+	return mvect;
 }
 
 int main(){
@@ -153,6 +153,8 @@ int main(){
 	double max = hmap.getmaxalt();
 	int min = 10;
 	
+	CUBE mvect;
+	
 	char * water = new char[xsize*ysize];
 	for(int x=0;x<xsize;x++)
 		for(int y=0;y<ysize;y++)
@@ -171,8 +173,11 @@ int main(){
 		for(int y=ycrop; y < ysize - (ycrop/2); ++y){
 			int alt = (int) (hmap.getaltitude(x,y)*10/max);
 			alt = alt < 9 ? alt:9;
-			if(alt == min)
-				markAsWater(&hmap,water,x,y,alt);
+			if(alt == min){
+				mvect = markAsWater(&hmap,water,x,y,alt);
+				if(mvect.modflag == 1)
+					cout << mvect << endl;
+			}
 		} 
 	}
 
