@@ -244,9 +244,10 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	return ret.str();
 }
 
+/*
 string makeWater(AltitudeMap * hmap){
 	
-}
+}*/
 
 string makeGrid(AltitudeMap * hmap, int sh){
 	stringstream ret;
