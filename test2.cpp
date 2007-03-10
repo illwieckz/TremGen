@@ -19,7 +19,7 @@
 #define LEFT 3
 
 
-#define WATERL 1 
+#define WATERL 2 
 #define WATER(x,y) (water[(x)*ysize+(y)])
 
 typedef struct tagVECTOR2D{
@@ -73,24 +73,24 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 
 	if(WATER(x,y) > 0 || alt > (level + WATERL)){
 		if(x < mvect.lt.x)
-			mvect.lt.x = x;
+			mvect.lt.x = x + 1;
 		if(y < mvect.lt.y)
-			mvect.lt.y = y;
+			mvect.lt.y = y + 1;
 		
 		if(x > mvect.rb.x)
-			mvect.rb.x = x;
+			mvect.rb.x = x - 1;
 		if(y > mvect.rb.y)
-			mvect.rb.y = y;
+			mvect.rb.y = y - 1;
 
 		if(x < mvect.lb.x)
-                        mvect.lb.x = x;
+                        mvect.lb.x = x + 1;
                 if(y > mvect.lb.y)
-                        mvect.lb.y = y;
+                        mvect.lb.y = y - 1;
 
 		if(x > mvect.rt.x)
-                        mvect.rt.x = x;
+                        mvect.rt.x = x - 1;
                 if(y < mvect.rt.y)
-                        mvect.rt.y = y;
+                        mvect.rt.y = y + 1;
 
 		if(from != CENTER)
 			mvect.modflag = 1;
