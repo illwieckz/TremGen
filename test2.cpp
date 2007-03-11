@@ -175,8 +175,24 @@ int main(){
 			alt = alt < 9 ? alt:9;
 			if(alt == min){
 				mvect = markAsWater(&hmap,water,x,y,alt);
-				if(mvect.modflag == 1)
+				if(mvect.modflag == 1){
+					double minalt = 0;
+					double a = hmap.getaltitude(mvect.lt.x,mvect.lt.y);
+                                        double b = hmap.getaltitude(mvect.rt.x,mvect.rt.y);
+                                        double c = hmap.getaltitude(mvect.lb.x,mvect.lb.y);
+                                        double d = hmap.getaltitude(mvect.rb.x,mvect.rb.y);
+                                        if(a < b && a < c && a < d)
+                                                minalt = a;
+                                        else if(b < a && b < c && b < d)
+                                                minalt = b;
+                                        else if(c < b && c < a && c < d)
+                                                minalt = c;
+                                        else if(d < c && d < b && d < a)
+                                                minalt = d;
+
+					printf("%g %g %g %g => %g\n",a,b,c,d,minalt);
 					cout << mvect << endl;
+				}
 			}
 		} 
 	}

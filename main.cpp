@@ -345,17 +345,18 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 
 CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	double max = hmap->getmaxalt();
-	int ysize = hmap->ysize;
+//	int ysize = hmap->ysize;
 	CUBE mvect;
 
 	mvect = markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
-
+/*
 	if(mvect.modflag == 1){
 		WATER(mvect.lt.x,mvect.lt.y) = TOP;
 		WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
 		WATER(mvect.lb.x,mvect.lb.y) = LEFT;
 		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
 	}
+*/
 	return mvect;
 }
 
@@ -396,7 +397,28 @@ string makeWater(AltitudeMap * hmap, int sh){
 			if(alt == min){
 				mvect = markAsWater(&(*hmap),water,x,y,alt);
 				if(mvect.modflag == 1){
-					// le code
+					/*
+					   WATER(mvect.lt.x,mvect.lt.y);
+					   WATER(mvect.rt.x,mvect.rt.y);
+					   WATER(mvect.lb.x,mvect.lb.y);
+					   WATER(mvect.rb.x,mvect.rb.y);
+					Ex : (7,39) (17,39) (7,51) (17,51)
+					*/
+					double minalt=0;
+					double a = hmap->getaltitude(mvect.lt.x,mvect.lt.y);
+					double b = hmap->getaltitude(mvect.rt.x,mvect.rt.y);
+					double c = hmap->getaltitude(mvect.lb.x,mvect.lb.y);
+					double d = hmap->getaltitude(mvect.rb.x,mvect.rb.y);
+					if(a < b && a < c && a < d)
+						minalt = a;
+					else if(b < a && b < c && b < d)
+						minalt = b;
+					else if(c < b && c < a && c < d)
+						minalt = c;
+					else if(d < c && d < b && d < a)
+						minalt = d;
+
+					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g)\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt);
 				}
 			}
 		}
