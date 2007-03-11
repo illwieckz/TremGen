@@ -363,8 +363,7 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 string makeWater(AltitudeMap * hmap, int sh){
 	stringstream ret;
 
-	//double s = TSIZE;
-	//double max = (hmap->getmaxalt() +0.5) * 255 + 160 / sh; //bootstrap pour lan
+	double s = TSIZE;
 
 	int xsize = hmap->xsize;
 	int ysize = hmap->ysize;
@@ -405,6 +404,7 @@ string makeWater(AltitudeMap * hmap, int sh){
 					Ex : (7,39) (17,39) (7,51) (17,51)
 					*/
 					double minalt=0;
+					double depth = hmap->getaltitude(x,y);
 					double a = hmap->getaltitude(mvect.lt.x,mvect.lt.y);
 					double b = hmap->getaltitude(mvect.rt.x,mvect.rt.y);
 					double c = hmap->getaltitude(mvect.lb.x,mvect.lb.y);
@@ -418,7 +418,9 @@ string makeWater(AltitudeMap * hmap, int sh){
 					else if(d < c && d < b && d < a)
 						minalt = d;
 
-					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g)\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt);
+					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,depth);
+	   
+					ret  << makeFace(mvect.lb.x,mvect.lb.y,depth,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
 				}
 			}
 		}
