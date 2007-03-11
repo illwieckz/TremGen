@@ -32,6 +32,7 @@
 #define RIGHT 4
 #define LEFT 5
 
+#define TEXTURE_WATER_CAULK (-3)
 #define TEXTURE_SKIP (-2)
 #define TEXTURE_CAULK (-1)
 #define TEXTURE_HINT 9
@@ -100,6 +101,8 @@ string getTexture(int i){
 			return "arkadia/rock_1 0 0 0 0 0 0 0 0";
 		case TEXTURE_WATER:
 			return "example2/water 0 0 0 0.0 0.0 0 0 0";
+		case TEXTURE_WATER_CAULK:
+			return "example2/watercaulk 0 0 0 0.0 0.0 0 0 0";
 		default:
 			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
@@ -130,7 +133,25 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	//tx=abs(tx);
 	//ty=abs(ty);
 	//tz=abs(tz);
-	int tdef=(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
+	int tdef=0;
+
+//	(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
+	switch (texture)
+	{
+	case TEXTURE_HINT: /*Les autres faces des hint sont en skip*/
+	tdef=TEXTURE_SKIP;
+	break;
+
+	case TEXTURE_WATER: /*Les autres faces des haut sont en water_caulk*/
+	tdef=TEXTURE_WATER_CAULK;
+	break;
+
+	default: /* Par defaut caulk*/
+	tdef=TEXTURE_CAULK;
+	
+	}
+
+	
 
 	//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
 	ret << "{" << endl;
@@ -364,7 +385,7 @@ string makeWater(AltitudeMap * hmap, int sh){
 	stringstream ret;
 
 	double s = TSIZE;
-
+sh=sh*255;
 	int xsize = hmap->xsize;
 	int ysize = hmap->ysize;
 
@@ -420,7 +441,7 @@ string makeWater(AltitudeMap * hmap, int sh){
 
 					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,depth);
 	   
-					ret  << makeFace(mvect.lb.x,mvect.lb.y,depth,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+					ret  << makeFace(mvect.lb.x*s,mvect.lb.y*s,depth*sh,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
 				}
 			}
 		}
