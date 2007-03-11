@@ -441,7 +441,8 @@ sh=sh*255;
 
 					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,depth);
 	   
-					ret  << makeFace(mvect.lb.x*s,mvect.lb.y*s,depth*sh,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+					ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt-depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+//					ret  << makeFace(mvect.lb.x*s,mvect.lb.y*s,depth*sh,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
 				}
 			}
 		}
