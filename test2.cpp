@@ -33,6 +33,7 @@ typedef struct tagCUBE{
 	VECTOR2D lb;
 	VECTOR2D rb;
 	char modflag;
+	char borderflag;
 }CUBE;
 
 std::ostream& operator<< (std::ostream& out, CUBE c)
@@ -55,7 +56,6 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 	int alt = (int) (hmap->getaltitude(x,y)*10/max);
 	alt = alt < 9 ? alt:9;
 
-	
 	if(from == CENTER){
 		mvect.lt.x = xsize + 1;
 		mvect.lt.y = ysize + 1;
@@ -70,31 +70,40 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 		mvect.rb.y = 0;
 		
 		mvect.modflag = 0;
+		mvect.borderflag = 0;
 	}
 
-	if(WATER(x,y) > 0)
-		return mvect;
-
-	if(alt > (level + WATERL)){
+	if(WATER(x,y) > 0 || (alt > (level + WATERL))){
+		int a,b;
+		a = b = 1;
+		if((x == 0) || (x == xsize - 1)){
+			mvect.borderflag = 1;
+			a = 0;
+		}
+		if((y == 0) || (y == ysize - 1)){
+			mvect.borderflag = 1;
+			b = 0;
+		}
+		
 		if(x < mvect.lt.x)
-			mvect.lt.x = x + 1;
+			mvect.lt.x = x + a;
 		if(y < mvect.lt.y)
-			mvect.lt.y = y + 1;
+			mvect.lt.y = y + b;
 		
 		if(x > mvect.rb.x)
-			mvect.rb.x = x - 1;
+			mvect.rb.x = x - a;
 		if(y > mvect.rb.y)
-			mvect.rb.y = y - 1;
+			mvect.rb.y = y - b;
 
 		if(x < mvect.lb.x)
-                        mvect.lb.x = x + 1;
+                        mvect.lb.x = x + a;
                 if(y > mvect.lb.y)
-                        mvect.lb.y = y - 1;
+                        mvect.lb.y = y - b;
 
 		if(x > mvect.rt.x)
-                        mvect.rt.x = x - 1;
+                        mvect.rt.x = x - a;
                 if(y < mvect.rt.y)
-                        mvect.rt.y = y + 1;
+                        mvect.rt.y = y + b;
 
 		if(from != CENTER)
 			mvect.modflag = 1;
@@ -121,23 +130,24 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 
 CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	double max = hmap->getmaxalt();
+	//int xsize = hmap->xsize;
 	int ysize = hmap->ysize;
 	CUBE mvect;
 
 	mvect = markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
 
 	if(mvect.modflag == 1){
-		WATER(mvect.lt.x,mvect.lt.y) = TOP;
-		WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
-		WATER(mvect.lb.x,mvect.lb.y) = LEFT;
-		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
+			WATER(mvect.lt.x,mvect.lt.y) = TOP;
+			WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
+			WATER(mvect.lb.x,mvect.lb.y) = LEFT;
+			WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
 	}
 
 	return mvect;
 }
 
 int main(){
-	AltitudeMap hmap(100,100);
+	AltitudeMap hmap(50,50);
 
 	hmap.randomize(0.5);
 	hmap.subdivision(0.85,random(),random(),random(),random());
@@ -176,7 +186,9 @@ int main(){
 			if(alt == min){
 				mvect = markAsWater(&hmap,water,x,y,alt);
 				if(mvect.modflag == 1){
-					double minalt = 0;
+					double minalt = 1.0;
+					double lalt;
+					/*
 					double a = hmap.getaltitude(mvect.lt.x,mvect.lt.y);
                                         double b = hmap.getaltitude(mvect.rt.x,mvect.rt.y);
                                         double c = hmap.getaltitude(mvect.lb.x,mvect.lb.y);
@@ -191,6 +203,24 @@ int main(){
                                                 minalt = d;
 
 					printf("%g %g %g %g => %g\n",a,b,c,d,minalt);
+					*/
+					for(int j=mvect.lt.x; j < mvect.rt.x + 1; j++){
+						lalt = hmap.getaltitude(j,mvect.lt.y);
+						if(lalt < minalt)
+							minalt = lalt;
+						lalt = hmap.getaltitude(j,mvect.lb.y);
+                                                if(lalt < minalt)
+                                                        minalt = lalt;
+					}
+					for(int j=mvect.lt.y; j < mvect.lb.y + 1; j++){
+						lalt = hmap.getaltitude(mvect.lt.x,j);
+						if(lalt < minalt)
+							minalt = lalt;
+						lalt = hmap.getaltitude(mvect.rt.x,j);
+                                                if(lalt < minalt)
+                                                        minalt = lalt;
+					}
+					printf("minalt: %g\n",lalt);
 					cout << mvect << endl;
 				}
 			}

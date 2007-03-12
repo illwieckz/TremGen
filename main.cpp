@@ -43,7 +43,7 @@
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 
-#define WATERL 1 // Variable qui definit la hauteur des lacs et leur etendu
+#define WATERL 2 // Variable qui definit la hauteur des lacs et leur etendu
 #define WATER(x,y) (water[(x)*ysize+(y)])
 
 #define rad(x) (x*M_PI/180)
@@ -71,6 +71,7 @@ typedef struct tagCUBE{
 	VECTOR2D lb;
 	VECTOR2D rb;
 	char modflag;
+	char borderflag;
 }CUBE; 
 
 int textZ(double z)
@@ -135,23 +136,23 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	//tz=abs(tz);
 	int tdef=0;
 
-//	(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
+	//	(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
 	switch (texture)
 	{
-	case TEXTURE_HINT: /*Les autres faces des hint sont en skip*/
-	tdef=TEXTURE_SKIP;
-	break;
+		case TEXTURE_HINT: /*Les autres faces des hint sont en skip*/
+			tdef=TEXTURE_SKIP;
+			break;
 
-	case TEXTURE_WATER: /*Les autres faces des haut sont en water_caulk*/
-	tdef=TEXTURE_WATER_CAULK;
-	break;
+		case TEXTURE_WATER: /*Les autres faces des haut sont en water_caulk*/
+			tdef=TEXTURE_WATER_CAULK;
+			break;
 
-	default: /* Par defaut caulk*/
-	tdef=TEXTURE_CAULK;
-	
+		default: /* Par defaut caulk*/
+			tdef=TEXTURE_CAULK;
+
 	}
 
-	
+
 
 	//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
 	ret << "{" << endl;
@@ -299,7 +300,6 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 	int alt = (int) (hmap->getaltitude(x,y)*10/max);
 	alt = alt < 9 ? alt:9;
 
-
 	if(from == CENTER){
 		mvect.lt.x = xsize + 1;
 		mvect.lt.y = ysize + 1;
@@ -314,31 +314,40 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 		mvect.rb.y = 0;
 
 		mvect.modflag = 0;
+		mvect.borderflag = 0;
 	}
 
-	if(WATER(x,y) > 0)
-		return mvect;
+	if(WATER(x,y) > 0 || (alt > (level + WATERL))){
+		int a,b;
+		a = b = 1;
+		if((x == 0) || (x == xsize - 1)){
+			mvect.borderflag = 1;
+			a = 0;
+		}
+		if((y == 0) || (y == ysize - 1)){
+			mvect.borderflag = 1;
+			b = 0;
+		}
 
-	if(alt > (level + WATERL)){
 		if(x < mvect.lt.x)
-			mvect.lt.x = x + 1;
+			mvect.lt.x = x + a;
 		if(y < mvect.lt.y)
-			mvect.lt.y = y + 1;
+			mvect.lt.y = y + b;
 
 		if(x > mvect.rb.x)
-			mvect.rb.x = x - 1;
+			mvect.rb.x = x - a;
 		if(y > mvect.rb.y)
-			mvect.rb.y = y - 1;
+			mvect.rb.y = y - b;
 
 		if(x < mvect.lb.x)
-			mvect.lb.x = x + 1;
+			mvect.lb.x = x + a;
 		if(y > mvect.lb.y)
-			mvect.lb.y = y - 1;
+			mvect.lb.y = y - b;
 
 		if(x > mvect.rt.x)
-			mvect.rt.x = x - 1;
+			mvect.rt.x = x - a;
 		if(y < mvect.rt.y)
-			mvect.rt.y = y + 1;
+			mvect.rt.y = y + b;
 
 		if(from != CENTER)
 			mvect.modflag = 1;
@@ -363,21 +372,20 @@ CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int l
 	return mvect;
 }
 
-
 CUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	double max = hmap->getmaxalt();
-//	int ysize = hmap->ysize;
+	//	int ysize = hmap->ysize;
 	CUBE mvect;
 
 	mvect = markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
-/*
-	if(mvect.modflag == 1){
-		WATER(mvect.lt.x,mvect.lt.y) = TOP;
-		WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
-		WATER(mvect.lb.x,mvect.lb.y) = LEFT;
-		WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
-	}
-*/
+	/*
+	   if(mvect.modflag == 1){
+	   WATER(mvect.lt.x,mvect.lt.y) = TOP;
+	   WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
+	   WATER(mvect.lb.x,mvect.lb.y) = LEFT;
+	   WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
+	   }
+	   */
 	return mvect;
 }
 
@@ -385,7 +393,7 @@ string makeWater(AltitudeMap * hmap, int sh){
 	stringstream ret;
 
 	double s = TSIZE;
-sh=sh*255;
+	sh=sh*255;
 	int xsize = hmap->xsize;
 	int ysize = hmap->ysize;
 
@@ -422,27 +430,34 @@ sh=sh*255;
 					   WATER(mvect.rt.x,mvect.rt.y);
 					   WATER(mvect.lb.x,mvect.lb.y);
 					   WATER(mvect.rb.x,mvect.rb.y);
-					Ex : (7,39) (17,39) (7,51) (17,51)
-					*/
-					double minalt=0;
+Ex : (7,39) (17,39) (7,51) (17,51)
+*/
+					double minalt=1.0;
+					double lalt;
 					double depth = hmap->getaltitude(x,y);
-					double a = hmap->getaltitude(mvect.lt.x,mvect.lt.y);
-					double b = hmap->getaltitude(mvect.rt.x,mvect.rt.y);
-					double c = hmap->getaltitude(mvect.lb.x,mvect.lb.y);
-					double d = hmap->getaltitude(mvect.rb.x,mvect.rb.y);
-					if(a < b && a < c && a < d)
-						minalt = a;
-					else if(b < a && b < c && b < d)
-						minalt = b;
-					else if(c < b && c < a && c < d)
-						minalt = c;
-					else if(d < c && d < b && d < a)
-						minalt = d;
 
-					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,depth);
-	   
+					for(int j=mvect.lt.x; j < mvect.rt.x + 1; j++){
+						lalt = hmap->getaltitude(j,mvect.lt.y);
+						if(lalt < minalt)
+							minalt = lalt;
+						lalt = hmap->getaltitude(j,mvect.lb.y);
+						if(lalt < minalt)
+							minalt = lalt;
+					}
+
+					for(int j=mvect.lt.y; j < mvect.lb.y + 1; j++){
+						lalt = hmap->getaltitude(mvect.lt.x,j);
+						if(lalt < minalt)
+							minalt = lalt;
+						lalt = hmap->getaltitude(mvect.rt.x,j);
+						if(lalt < minalt)
+							minalt = lalt;
+					}
+
+					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,minalt - depth);
+
 					ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt-depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
-//					ret  << makeFace(mvect.lb.x*s,mvect.lb.y*s,depth*sh,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+					//					ret  << makeFace(mvect.lb.x*s,mvect.lb.y*s,depth*sh,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
 				}
 			}
 		}
