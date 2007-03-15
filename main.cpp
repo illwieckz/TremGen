@@ -36,8 +36,12 @@
 #define TEXTURE_SKIP (-2)
 #define TEXTURE_CAULK (-1)
 #define TEXTURE_HINT 9
-#define TEXTURE_DIRT 3
-#define TEXTURE_ROCK 4
+#define TEXTURE_TER1 3
+#define TEXTURE_TER2 4
+#define TEXTURE_TER3 5
+#define TEXTURE_TER4 6
+#define TEXTURE_TER5 7
+
 #define TEXTURE_WATER 10 
 
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
@@ -77,16 +81,40 @@ typedef struct tagCUBE{
 int textZ(double z)
 {
 
-	if(abs(z)< 70) //(255*HINC*0.2))
-	{
-		return TEXTURE_DIRT;
-	}else{
-		return TEXTURE_ROCK;
+
+	if(abs(z)<30){
+		return TEXTURE_TER1;
 	}
+
+	if(abs(z)<60){
+		return TEXTURE_TER2;
+	}
+
+	if(abs(z)<110){
+		return TEXTURE_TER3;
+	}
+
+	if(abs(z)<160){
+		return TEXTURE_TER4;
+	}
+
+	/*if(abs(z)< 80) //(255*HINC*0.2))
+	{
+
+	}*/
+		return TEXTURE_TER5;
+	
 }
 
 
 string getTexture(int i){
+
+stringstream end,ret;
+int j=0;
+for(j=0;j<8;j++){
+//end << 20*random() << " ";
+end << 0 << " ";
+}
 	switch(i){
 		case 1:
 			return "example2/skybox 0 0 0 0.5 0.5 0 0 0";
@@ -96,10 +124,21 @@ string getTexture(int i){
 			return "common/hint 0 0 0 0 0 0 0 0";
 		case TEXTURE_SKIP: //dans trem c'est toujours hint
 			return "common/hint 0 0 0 0 0 0 0 0";
-		case TEXTURE_DIRT:
-			return "arkadia/eq2_rock_02 0 0 0 0 0 0 0 0";
-		case TEXTURE_ROCK:
-			return "arkadia/rock_1 0 0 0 0 0 0 0 0";
+		case TEXTURE_TER1:
+			ret << "example2/ter_moss1 ";
+			break;
+		case TEXTURE_TER2:
+			ret << "example2/ter_mud1 ";
+			break;
+		case TEXTURE_TER3:
+			ret << "example2/ter_dirt1 ";
+			break;
+		case TEXTURE_TER4:
+			ret << "example2/ter_rock3 ";
+			break;
+		case TEXTURE_TER5:
+			ret << "example2/ter_rock2 ";
+			break;
 		case TEXTURE_WATER:
 			return "example2/water 0 0 0 0.0 0.0 0 0 0";
 		case TEXTURE_WATER_CAULK:
@@ -108,6 +147,8 @@ string getTexture(int i){
 			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 	}
+	ret << end.str();
+	return ret.str();
 }
 
 /*string makeFace(double x, double y, double z, double tx, double ty, double tz, int texture){
