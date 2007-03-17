@@ -90,9 +90,13 @@ string getTexture(int i){
 		}
 	}
 	switch(i){
-		case 1:
+		case TEXTURE_SKYBOX:
 			return "example2/skybox 0 0 0 0.5 0.5 0 0 0";
-		case 2:case TEXTURE_CAULK:
+		case TEXTURE_ALPHA_50:
+			return "example2/alpha_050 0 0 0 0.5 0.5 0 0 0";
+		case TEXTURE_ALPHA_100:
+			return "example2/alpha_100 0 0 0 0.5 0.5 0 0 0";
+		case TEXTURE_CAULK:
 			return "common/caulk 0 0 0 0 0 0 0 0";
 		case TEXTURE_HINT:
 			return "common/hint 0 0 0 0 0 0 0 0";
@@ -100,15 +104,27 @@ string getTexture(int i){
 			return "common/hint 0 0 0 0 0 0 0 0";
 		case TEXTURE_TER1:
 			ret << "example2/ter_moss1 ";
+		break;
+		case TEXTURE_TER1_2:
+			ret << "example2/ter_moss_mud ";
 			break;
 		case TEXTURE_TER2:
 			ret << "example2/ter_mud1 ";
 			break;
+		case TEXTURE_TER2_3:
+			ret << "example2/ter_mud_dirt ";
+			break;
 		case TEXTURE_TER3:
 			ret << "example2/ter_dirt1 ";
 			break;
+		case TEXTURE_TER3_4:
+			ret << "example2/ter_dirt_srock ";
+			break;
 		case TEXTURE_TER4:
 			ret << "example2/ter_rock3 ";
+			break;
+		case TEXTURE_TER4_5:
+			ret << "example2/ter_srock_rock ";
 			break;
 		case TEXTURE_TER5:
 			ret << "example2/ter_rock2 ";
@@ -229,20 +245,20 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
 
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(2) << endl; // iso-y
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; // iso-x
+			ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 
-			ret << t(x+tx,y+ty,z+tz+dc-10) << t(x,y+ty,z+tz+db-10) << t(x+tx,y,z+tz+da-10) << getTexture(2) << endl; // iso-z
-			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da) << t(x+tx,y,z+tz+da-10) << getTexture(2) << endl; 
+			ret << t(x+tx,y+ty,z+tz+dc-10) << t(x,y+ty,z+tz+db-10) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
+			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; 
 			ret << "}\n";
 
 			ret << "{\n";
 			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; 
+			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; 
 
-			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(2) << endl; // iso-z
-			ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+da+tz-10) << getTexture(2) << endl; // iso-y
-			ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(2) << endl; // iso-x
+			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
+			ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+da+tz-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+			ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 			ret << "}\n";
 
 		}else{ if(dc - da !=db ){
@@ -255,18 +271,23 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 			ret << "//pave" << endl;
 		}
 		ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-		ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(2) << endl; // iso-y
-		ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; // iso-x
+		ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+		ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 
 		//carre 
-		ret << t(x,y,z+tz+ds-10) << t(x+tx,y,z+tz+ds-10) << t(x,y+ty,z+tz+ds-10) << getTexture(2) << endl; // iso-z
+		ret << t(x,y,z+tz+ds-10) << t(x+tx,y,z+tz+ds-10) << t(x,y+ty,z+tz+ds-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
 
-		ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+tz+da-10) << getTexture(2) << endl; // iso-y
-		ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(2) << endl; // iso-x
+		ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+		ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 		ret  <<  "}\n";
 
 		}
 	}
+	/*
+	if(hmap->gettex(xx,yy)>TEXTURE_TER5 && hmap->gettex(xx,yy)<=TEXTURE_TER4_5){
+ret << endl << makeFace(x+tx/2,y+ty/2,z+tz+20,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+    }
+	*/
 	return ret.str();
 }
 
@@ -278,13 +299,13 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	int h = hmap->ysize;
 	double max = (hmap->getmaxalt() +0.5) * 255 + 160 / sh; //bootstrap pour lan
 
-	ret  << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,0,0,0,1,FACE_RIGHT) << endl;
-	ret  << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,0,0,0,1,FACE_REAR) << endl;
+	ret  << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_RIGHT) << endl;
+	ret  << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_REAR) << endl;
 
-	ret  << makeFace((w-1)*s-10+5,0,0,10,(h-1)*s+5,max*sh,0,0,0,1,FACE_LEFT) << endl;
-	ret  << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,1,FACE_FRONT) << endl;
+	ret  << makeFace((w-1)*s-10+5,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_LEFT) << endl;
+	ret  << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_FRONT) << endl;
 
-	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,1,FACE_BOTTOM) << endl;
+	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_SKYBOX,FACE_BOTTOM) << endl;
 	ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
 
 	for(double i=1;i<(w-1)*s;i++){
@@ -499,8 +520,20 @@ string makeGrid(AltitudeMap * hmap, int sh){
 	int h = hmap->ysize;
 
 	for(j=0; j < (h-1); j++)
-		for(i=0; i < (w-1); i++)
+		for(i=0; i < (w-1); i++){
 			ret << endl << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC) << endl;
+	
+	if(hmap->gettex(i,j)>TEXTURE_TER5 && hmap->gettex(i,j)<=TEXTURE_TER4_5)
+	{
+double x=i*TSIZE;
+double y=j*TSIZE;
+double tx,ty;
+tx=ty=TSIZE;
+
+ret << endl << makeFace(x+tx/2,y+ty/2,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+	}
+	}
 	return ret.str();
 }
 

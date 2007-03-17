@@ -3,9 +3,10 @@
 #include <ctime>
 #include "textures.h"
 
+#define AT(wh,x,y) (wh[(x)*ysize+(y)])
 #define ALT(x,y) (map[(x)*ysize+(y)])
 #define ALTD(x,y) (dmap[(x)*ysize+(y)])
-#define TEXM(x,y) (tmap[(x)*ysize+(y)])
+#define TEXM(x,y) (AT(tmap,x,y))
 #define getRnd(X) (double)(X*2 * ((random()+0.0) / (RAND_MAX ) - 0.5))
 #define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
 //pas besion de tester avec 0 c'est le min de ce que renvoi abs 
@@ -151,11 +152,13 @@ int textchooser(double criteria)
 void AltitudeMap::maketextures(void)
 {
 	tmap = new int[xsize*ysize];
+int *	tmap2 = new int[xsize*ysize];
 	for(int x=0; x < xsize; ++x)
 		for(int y=0; y < ysize; ++y){
 		
 		
 			TEXM(x,y) =textchooser( getdiff(x,y));
+			AT(tmap2,x,y)=TEXM(x,y);
 		}
 
 //supression des textures encercles
@@ -177,6 +180,24 @@ void AltitudeMap::maketextures(void)
 			}
 			}
 
+//Gestion des interfaces
+
+        for(int x=1; x < xsize-1; ++x)
+	                for(int y=0; y < ysize; ++y){
+			if(gettex(x-1,y)!=gettex(x+1,y))
+			AT(tmap2,x,y)=gettex(x-1,y)+gettex(x+1,y);
+			}
+
+
+
+
+//copie des res on doit pouvoir faire mieux mais la c'est sûr
+
+        for(int x=0; x < xsize; ++x)
+	                for(int y=0; y < ysize; ++y){
+			TEXM(x,y)=AT(tmap2,x,y);
+			}
+delete [] tmap2;
 }
 
 double AltitudeMap::getmaxalt(void){
