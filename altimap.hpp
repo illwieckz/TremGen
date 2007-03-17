@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include "textures.h"
 
 #define ALT(x,y) (map[(x)*ysize+(y)])
 #define ALTD(x,y) (dmap[(x)*ysize+(y)])

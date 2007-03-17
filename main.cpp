@@ -6,6 +6,8 @@
 #include "altimap.hpp"
 #include "entity.hpp"
 
+#include "textures.h"
+
 #define HINC 10 //5 // Increment de hauteur
 #define TSIZE 150 // Taille d'un dalle
 
@@ -32,17 +34,6 @@
 #define RIGHT 4
 #define LEFT 5
 
-#define TEXTURE_WATER_CAULK (-3)
-#define TEXTURE_SKIP (-2)
-#define TEXTURE_CAULK (-1)
-#define TEXTURE_HINT 9
-#define TEXTURE_TER1 3
-#define TEXTURE_TER2 4
-#define TEXTURE_TER3 5
-#define TEXTURE_TER4 6
-#define TEXTURE_TER5 7
-
-#define TEXTURE_WATER 10 
 
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
@@ -109,12 +100,22 @@ int textZ(double z)
 
 string getTexture(int i){
 
-stringstream end,ret;
-int j=0;
-for(j=0;j<8;j++){
-//end << 20*random() << " ";
-end << 0 << " ";
-}
+	stringstream end,ret;
+	int j=0;
+	for(j=0;j<8;j++){
+		if(j<3 || j>4){
+			if(j<2){ //offsets
+				end << 16*round(5*random()) << " ";
+			}else if(j==2){//rot
+				end << round(360*random()) << " ";
+			}else{ //autres
+
+				end << 20*random() << " ";
+			}
+		}else{
+			end << 0 << " ";
+		}
+	}
 	switch(i){
 		case 1:
 			return "example2/skybox 0 0 0 0.5 0.5 0 0 0";
