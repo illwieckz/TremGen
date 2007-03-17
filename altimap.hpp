@@ -5,6 +5,7 @@
 
 #define ALT(x,y) (map[(x)*ysize+(y)])
 #define ALTD(x,y) (dmap[(x)*ysize+(y)])
+#define TEXM(x,y) (tmap[(x)*ysize+(y)])
 #define getRnd(X) (double)(X*2 * ((random()+0.0) / (RAND_MAX ) - 0.5))
 #define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
 //pas besion de tester avec 0 c'est le min de ce que renvoi abs 
@@ -15,9 +16,10 @@ class AltitudeMap{
 	private:
 		double * map;
 		double * dmap; /*diff map*/
+		int * tmap; /*textures map*/
 
 		void subdiv_private(double coeff, int x1, int y1, int x2, int y2);
-		
+		void maketextures(void);	
 
 	public:
 		int xsize,ysize;
@@ -32,6 +34,10 @@ class AltitudeMap{
 		double getdiff(int x, int y);
 		void makediff(void);
 		/*end diff fct*/
+
+		int  texchooser(double criteria);	
+		int gettex(int x, int y);
+
 		double getmaxalt(void);
 		double getminalt(void);
 
@@ -51,14 +57,19 @@ AltitudeMap::AltitudeMap(int _xsize, int _ysize):xsize(_xsize),ysize(_ysize),sea
 		for(int y=0; y < ysize; ++y)
 			ALT(x,y) = 0.0;
 	dmap=NULL;
+	tmap=NULL;
+
 }
 
 AltitudeMap::~AltitudeMap(void){
 	delete [] map;
 	if(dmap!=NULL)
 	{
-	
 	delete [] dmap;
+	}
+	if(tmap!=NULL)
+	{
+	delete [] tmap;
 	}
 }
 
@@ -94,6 +105,59 @@ void AltitudeMap::makediff(void)
 
 }
 
+
+int textchooser(double criteria)
+{
+
+/** Pour l'instant critere sur la diff */
+	if(abs(criteria)<30){
+		return TEXTURE_TER1;
+	}
+
+	if(abs(criteria)<60){
+		return TEXTURE_TER2;
+	}
+
+	if(abs(criteria)<110){
+		return TEXTURE_TER3;
+	}
+
+	if(abs(criteria)<160){
+		return TEXTURE_TER4;
+	}
+
+	/*if(abs(z)< 80) //(255*HINC*0.2))
+	{
+
+	}*/
+		return TEXTURE_TER5;
+	
+
+
+
+}
+
+
+	int AltitudeMap::gettex(int x, int y){
+	if(tmap==NULL)
+	{
+		maketextures();
+	}
+		if(x < xsize && y < ysize)
+			return TEXM(x,y);
+		return 1000; //defval
+	}
+
+void AltitudeMap::maketextures(void)
+{
+	tmap = new int[xsize*ysize];
+	for(int x=0; x < xsize; ++x)
+		for(int y=0; y < ysize; ++y){
+		
+		
+			TEXM(x,y) =textchooser( getdiff(x,y));
+		}
+}
 
 double AltitudeMap::getmaxalt(void){
 	double max=ALT(0,0);

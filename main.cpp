@@ -69,33 +69,6 @@ typedef struct tagCUBE{
 	char borderflag;
 }CUBE; 
 
-int textZ(double z)
-{
-
-
-	if(abs(z)<30){
-		return TEXTURE_TER1;
-	}
-
-	if(abs(z)<60){
-		return TEXTURE_TER2;
-	}
-
-	if(abs(z)<110){
-		return TEXTURE_TER3;
-	}
-
-	if(abs(z)<160){
-		return TEXTURE_TER4;
-	}
-
-	/*if(abs(z)< 80) //(255*HINC*0.2))
-	{
-
-	}*/
-		return TEXTURE_TER5;
-	
-}
 
 
 string getTexture(int i){
@@ -255,7 +228,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 
 		if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
 
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
+			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(2) << endl; // iso-y
 			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; // iso-x
 
@@ -264,7 +237,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 			ret << "}\n";
 
 			ret << "{\n";
-			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
+			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
 			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; 
 
 			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(2) << endl; // iso-z
@@ -275,13 +248,13 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		}else{ if(dc - da !=db ){
 
 
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
+			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
 		}
 		else{
 
 			ret << "//pave" << endl;
 		}
-		ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(textZ(maxabs(da,db,dc))) << endl; // iso-z
+		ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
 		ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(2) << endl; // iso-y
 		ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(2) << endl; // iso-x
 
