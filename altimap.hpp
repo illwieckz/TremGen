@@ -157,6 +157,26 @@ void AltitudeMap::maketextures(void)
 		
 			TEXM(x,y) =textchooser( getdiff(x,y));
 		}
+
+//supression des textures encercles
+//test non-optimal mais plus simple
+        for(int x=0; x < xsize; ++x)
+	                for(int y=0; y < ysize; ++y){
+			int tcomp=gettex(x-1,y-1);
+			if(	   tcomp==gettex(x-1,y)
+				&& tcomp==gettex(x-1,y+1)
+				&& tcomp==gettex(x,y-1)
+				&& tcomp==gettex(x,y+1)
+				&& tcomp==gettex(x+1,y-1)
+				&& tcomp==gettex(x+1,y)
+				&& tcomp==gettex(x+1,y+1)
+				&& tcomp!=gettex(x,y)
+			)
+			{
+				TEXM(x,y)=tcomp;			
+			}
+			}
+
 }
 
 double AltitudeMap::getmaxalt(void){
