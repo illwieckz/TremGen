@@ -111,27 +111,24 @@ int textchooser(double criteria)
 {
 
 /** Pour l'instant critere sur la diff */
-	if(abs(criteria)<30){
+	if(abs(criteria)<50){
 		return TEXTURE_TER1;
 	}
 
-	if(abs(criteria)<60){
+	if(abs(criteria)<105){
 		return TEXTURE_TER2;
 	}
 
-	if(abs(criteria)<110){
+	if(abs(criteria)<160){
 		return TEXTURE_TER3;
 	}
 
-	if(abs(criteria)<160){
 		return TEXTURE_TER4;
-	}
 
 	/*if(abs(z)< 80) //(255*HINC*0.2))
 	{
 
 	}*/
-		return TEXTURE_TER5;
 	
 
 
@@ -152,13 +149,13 @@ int textchooser(double criteria)
 void AltitudeMap::maketextures(void)
 {
 	tmap = new int[xsize*ysize];
-int *	tmap2 = new int[xsize*ysize];
+//int *	tmap2 = new int[xsize*ysize];
 	for(int x=0; x < xsize; ++x)
 		for(int y=0; y < ysize; ++y){
 		
 		
 			TEXM(x,y) =textchooser( getdiff(x,y));
-			AT(tmap2,x,y)=TEXM(x,y);
+			//AT(tmap2,x,y)=TEXM(x,y);
 		}
 
 //supression des textures encercles
@@ -179,7 +176,7 @@ int *	tmap2 = new int[xsize*ysize];
 				TEXM(x,y)=tcomp;			
 			}
 			}
-
+/*
 //Gestion des interfaces
 
         for(int x=1; x < xsize-1; ++x)
@@ -198,6 +195,8 @@ int *	tmap2 = new int[xsize*ysize];
 			TEXM(x,y)=AT(tmap2,x,y);
 			}
 delete [] tmap2;
+*/
+
 }
 
 double AltitudeMap::getmaxalt(void){

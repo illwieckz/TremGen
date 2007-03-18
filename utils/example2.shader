@@ -76,7 +76,7 @@ textures/example2/ter_moss_mud
 }
 
 
-textures/example2/ter_mud_dirt
+textures/example2/ter_dirt_mud
 {
 
 	q3map_nonplanar
@@ -84,12 +84,12 @@ textures/example2/ter_mud_dirt
 	q3map_shadeangle 180
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
+	{
+	map textures/example2/ter_dirt1.tga
+	rgbGen identity
+	}
 	{
 	map textures/example2/ter_mud1.tga
-	rgbGen identity
-	}
-	{
-	map textures/example2/ter_dirt1.tga
 	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
 	alphaFunc GE128
 	rgbGen identity
@@ -103,7 +103,7 @@ textures/example2/ter_mud_dirt
 }
 
 
-textures/example2/ter_dirt_srock
+textures/example2/ter_srock_mud
 {
 
 	qer_editorimage textures/example2/ter_mossmud.tga
@@ -112,11 +112,11 @@ textures/example2/ter_dirt_srock
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
 	{
-	map textures/example2/ter_dirt1.tga
+	map textures/example2/ter_rock3.tga
 	rgbGen identity
 	}
 	{
-	map textures/example2/ter_rock3.tga
+	map textures/example2/ter_mud1.tga
 	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
 	alphaFunc GE128
 	rgbGen identity
@@ -130,7 +130,7 @@ textures/example2/ter_dirt_srock
 }
 
 
-textures/example2/ter_srock_rock
+textures/example2/ter_rock_mud
 {
 
 	qer_editorimage textures/example2/ter_mossmud.tga
@@ -138,12 +138,12 @@ textures/example2/ter_srock_rock
 	q3map_shadeangle 180
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
-	{
-	map textures/example2/ter_rock3.tga
-	rgbGen identity
-	}
 	{
 	map textures/example2/ter_rock2.tga
+	rgbGen identity
+	}
+	{
+	map textures/example2/ter_mud1.tga
 	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
 	alphaFunc GE128
 	rgbGen identity

@@ -103,31 +103,16 @@ string getTexture(int i){
 		case TEXTURE_SKIP: //dans trem c'est toujours hint
 			return "common/hint 0 0 0 0 0 0 0 0";
 		case TEXTURE_TER1:
-			ret << "example2/ter_moss1 ";
-		break;
-		case TEXTURE_TER1_2:
 			ret << "example2/ter_moss_mud ";
-			break;
+		break;
 		case TEXTURE_TER2:
-			ret << "example2/ter_mud1 ";
-			break;
-		case TEXTURE_TER2_3:
-			ret << "example2/ter_mud_dirt ";
+			ret << "example2/ter_dirt_mud ";
 			break;
 		case TEXTURE_TER3:
-			ret << "example2/ter_dirt1 ";
-			break;
-		case TEXTURE_TER3_4:
-			ret << "example2/ter_dirt_srock ";
+			ret << "example2/ter_srock_mud ";
 			break;
 		case TEXTURE_TER4:
-			ret << "example2/ter_rock3 ";
-			break;
-		case TEXTURE_TER4_5:
-			ret << "example2/ter_srock_rock ";
-			break;
-		case TEXTURE_TER5:
-			ret << "example2/ter_rock2 ";
+			ret << "example2/ter_rock_mud ";
 			break;
 		case TEXTURE_WATER:
 			return "example2/water 0 0 0 0.0 0.0 0 0 0";
@@ -522,7 +507,7 @@ string makeGrid(AltitudeMap * hmap, int sh){
 	for(j=0; j < (h-1); j++)
 		for(i=0; i < (w-1); i++){
 			ret << endl << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC) << endl;
-	
+	/*
 	if(hmap->gettex(i,j)>TEXTURE_TER5 && hmap->gettex(i,j)<=TEXTURE_TER4_5)
 	{
 double x=i*TSIZE;
@@ -532,7 +517,7 @@ tx=ty=TSIZE;
 
 ret << endl << makeFace(x+tx/2,y+ty/2,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
 //ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	}
+	}*/
 	}
 	return ret.str();
 }
