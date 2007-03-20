@@ -175,14 +175,14 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
 	ret << "{" << endl;
 
-	ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face == FACE_UP ? texture: tdef)) << 
+	ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face & FACE_UP ? texture: tdef)) << 
 		endl; // iso-z
-	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x-dx,y+ty,z+tz) << t(x+tx-dx,y+ty+dy,z) << getTexture((face == FACE_REAR ? texture: tdef)) << endl; // iso-y
-	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x+tx-dx,y+ty+dy,z) << t(x+tx,y+dy,z+tz) << getTexture((face == FACE_RIGHT ? texture: tdef)) << endl; // iso-x
+	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x-dx,y+ty,z+tz) << t(x+tx-dx,y+ty+dy,z) << getTexture((face & FACE_REAR ? texture: tdef)) << endl; // iso-y
+	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x+tx-dx,y+ty+dy,z) << t(x+tx,y+dy,z+tz) << getTexture((face & FACE_RIGHT ? texture: tdef)) << endl; // iso-x
 
-	ret << t(x,y,z) << t(x+tx,y+dy,z+dz) << t(x-dx,y+ty,z) << getTexture((face == FACE_BOTTOM ? texture: tdef)) << endl; // iso-z
-	ret << t(x,y,z) << t(x,y,z+tz) << t(x+tx,y+dy,z) << getTexture((face == FACE_FRONT ? texture: tdef)) << endl; // iso-y
-	ret << t(x,y,z) << t(x-dx,y+ty,z) << t(x,y,z+tz) << getTexture((face == FACE_LEFT ? texture: tdef)) << endl; // iso-x
+	ret << t(x,y,z) << t(x+tx,y+dy,z+dz) << t(x-dx,y+ty,z) << getTexture((face & FACE_BOTTOM ? texture: tdef)) << endl; // iso-z
+	ret << t(x,y,z) << t(x,y,z+tz) << t(x+tx,y+dy,z) << getTexture((face & FACE_FRONT ? texture: tdef)) << endl; // iso-y
+	ret << t(x,y,z) << t(x-dx,y+ty,z) << t(x,y,z+tz) << getTexture((face & FACE_LEFT ? texture: tdef)) << endl; // iso-x
 	ret << "}" << endl;
 	return ret.str();
 }
@@ -513,17 +513,75 @@ string makeGrid(AltitudeMap * hmap, int sh){
 	for(j=0; j < (h-1); j++)
 		for(i=0; i < (w-1); i++){
 			ret << endl << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC) << endl;
-	/*
-	if(hmap->gettex(i,j)>TEXTURE_TER5 && hmap->gettex(i,j)<=TEXTURE_TER4_5)
+	
+	if(hmap->gettex(i,j)!= hmap->gettex(i,j+1) )
 	{
 double x=i*TSIZE;
 double y=j*TSIZE;
 double tx,ty;
 tx=ty=TSIZE;
 
-ret << endl << makeFace(x+tx/2,y+ty/2,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+ret << endl << makeFace(x+tx-10,y+ty/2,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
 //ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	}*/
+	}
+	
+	
+	if(hmap->gettex(i+1,j)!= hmap->gettex(i,j) )
+	{
+double x=i*TSIZE;
+double y=j*TSIZE;
+double tx,ty;
+tx=ty=TSIZE;
+
+ret << endl << makeFace(x+tx/2,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+	}
+	
+/*	
+	if(hmap->gettex(i,j)!= hmap->gettex(i-1,j) )
+	{
+double x=i*TSIZE;
+double y=j*TSIZE;
+double tx,ty;
+tx=ty=TSIZE;
+
+ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+	}
+	
+	
+
+	if(hmap->gettex(i,j)!= hmap->gettex(i,-1) )
+	{
+double x=i*TSIZE;
+double y=j*TSIZE;
+double tx,ty;
+tx=ty=TSIZE;
+
+ret << endl << makeFace(x,y+ty/2,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+	}
+	
+	
+	
+*/	
+	
+
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	}
 	return ret.str();
 }
