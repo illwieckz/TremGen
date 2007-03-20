@@ -68,7 +68,6 @@ typedef struct tagWATERCUBE{
 
 	double depth;	
 	char modflag;
-	char borderflag;
 }WATERCUBE; 
 
 
@@ -340,23 +339,18 @@ WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, 
 		mvect.depth = 1;
 
 		mvect.modflag = 0;
-		mvect.borderflag = 0;
 	}
 
 	if(mvect.depth > hmap->getaltitude(x,y))
 		mvect.depth = hmap->getaltitude(x,y);
 
 	if(WATER(x,y) > 0 || (alt > (level + WATERL))){
-		int a,b;
-		a = b = 1;
-		if((x == 0) || (x == xsize - 1)){
-			mvect.borderflag = 1;
+		int a,b; a = b = 1;
+
+		if((x == 0) || (x == xsize - 1))
 			a = 0;
-		}
-		if((y == 0) || (y == ysize - 1)){
-			mvect.borderflag = 1;
+		if((y == 0) || (y == ysize - 1))
 			b = 0;
-		}
 
 		if(x < mvect.lt.x)
 			mvect.lt.x = x + a;
@@ -403,18 +397,9 @@ WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, 
 
 WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
 	double max = hmap->getmaxalt();
-	//	int ysize = hmap->ysize;
 	WATERCUBE mvect;
-	mvect = markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
-	/*
-	   if(mvect.modflag == 1){
-	   WATER(mvect.lt.x,mvect.lt.y) = TOP;
-	   WATER(mvect.rt.x,mvect.rt.y) = RIGHT;
-	   WATER(mvect.lb.x,mvect.lb.y) = LEFT;
-	   WATER(mvect.rb.x,mvect.rb.y) = BOTTOM;
-	   }
-	   */
-	return mvect;
+
+	return markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
 }
 
 string makeWater(AltitudeMap * hmap, int sh){
@@ -453,13 +438,6 @@ string makeWater(AltitudeMap * hmap, int sh){
 			if(alt == min){
 				mvect = markAsWater(&(*hmap),water,x,y,alt);
 				if(mvect.modflag == 1){
-					/*
-					   WATER(mvect.lt.x,mvect.lt.y);
-					   WATER(mvect.rt.x,mvect.rt.y);
-					   WATER(mvect.lb.x,mvect.lb.y);
-					   WATER(mvect.rb.x,mvect.rb.y);
-						Ex : (7,39) (17,39) (7,51) (17,51)
-					*/
 					double minalt=1.0;
 					double lalt;
 
@@ -484,21 +462,10 @@ string makeWater(AltitudeMap * hmap, int sh){
 					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,minalt - mvect.depth);
 
 					ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
-					//					ret  << makeFace(mvect.lb.x*s,mvect.lb.y*s,mvect.depth*sh,(mvect.rt.x-mvect.lb.x)*s,(mvect.lb.y-mvect.lt.y)*s,minalt*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
 				}
 			}
 		}
 	}
-	/*
-	   ret  << makeFace(-3,0,0,10,(ysize-1)*s+5,max*sh,0,0,0,1,FACE_RIGHT) << endl;
-	   ret  << makeFace(0,-3,0,(xsize-1)*s+5,10,max*sh,0,0,0,1,FACE_REAR) << endl;
-
-	   ret  << makeFace((xsize-1)*s-10+5,0,0,10,(ysize-1)*s+5,max*sh,0,0,0,1,FACE_LEFT) << endl;
-	   ret  << makeFace(0,(ysize-1)*s-5,0,(xsize-1)*s+5,10,max*sh,0,0,0,1,FACE_FRONT) << endl;
-
-	   ret  << makeFace(-3,-3,sh*max-10,(xsize-1)*s+5,(ysize-1)*s+5,16,0,0,0,1,FACE_BOTTOM) << endl;
-	   ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(xsize-1)*s+5,(ysize-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
-	   */
 
 	delete [] water;
 	return ret.str();
