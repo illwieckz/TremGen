@@ -11,7 +11,7 @@
 #define HINC 10 //5 // Increment de hauteur
 #define TSIZE 150 // Taille d'un dalle
 
-#define MAPSIZE 50
+#define MAPSIZE 20
 
 #define t(a,b,c)  "( " << round(a) << " " << round(b) << " " << round(c) << " ) "
 
@@ -95,6 +95,8 @@ string getTexture(int i){
 			return "example2/skybox 0 0 0 0.5 0.5 0 0 0";
 		case TEXTURE_ALPHA_50:
 			return "example2/alpha_050 0 0 0 0.5 0.5 0 0 0";
+		case TEXTURE_ALPHA_0:
+			return "example2/alpha_0 0 0 0 0.5 0.5 0 0 0";
 		case TEXTURE_ALPHA_100:
 			return "example2/alpha_100 0 0 0 0.5 0.5 0 0 0";
 		case TEXTURE_CAULK:
@@ -480,6 +482,18 @@ string makeGrid(AltitudeMap * hmap, int sh){
 	for(j=0; j < (h-1); j++)
 		for(i=0; i < (w-1); i++){
 			ret << endl << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC) << endl;
+	
+	if(i<1||j<0 )
+	{
+double x=i*TSIZE;
+double y=j*TSIZE;
+double tx,ty;
+tx=ty=TSIZE;
+
+ret << endl << makeFace(x+tx-10,y+ty/2,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_0,FACE_ALL) << endl ;
+//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+	}
+	
 	
 	if(hmap->gettex(i,j)!= hmap->gettex(i,j+1) )
 	{

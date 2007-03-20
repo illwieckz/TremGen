@@ -176,6 +176,16 @@ textures/example2/alpha_100      // Perfect mix of both Primary + Secondary
         qer_trans 0.75
 }
 
+textures/example2/alpha_0      // Perfect mix of both Primary + Secondary
+{
+        q3map_alphaMod volume
+        q3map_alphaMod set 0.0
+        surfaceparm nodraw
+        surfaceparm nonsolid
+        surfaceparm trans
+        qer_trans 0.75
+}
+
 
 textures/system/caulk_water 
 { 
