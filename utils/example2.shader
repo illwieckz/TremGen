@@ -10,45 +10,42 @@ textures/example2/skybox
 	skyparms env/example2/mars - -
 }
 
-textures/atcs/rockground_grass
+textures/example2/rockground_grass
 {
-	q3map_nonplanar
-	q3map_shadeangle 180
-	qer_editorimage textures/atcs/rockground.tga 
+        q3map_nonplanar
+        q3map_shadeangle 180
+        qer_editorimage textures/atcs/rockground.tga
 
-	q3map_surfaceModel models/mapobjects/example2/grass1.md3 48 0.125 0.5 2 0 90 1
-	{
-		map $lightmap
-		rgbGen identity
-	}
+        q3map_surfaceModel models/mapobjects/multiplant/multiplant_b.md3 128 0.1 0.05 0.25 0 360 1
         {
-		map textures/atcs/rockground.tga
-		blendFunc filter
-	}
-}
-
-ctftrunk
-{
+                map $lightmap
+                rgbGen identity
+        }
 	{
-                map models/mapobjects/example2/ctftree.tga
-                rgbGen Vertex
+                map textures/atcs/rockground.tga
+                blendFunc filter
         }
 }
 
-ctfleaves
-{
-        cull disable
-        //deformVertexes wave 3 sin 0 1 0 .5
-        deformVertexes bulge 3 3 .8
-        nopicmip
-        surfaceparm pointlight
+textures/example2/force_field_s
         {
-                map models/mapobjects/example2/ctftree.tga
-                alphaFunc GE128
-                rgbGen vertex
+        qer_editorimage textures/example2/force_field_gtk.tga
+        surfaceparm trans
+        surfaceparm nomarks
+        surfaceparm nolightmap
+        cull none
+        {
+                map textures/example2/force_field.tga
+                tcMod Scroll .1 0
+                blendFunc add
+        }
+        {
+                map textures/example2/force_grid.tga
+                tcMod Scroll -.01 0
+                blendFunc add
+                rgbgen wave sin .2 .2 0 .4
         }
 }
-
 
 textures/example2/ter_moss_mud
 {
