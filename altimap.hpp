@@ -11,6 +11,8 @@
 #define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
 //pas besion de tester avec 0 c'est le min de ce que renvoi abs 
 
+#define BORDERFACT (1.2)
+
 using namespace std;
 
 class AltitudeMap{
@@ -52,6 +54,8 @@ class AltitudeMap{
 AltitudeMap::AltitudeMap(int _xsize, int _ysize):xsize(_xsize),ysize(_ysize),sealevel(0.0){
 	srandom(time(NULL));
 
+	xsize+=3;
+	ysize+=3;
 	map = new double[xsize*ysize];
 
 	for(int x=0; x < xsize; ++x)
@@ -224,14 +228,102 @@ void AltitudeMap::subdivision(double coeff, double lt, double rt, double lb, dou
 
 	srand(time(NULL));
 
-	subdiv_private(coeff,0,0,xsize-1,ysize-1);
+	subdiv_private(coeff,3,3,xsize-4,ysize-4);
 	for(int x=0; x < xsize; ++x)
 		for(int y=0; y < ysize; ++y){
 			ALT(x,y) += 0.5;
 			if(ALT(x,y) > 1.0) ALT(x,y) = 1.0;
 			if(ALT(x,y) < 0.0) ALT(x,y) = 0.0;
 		}
+//bord
+	for(int x=0; x < xsize; ++x){
+		for(int y=0; y < ysize; ++y){
+			if(x>(xsize-4))
+			{
+				ALT(x,y)=BORDERFACT*ALT(x-1,y);
+			}
+
+
+			if(y>(ysize-4))
+			{
+
+				ALT(x,y)=BORDERFACT*ALT(x,y-1);
+			}
+		}
+	}
+
+	
+	for(int x=xsize-1; x >= 0; --x){
+		for(int y=ysize-1; y >=0 ; --y){
+			if(x<3)
+			{
+				ALT(x,y)=BORDERFACT*ALT(x+1,y);
+			}
+
+
+			if(y<3)
+			{
+
+				ALT(x,y)=BORDERFACT*ALT(x,y+1);
+			}
+		}
+	}
+
+//coins
+
+	for(int x=0; x < xsize; ++x){
+		for(int y=0; y < ysize; ++y){
+		float X=x-xsize/2.0;
+		float Y=y-ysize/2.0;
+			if(X==Y || X==-Y )
+			{
+			if(x>(xsize-4))
+			{
+			ALT(x,y)=BORDERFACT*ALT(x-1,y-1);
+			}
+
+			}
+
+		}
+	}
+
+	for(int x=xsize-1; x >= 0; --x){
+		for(int y=ysize-1; y >=0 ; --y){
+		float X=x-xsize/2.0;
+		float Y=y-ysize/2.0;
+			if(x==y || X==-Y )
+			{
+			if(x<3)
+			{
+			ALT(x,y)=BORDERFACT*ALT(x+1,y+1);
+			}
+
+			}
+		}
+	}
+
+
+	for(int x=0; x < xsize; ++x){
+		for(int y=0; y < ysize; ++y){
+
+		float X=x-xsize/2.0;
+		float Y=y-ysize/2.0;
+	if((x<3 || x>(xsize-4)) && ( y<3 || y>(ysize-4)) && X!=Y && X!=-Y)
+			{
+		if(X<Y && Y>-X)
+		{//horiz
+//		ALT(x,y)=ALT(y,y)+ALT(,y)
+		}else
+		{//vert
+		
+		}
+			}
+		}
+	}
+//renormalization	
+	normalize();
 }
+
 
 void AltitudeMap::subdiv_private(double coeff, int x1, int y1, int x2, int y2){
 
