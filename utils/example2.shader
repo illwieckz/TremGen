@@ -13,7 +13,7 @@ textures/example2/skybox
 textures/example2/rockground_grass
 {
         q3map_nonplanar
-        q3map_shadeangle 180
+        q3map_shadeAngle 120
         qer_editorimage textures/atcs/rockground.tga
 
         q3map_surfaceModel models/mapobjects/multiplant/multiplant_b.md3 128 0.1 0.05 0.25 0 360 1
@@ -51,7 +51,9 @@ textures/example2/ter_moss_mud
 {
 	qer_editorimage textures/example2/ter_mossmud.tga
 	q3map_nonplanar
-	q3map_shadeangle 180
+	q3map_shadeAngle 120
+	q3map_lightmapMergable
+	q3map_terrain
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
 	{
@@ -78,7 +80,9 @@ textures/example2/ter_dirt_mud
 
 	q3map_nonplanar
 	qer_editorimage textures/example2/ter_mossmud.tga
-	q3map_shadeangle 180
+	q3map_shadeAngle 120
+	q3map_lightmapMergable
+	q3map_terrain
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
 	{
@@ -105,7 +109,9 @@ textures/example2/ter_srock_mud
 
 	qer_editorimage textures/example2/ter_mossmud.tga
 	q3map_nonplanar
-	q3map_shadeangle 180
+	q3map_terrain
+	q3map_shadeAngle 120
+	q3map_lightmapMergable
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
 	{
@@ -132,7 +138,9 @@ textures/example2/ter_rock_mud
 
 	qer_editorimage textures/example2/ter_mossmud.tga
 	q3map_nonplanar
-	q3map_shadeangle 180
+	q3map_terrain
+	q3map_lightmapMergable
+	q3map_shadeAngle 120
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
 	{
@@ -156,7 +164,7 @@ textures/example2/ter_rock_mud
 textures/example2/alpha_050      // Perfect mix of both Primary + Secondary
 {
         q3map_alphaMod volume
-        q3map_alphaMod set 0.50
+        q3map_alphaMod set 0.5
         surfaceparm nodraw
         surfaceparm nonsolid
         surfaceparm trans
@@ -166,7 +174,7 @@ textures/example2/alpha_050      // Perfect mix of both Primary + Secondary
 textures/example2/alpha_100      // Perfect mix of both Primary + Secondary
 {
         q3map_alphaMod volume
-        q3map_alphaMod set 1.00
+        q3map_alphaMod set 1.0
         surfaceparm nodraw
         surfaceparm nonsolid
         surfaceparm trans
