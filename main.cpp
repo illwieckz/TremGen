@@ -9,10 +9,10 @@
 #include "textures.h"
 
 #define HINC 10 //5 // Increment de hauteur
-#define TSIZE 150 // Taille d'un dalle
+#define TSIZE 300 // Taille d'un dalle
 
 //#define MAPSIZE 20 //2-3h to compil
-#define MAPSIZE 50
+#define MAPSIZE 25
 
 #define t(a,b,c)  "( " << round(a) << " " << round(b) << " " << round(c) << " ) "
 
