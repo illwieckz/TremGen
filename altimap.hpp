@@ -11,7 +11,7 @@
 #define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
 //pas besion de tester avec 0 c'est le min de ce que renvoi abs 
 
-#define BORDERFACT (1.2)
+#define BORDERFACT (1.4)
 
 using namespace std;
 
@@ -310,12 +310,48 @@ void AltitudeMap::subdivision(double coeff, double lt, double rt, double lb, dou
 		float Y=y-ysize/2.0;
 	if((x<3 || x>(xsize-4)) && ( y<3 || y>(ysize-4)) && X!=Y && X!=-Y)
 			{
+//			fprintf(stderr,"%d %d\n",x,y);
 		if(X<Y && Y>-X)
 		{//horiz
-//		ALT(x,y)=ALT(y,y)+ALT(,y)
+		int in=3-y+1;
+		float c1=(3-x)/3.0;
+		if(y>ysize/2.0)
+		{
+		in=-(3-(ysize-y));
+
+		}
+
+		if(x>xsize/2.0){
+		c1=(x-(xsize-3))/3.0;
+		}
+		float c2=1.0-c1;
+		
+//			fprintf(stderr,"%f %f %f %f\n",c1,ALT(y,y),c2,ALT((y+in),y));
+		ALT(x,y)=c2*ALT(y,y)+c1*ALT((y+in),y);
 		}else
 		{//vert
 		
+		int in=3-x+1;
+		float c1=(3-y)/3.0;
+		if(x>xsize/2.0)
+		{
+		in=-(3-(xsize-x));
+
+		}
+
+		if(y>ysize/2.0){
+		c1=(y-(ysize-3))/3.0;
+		}
+		float c2=1.0-c1;
+		
+//			fprintf(stderr,"%f %f %f %f\n",c1,ALT(y,y),c2,ALT((y+in),y));
+		ALT(x,y)=c2*ALT(x,x)+c1*ALT(x,(x+in));
+
+
+
+
+
+
 		}
 			}
 		}

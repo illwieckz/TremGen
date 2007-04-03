@@ -12,7 +12,7 @@
 #define TSIZE 150 // Taille d'un dalle
 
 //#define MAPSIZE 20 //2-3h to compil
-#define MAPSIZE 10
+#define MAPSIZE 50
 
 #define t(a,b,c)  "( " << round(a) << " " << round(b) << " " << round(c) << " ) "
 
