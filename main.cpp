@@ -193,7 +193,7 @@ string getHeader(int xsize, int ysize){
 	stringstream ret;
 	ret << "//entity 0\n";
 	ret << "{\n\"classname\" \"worldspawn\"\n";
-	//	ret << "\"_blocksize\" \"16384 16384 16384\"\n"; //useless
+	ret << "\"_blocksize\" \"16384 16384 16384\"\n"; //seemingly useless
 	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << "\"\n";
 
 	return ret.str();
@@ -286,7 +286,7 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	double s = TSIZE;
 	int w = hmap->xsize;
 	int h = hmap->ysize;
-	double max = (hmap->getmaxalt() +0.5) * 255 + 160 / sh; //bootstrap pour lan
+	double max = (hmap->getmaxalt() ) * 255 + 160 / sh; //+0.5 (dans axalt)bon bootstrap pour lan
 
 	ret  << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_RIGHT) << endl;
 	ret  << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_REAR) << endl;
@@ -295,13 +295,14 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	ret  << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_FRONT) << endl;
 
 	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_SKYBOX,FACE_BOTTOM) << endl;
-	ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
-
+/*
+ ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+*//*
 	for(double i=1;i<(w-1)*s;i++){
 
 		if((int)round(i)%500==0)
 		{
-			ret << 	makeFace(i,-3,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_HINT,FACE_RIGHT) << endl;
+			ret << 	makeFace(i,-3,0,10,(h-1)*s+5,max*sh-160,0,0,0,TEXTURE_HINT,FACE_RIGHT) << endl;
 		}
 
 	}
@@ -310,11 +311,14 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 
 		if((int)round(i)%500==0)
 		{
-			ret <<	makeFace(0,i,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_HINT,FACE_FRONT) << endl;
+			ret <<	makeFace(0,i,0,(w-1)*s+5,10,max*sh-160,0,0,0,TEXTURE_HINT,FACE_FRONT) << endl;
 		}
 
-	}
-
+	} */
+for(double i=10+hmap->getminalt()*255;i<max;i+=40){
+//fprintf(stderr,"%f %f\n",i,max);
+ ret  << makeFace(-3,-3,i*sh,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+}
 	return ret.str();
 }
 
