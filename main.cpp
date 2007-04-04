@@ -625,10 +625,18 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",300,300,max*HINC));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
 
-	
-	egp->misc.entityAdd(Entity("misc_model",200,200,max*HINC));
-	if((etmp = egp->misc.entityAt(-1)) != NULL)
-		etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
+
+	for(int i=0; i < 10; i++){
+		int lx,ly;
+		do{
+			lx = (int) round(hmap->xsize*random());
+			ly = (int) round(hmap->ysize*random());
+		}while(hmap->getwater(lx,ly) != 0);
+		
+		egp->misc.entityAdd(Entity("misc_model",lx*TSIZE,ly*TSIZE, hmap->getaltitude(lx,ly) * 255 * HINC));
+		if((etmp = egp->misc.entityAt(-1)) != NULL)
+			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
+	}
 	
 
 }
