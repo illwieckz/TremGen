@@ -631,11 +631,11 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 		do{
 			lx = (int) round(hmap->xsize*random());
 			ly = (int) round(hmap->ysize*random());
-		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER);
+		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0);
 
 		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
 		
-		egp->misc.entityAdd(Entity("misc_model",lx*TSIZE,ly*TSIZE, hmap->getaltitude(lx,ly) * 255 * HINC));
+		egp->misc.entityAdd(Entity("misc_model",lx*TSIZE,ly*TSIZE, hmap->getaltitude(lx,ly) * 255 * HINC+40));
 		if((etmp = egp->misc.entityAt(-1)) != NULL)
 			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
 	}
