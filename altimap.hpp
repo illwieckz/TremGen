@@ -43,7 +43,7 @@ class AltitudeMap{
 		int  texchooser(double criteria);	
 		int gettex(int x, int y);
 
-		void setwater(int x, int y);
+		void setwater(int x, int y, char level);
 		char getwater(int x, int y);
 
 		double getmaxalt(void);
@@ -116,9 +116,9 @@ void AltitudeMap::makediff(void)
 
 }
 
-void AltitudeMap::setwater(int x, int y){
+void AltitudeMap::setwater(int x, int y, char level){
 	if(x < xsize && y < ysize)
-		IWATER(x,y) = 1;
+		IWATER(x,y) = level;
 }
 
 char AltitudeMap::getwater(int x, int y){

@@ -40,7 +40,7 @@
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 
 #define WATERL 2 // Variable qui definit la hauteur des lacs et leur etendu
-#define WATER(x,y) (water[(x)*ysize+(y)])
+//#define WATER(x,y) (water[(x)*ysize+(y)])
 
 #define rad(x) (x*M_PI/180)
 #define deg(x) (x*180/M_PI)
@@ -322,7 +322,7 @@ for(double i=10+hmap->getminalt()*255;i<max;i+=40){
 	return ret.str();
 }
 
-WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, int level, double max, WATERCUBE mvect){
+WATERCUBE markAsWater(AltitudeMap * hmap, int x, int y, int from, int level, double max, WATERCUBE mvect){
 	int xsize = hmap->xsize;
 	int ysize = hmap->ysize;
 
@@ -351,7 +351,7 @@ WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, 
 	if(mvect.depth > hmap->getaltitude(x,y))
 		mvect.depth = hmap->getaltitude(x,y);
 
-	if(WATER(x,y) > 0 || (alt > (level + WATERL))){
+	if(hmap->getwater(x,y) > 0 || (alt > (level + WATERL))){
 		int a,b; a = b = 1;
 
 		if((x == 0) || (x == xsize - 1))
@@ -386,30 +386,28 @@ WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, 
 	}
 
 	if(from == CENTER){
-		WATER(x,y) = CENTER;
-		hmap->setwater(x,y);
+		hmap->setwater(x,y,CENTER);
 	}else{
-		WATER(x,y) = TWATER;
-		hmap->setwater(x,y);
+		hmap->setwater(x,y,TWATER);
 	}
 
 	if(x > 0 && from != LEFT)
-		mvect = markAsWater(hmap,water,x-1,y,RIGHT,level,max,mvect);
+		mvect = markAsWater(hmap,x-1,y,RIGHT,level,max,mvect);
 	if(y > 0 && from != TOP)
-		mvect = markAsWater(hmap,water,x,y-1,BOTTOM,level,max,mvect);
+		mvect = markAsWater(hmap,x,y-1,BOTTOM,level,max,mvect);
 	if(x < xsize - 1 && from != RIGHT)
-		mvect = markAsWater(hmap,water,x+1,y,LEFT,level,max,mvect);
+		mvect = markAsWater(hmap,x+1,y,LEFT,level,max,mvect);
 	if(y < ysize - 1 && from != BOTTOM)
-		mvect = markAsWater(hmap,water,x,y+1,TOP,level,max, mvect);
+		mvect = markAsWater(hmap,x,y+1,TOP,level,max, mvect);
 
 	return mvect;
 }
 
-WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int level){
+WATERCUBE markAsWater(AltitudeMap * hmap, int x, int y, int level){
 	double max = hmap->getmaxalt();
 	WATERCUBE mvect;
 
-	return markAsWater(&(*hmap),water,x,y,CENTER,level,max,mvect);
+	return markAsWater(&(*hmap),x,y,CENTER,level,max,mvect);
 }
 
 string makeWater(AltitudeMap * hmap, int sh){
@@ -427,11 +425,6 @@ string makeWater(AltitudeMap * hmap, int sh){
 
 	WATERCUBE mvect;
 
-	char * water = new char[xsize*ysize];
-	for(int x=0;x<xsize;x++)
-		for(int y=0;y<ysize;y++)
-			WATER(x,y) = 0;
-
 	for(int x=xcrop; x < xsize - (xcrop/2); ++x){
 		for(int y=ycrop; y < ysize - (ycrop/2); ++y){
 			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
@@ -446,7 +439,7 @@ string makeWater(AltitudeMap * hmap, int sh){
 			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
 			alt = alt < 9 ? alt:9;
 			if(alt == min){
-				mvect = markAsWater(&(*hmap),water,x,y,alt);
+				mvect = markAsWater(&(*hmap),x,y,alt);
 				if(mvect.modflag == 1){
 					double minalt=1.0;
 					double lalt;
@@ -480,16 +473,29 @@ string makeWater(AltitudeMap * hmap, int sh){
 	for(int y=0; y < ysize; ++y){
                 fprintf(stderr,"%2d ",y);
                 for(int x=0; x < xsize; ++x){
-			if(hmap->getwater(x,y) == 1)
-				fprintf(stderr,BLUE"0"NORM);
-			else 
-				fprintf(stderr,"0");
+			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
+			alt = alt < 9 ? alt:9;
+			switch(hmap->getwater(x,y)){
+                                case CENTER:
+                                        fprintf(stderr,RED"%d"NORM,alt);
+                                        break;
+                                case TWATER:
+                                        fprintf(stderr,BLUE"%d"NORM,alt);
+                                        break;
+                                case TOP:
+                                case BOTTOM:
+                                case LEFT:
+                                case RIGHT:
+                                        fprintf(stderr,GREEN"%d"NORM,alt);
+                                        break;
+                                default:
+                                        fprintf(stderr,"%d",alt);
+                        }
+
                 }
 		fprintf(stderr,"\n");
         }
 	
-
-	delete [] water;
 	return ret.str();
 }
 
