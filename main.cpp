@@ -626,12 +626,14 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
 
 
-	for(int i=0; i < 10; i++){
+	for(int i=0; i < 150; i++){
 		int lx,ly;
 		do{
 			lx = (int) round(hmap->xsize*random());
 			ly = (int) round(hmap->ysize*random());
-		}while(hmap->getwater(lx,ly) != 0);
+		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER);
+
+		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
 		
 		egp->misc.entityAdd(Entity("misc_model",lx*TSIZE,ly*TSIZE, hmap->getaltitude(lx,ly) * 255 * HINC));
 		if((etmp = egp->misc.entityAt(-1)) != NULL)
@@ -654,12 +656,14 @@ int main(int argc,char **argv)
 	hmap.erosion(2,1);
 	hmap.normalize();
 
-	makeBasicEntities(&hmap,&egp);
 
 	cout << getHeader(MAPSIZE,MAPSIZE);
 	cout << makeSkybox(&hmap,HINC);
 	cout << makeGrid(&hmap,HINC);
 	cout << makeWater(&hmap,HINC);
+	
+	makeBasicEntities(&hmap,&egp);
+	
 	cout << getFoot(&egp);
 
 	return 0;
