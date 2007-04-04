@@ -7,6 +7,7 @@
 #define ALT(x,y) (map[(x)*ysize+(y)])
 #define ALTD(x,y) (dmap[(x)*ysize+(y)])
 #define TEXM(x,y) (AT(tmap,x,y))
+#define IWATER(x,y) (wmap[(x)*ysize+(y)])
 #define getRnd(X) (double)(X*2 * ((random()+0.0) / (RAND_MAX ) - 0.5))
 #define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
 //pas besion de tester avec 0 c'est le min de ce que renvoi abs 
@@ -20,6 +21,7 @@ class AltitudeMap{
 		double * map;
 		double * dmap; /*diff map*/
 		int * tmap; /*textures map*/
+		char * wmap; /* water map */
 
 		void subdiv_private(double coeff, int x1, int y1, int x2, int y2);
 		void maketextures(void);	
@@ -40,6 +42,9 @@ class AltitudeMap{
 
 		int  texchooser(double criteria);	
 		int gettex(int x, int y);
+
+		void setwater(int x, int y);
+		char getwater(int x, int y);
 
 		double getmaxalt(void);
 		double getminalt(void);
@@ -64,18 +69,19 @@ AltitudeMap::AltitudeMap(int _xsize, int _ysize):xsize(_xsize),ysize(_ysize),sea
 	dmap=NULL;
 	tmap=NULL;
 
+	wmap = new char[xsize*ysize];
+	for(int x=0;x<xsize;++x)
+		for(int y=0;y<ysize;++y)
+			IWATER(x,y) = 0;
 }
 
 AltitudeMap::~AltitudeMap(void){
 	delete [] map;
 	if(dmap!=NULL)
-	{
-	delete [] dmap;
-	}
+		delete [] dmap;
 	if(tmap!=NULL)
-	{
-	delete [] tmap;
-	}
+		delete [] tmap;
+	delete [] wmap;
 }
 
 	double AltitudeMap::getaltitude(int x, int y){
@@ -110,6 +116,16 @@ void AltitudeMap::makediff(void)
 
 }
 
+void AltitudeMap::setwater(int x, int y){
+	if(x < xsize && y < ysize)
+		IWATER(x,y) = 1;
+}
+
+char AltitudeMap::getwater(int x, int y){
+	if(x < xsize && y < ysize)
+		return IWATER(x,y);
+	return 0;
+}
 
 int textchooser(double criteria)
 {

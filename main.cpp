@@ -385,10 +385,13 @@ WATERCUBE markAsWater(AltitudeMap * hmap, char * water, int x, int y, int from, 
 		return mvect;
 	}
 
-	if(from == CENTER)
+	if(from == CENTER){
 		WATER(x,y) = CENTER;
-	else
+		hmap->setwater(x,y);
+	}else{
 		WATER(x,y) = TWATER;
+		hmap->setwater(x,y);
+	}
 
 	if(x > 0 && from != LEFT)
 		mvect = markAsWater(hmap,water,x-1,y,RIGHT,level,max,mvect);
@@ -473,6 +476,18 @@ string makeWater(AltitudeMap * hmap, int sh){
 			}
 		}
 	}
+
+	for(int y=0; y < ysize; ++y){
+                fprintf(stderr,"%2d ",y);
+                for(int x=0; x < xsize; ++x){
+			if(hmap->getwater(x,y) == 1)
+				fprintf(stderr,BLUE"0"NORM);
+			else 
+				fprintf(stderr,"0");
+                }
+		fprintf(stderr,"\n");
+        }
+	
 
 	delete [] water;
 	return ret.str();
