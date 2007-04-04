@@ -55,6 +55,8 @@ typedef struct tagEntities_group{
 	Entities aliens;
 	Entities humans;
 	Entities infos;
+	
+	Entities misc;
 }Entities_group;
 
 typedef struct tagVECTOR2D{
@@ -207,6 +209,7 @@ string getFoot(Entities_group * egp){
 	ret << egp->aliens.entitiesDump();
 	ret << egp->humans.entitiesDump();
 	ret << egp->infos.entitiesDump();
+	ret << egp->misc.entitiesDump();
 
 	return ret.str();
 }
@@ -385,11 +388,10 @@ WATERCUBE markAsWater(AltitudeMap * hmap, int x, int y, int from, int level, dou
 		return mvect;
 	}
 
-	if(from == CENTER){
+	if(from == CENTER)
 		hmap->setwater(x,y,CENTER);
-	}else{
+	else
 		hmap->setwater(x,y,TWATER);
-	}
 
 	if(x > 0 && from != LEFT)
 		mvect = markAsWater(hmap,x-1,y,RIGHT,level,max,mvect);
@@ -461,6 +463,11 @@ string makeWater(AltitudeMap * hmap, int sh){
 						if(lalt < minalt)
 							minalt = lalt;
 					}
+
+					hmap->setwater(mvect.lt.x,mvect.lt.y,TOP);
+					hmap->setwater(mvect.rt.x,mvect.rt.y,RIGHT);
+					hmap->setwater(mvect.lb.x,mvect.lb.y,LEFT);
+					hmap->setwater(mvect.rb.x,mvect.rb.y,BOTTOM);
 
 					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,minalt - mvect.depth);
 
@@ -599,6 +606,8 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 	double w = (MAPSIZE-1)*TSIZE;
 	double h = (MAPSIZE-1)*TSIZE;
+	
+	Entity * etmp;
 
 	egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
 	egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
@@ -615,6 +624,13 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	egp->aliens.entityAdd(Entity("team_alien_overmind",150,150,max*HINC));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",300,300,max*HINC));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
+
+	
+	egp->misc.entityAdd(Entity("misc_model",200,200,max*HINC));
+	if((etmp = egp->misc.entityAt(-1)) != NULL)
+		etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
+	
+
 }
 
 
