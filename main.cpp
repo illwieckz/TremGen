@@ -702,13 +702,55 @@ ret << endl << makeFace(x,y+ty/2,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0
 	return ret.str();
 }
 
+void  plantForest(double cx, double cy,int numTree,AltitudeMap * hmap, Entities_group * egp)
+{
+
+	Entity * etmp;
+	double k;
+	k=hmap->xsize+hmap->ysize;
+	k/=2.0;
+	k/=10;//1/10ème rayon de la foret
+	for(int i=numTree; i > 0; i--){
+		if(round(random()*100)>2){
+		double r,theta,lxx,lyy;
+		int lx,ly;
+		do{
+			r=pow(random()-1,4)*k;
+			theta=round(random()*36000)/100.0;
+			lxx=cx+r*cos(rad(theta));
+			lyy=cy+r*sin(rad(theta));
+			lx=(int)floor(lxx);
+			ly=(int)floor(lyy);
+
+		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0);
+
+		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
+		
+		egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)));
+		if((etmp = egp->misc.entityAt(-1)) != NULL)
+			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
+	}else{//changement de foret
+	double ncx,ncy;
+			ncx =  round((hmap->xsize-1)*random()*100)/100.0;
+			ncy =  round((hmap->ysize-1)*random()*100)/100.0;
+int temp=i;
+	temp/=2;
+
+plantForest(ncx,ncy,i-temp,hmap,egp);
+	numTree=temp;
+	}
+	
+	}
+
+}
+
 void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	double max = hmap->getmaxalt() * 255 + 50 / HINC;
 
 	double w = (MAPSIZE-1)*TSIZE;
 	double h = (MAPSIZE-1)*TSIZE;
 	
-	Entity * etmp;
+
 
 	egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
 	egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
@@ -727,25 +769,17 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
 
 
-	for(int i=0; i < 150; i++){
-		double lxx,lyy;
-		int lx,ly;
-		do{
-			lxx =  round(hmap->xsize*random()*100)/100.0;
-			lyy =  round(hmap->ysize*random()*100)/100.0;
-			lx=(int)round(lxx);
-			ly=(int)round(lyy);
-		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0);
 
-		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
-		
-		egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)));
-		if((etmp = egp->misc.entityAt(-1)) != NULL)
-			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
-	}
-	
 
+	double cx,cy;
+			cx=cy=(hmap->xsize-1)/4.0;
+			cx +=  round((hmap->xsize-1)/2.0*random()*100)/100.0;
+			cy +=  round((hmap->ysize-1)/2.0*random()*100)/100.0;
+
+plantForest(cx,cy,150,hmap,egp);
 }
+
+
 
 
 int main(int argc,char **argv)
