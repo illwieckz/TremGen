@@ -48,6 +48,8 @@
 #define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
 
 #define random() ((double)rand()/RAND_MAX)
+#define real(x,y) (getRealAlt(hmap,x,y,TSIZE,TSIZE,HINC)+30)
+
 
 using namespace std;
 
@@ -213,6 +215,105 @@ string getFoot(Entities_group * egp){
 
 	return ret.str();
 }
+
+
+double getRealAlt(AltitudeMap * hmap ,double x, double y,double tx,double ty, double itz)
+{
+
+//fprintf(stderr,"--%f %f\n",tx,ty);
+int xx=(int)floor(x/tx);
+int yy=(int)floor(y/ty);
+
+double tz=itz*hmap->getaltitude(xx,yy)*255+20; //hauteur de base
+double dx=x-xx*tx;
+dx/=tx;
+double dy=y-yy*ty; //rajout en %
+dy/=ty;
+//fprintf(stderr,"%f %f\n",dx,dy);
+double da=(itz*hmap->getaltitude(xx+1,yy)*255+20)-tz;
+double db=(itz*hmap->getaltitude(xx,yy+1)*255+20)-tz;
+double dc=(itz*hmap->getaltitude(xx+1,yy+1)*255+20)-tz;
+
+if(dy<dx)
+{//en bas
+
+
+	return tz+(da*dx+db*dy);///2 ;
+}else{
+
+	return tz+dc+((db-dc)*(1-dx)+(da-dc)*(1-dy));///2 ;
+}
+
+
+//if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
+//cherchons la bonne diagonale
+/*
+ *  (db)----- (dc)
+ *	|\ /|
+ *	| X |
+ *	|/ \|
+ *	-----
+ *    1ere   2eme (da)
+*/
+/*	if( dc < da || dc < db) //1ere 
+	{
+		if(dy<dx){ //en bas
+
+			return tz+(da*dx+(da-dc)*dy);///2;
+
+		}else{
+			return tz+((db-dc)*dx+db*dy);///2;;
+		}
+
+	}else{ //2eme
+
+		if((1-dy)>dx ){//en bas
+
+			return tz+(da*dx+db*dy);///2 ;
+		}else{
+
+			return tz+((dc-db)*(dx)+(da-dc)*(dy));///2 ;
+
+		}
+
+	}
+
+}else{
+	//convexe :
+	if(dc - da !=db ){ //si plat
+	return tz+(da*dx+db*dy);///2 ;
+	}
+
+
+if( dc > da || dc > db) //1ere 
+{
+
+		if(dy<dx){ //en bas
+
+			return tz+(da*dx+(dc-da)*dy);///2;
+
+		}else{
+			return tz+((dc-db)*dx+db*dy);///2;
+		}
+}else{//deuxième
+
+		if((1-dy)>dx ){//en bas
+
+			return tz+(da*dx+db*dy);///2 ;
+		}else{
+
+			return tz+((dc-db)*(dx)+abs(dc-da)*(dy));///2 ;
+
+		}
+
+}
+
+
+}
+//ça serait cool que ça marche
+*/
+}
+
 
 string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double ty, double itz){
 	stringstream ret;
@@ -627,15 +728,18 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 
 	for(int i=0; i < 150; i++){
+		double lxx,lyy;
 		int lx,ly;
 		do{
-			lx = (int) round(hmap->xsize*random());
-			ly = (int) round(hmap->ysize*random());
+			lxx =  round(hmap->xsize*random()*100)/100.0;
+			lyy =  round(hmap->ysize*random()*100)/100.0;
+			lx=(int)round(lxx);
+			ly=(int)round(lyy);
 		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0);
 
 		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
 		
-		egp->misc.entityAdd(Entity("misc_model",lx*TSIZE,ly*TSIZE, hmap->getaltitude(lx,ly) * 255 * HINC+40));
+		egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)));
 		if((etmp = egp->misc.entityAt(-1)) != NULL)
 			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
 	}
