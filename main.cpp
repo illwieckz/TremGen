@@ -710,10 +710,12 @@ void  plantForest(double cx, double cy,int numTree,AltitudeMap * hmap, Entities_
 	k=hmap->xsize+hmap->ysize;
 	k/=2.0;
 	k/=10;//1/10ème rayon de la foret
+	bool flag=false;
 	for(int i=numTree; i > 0; i--){
-		if(round(random()*100)>2){
+		if(round(random()*100)>5 && !flag ){
 		double r,theta,lxx,lyy;
 		int lx,ly;
+		int stop=1000;
 		do{
 			r=pow(random()-1,4)*k;
 			theta=round(random()*36000)/100.0;
@@ -721,12 +723,19 @@ void  plantForest(double cx, double cy,int numTree,AltitudeMap * hmap, Entities_
 			lyy=cy+r*sin(rad(theta));
 			lx=(int)floor(lxx);
 			ly=(int)floor(lyy);
+			stop--;
+		if(stop==0){ flag=true; 
+		fprintf(stderr,"Bye Bye Forest!\n");
+		 break;}
 
-		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0);
+		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-1) || lyy>=(hmap->ysize-1) || lxx<=0 || lyy <= 0);
+		if(flag){
+		continue;
+		}
 
 		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
 		
-		egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)));
+		egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)-10));// -10 pour enfoncage dans sol 
 		if((etmp = egp->misc.entityAt(-1)) != NULL)
 			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
 	}else{//changement de foret
@@ -734,10 +743,14 @@ void  plantForest(double cx, double cy,int numTree,AltitudeMap * hmap, Entities_
 			ncx =  round((hmap->xsize-1)*random()*100)/100.0;
 			ncy =  round((hmap->ysize-1)*random()*100)/100.0;
 int temp=i;
+if(!flag){
 	temp/=2;
-
+}else{
+temp=0;
+flag = false;
+}
 plantForest(ncx,ncy,i-temp,hmap,egp);
-	numTree=temp;
+	i=temp;
 	}
 	
 	}
