@@ -399,6 +399,22 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	ret  << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_FRONT) << endl;
 
 	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_SKYBOX,FACE_BOTTOM) << endl;
+
+/*Embalage caulk*/
+
+	ret  << makeFace(-13,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_RIGHT) << endl;
+	ret  << makeFace(-10,-13,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_REAR) << endl;
+
+	ret  << makeFace((w-1)*s-10+5+10,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_LEFT) << endl;
+	ret  << makeFace(-10,(h-1)*s-5+10,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_SKYBOX,FACE_FRONT) << endl;
+
+	ret  << makeFace(-13,-13,sh*max-10+10,(w-1)*s+5+20,(h-1)*s+5+20,16,0,0,0,TEXTURE_CAULK,FACE_BOTTOM) << endl;
+	ret  << makeFace(-13,-13,-10,(w-1)*s+5+20,(h-1)*s+5+20,16,0,0,0,TEXTURE_CAULK,FACE_BOTTOM) << endl;
+
+
+
+
+/*Embalage caulk*/
 /*
  ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
 *//*
