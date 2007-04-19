@@ -780,6 +780,7 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 
 }
 
+
 void  dropThings(AltitudeMap * hmap, Entities_group * egp){
 
 }
