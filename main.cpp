@@ -57,7 +57,7 @@ typedef struct tagEntities_group{
 	Entities aliens;
 	Entities humans;
 	Entities infos;
-	
+
 	Entities misc;
 }Entities_group;
 
@@ -112,7 +112,7 @@ string getTexture(int i){
 			return "common/hint 0 0 0 0 0 0 0 0";
 		case TEXTURE_TER1:
 			ret << "example2/ter_moss_mud ";
-		break;
+			break;
 		case TEXTURE_TER2:
 			ret << "example2/ter_dirt_mud ";
 			break;
@@ -220,98 +220,98 @@ string getFoot(Entities_group * egp){
 double getRealAlt(AltitudeMap * hmap ,double x, double y,double tx,double ty, double itz)
 {
 
-//fprintf(stderr,"--%f %f\n",tx,ty);
-int xx=(int)floor(x/tx);
-int yy=(int)floor(y/ty);
+	//fprintf(stderr,"--%f %f\n",tx,ty);
+	int xx=(int)floor(x/tx);
+	int yy=(int)floor(y/ty);
 
-double tz=itz*hmap->getaltitude(xx,yy)*255+20; //hauteur de base
-double dx=x-xx*tx;
-dx/=tx;
-double dy=y-yy*ty; //rajout en %
-dy/=ty;
-//fprintf(stderr,"%f %f\n",dx,dy);
-double da=(itz*hmap->getaltitude(xx+1,yy)*255+20)-tz;
-double db=(itz*hmap->getaltitude(xx,yy+1)*255+20)-tz;
-double dc=(itz*hmap->getaltitude(xx+1,yy+1)*255+20)-tz;
+	double tz=itz*hmap->getaltitude(xx,yy)*255+20; //hauteur de base
+	double dx=x-xx*tx;
+	dx/=tx;
+	double dy=y-yy*ty; //rajout en %
+	dy/=ty;
+	//fprintf(stderr,"%f %f\n",dx,dy);
+	double da=(itz*hmap->getaltitude(xx+1,yy)*255+20)-tz;
+	double db=(itz*hmap->getaltitude(xx,yy+1)*255+20)-tz;
+	double dc=(itz*hmap->getaltitude(xx+1,yy+1)*255+20)-tz;
 
-if(dy<dx)
-{//en bas
-
-
-	return tz+(da*dx+db*dy);///2 ;
-}else{
-
-	return tz+dc+((db-dc)*(1-dx)+(da-dc)*(1-dy));///2 ;
-}
+	if(dy<dx)
+	{//en bas
 
 
-//if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
-//cherchons la bonne diagonale
-/*
- *  (db)----- (dc)
- *	|\ /|
- *	| X |
- *	|/ \|
- *	-----
- *    1ere   2eme (da)
-*/
-/*	if( dc < da || dc < db) //1ere 
-	{
+		return tz+(da*dx+db*dy);///2 ;
+	}else{
+
+		return tz+dc+((db-dc)*(1-dx)+(da-dc)*(1-dy));///2 ;
+	}
+
+
+	//if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
+	//cherchons la bonne diagonale
+	/*
+	 *  (db)----- (dc)
+	 *	|\ /|
+	 *	| X |
+	 *	|/ \|
+	 *	-----
+	 *    1ere   2eme (da)
+	 */
+	/*	if( dc < da || dc < db) //1ere 
+		{
 		if(dy<dx){ //en bas
 
-			return tz+(da*dx+(da-dc)*dy);///2;
+		return tz+(da*dx+(da-dc)*dy);///2;
 
 		}else{
-			return tz+((db-dc)*dx+db*dy);///2;;
+		return tz+((db-dc)*dx+db*dy);///2;;
 		}
 
-	}else{ //2eme
+		}else{ //2eme
 
 		if((1-dy)>dx ){//en bas
 
-			return tz+(da*dx+db*dy);///2 ;
+		return tz+(da*dx+db*dy);///2 ;
 		}else{
 
-			return tz+((dc-db)*(dx)+(da-dc)*(dy));///2 ;
+		return tz+((dc-db)*(dx)+(da-dc)*(dy));///2 ;
 
 		}
 
-	}
+		}
 
-}else{
+		}else{
 	//convexe :
 	if(dc - da !=db ){ //si plat
 	return tz+(da*dx+db*dy);///2 ;
 	}
 
 
-if( dc > da || dc > db) //1ere 
-{
+	if( dc > da || dc > db) //1ere 
+	{
 
-		if(dy<dx){ //en bas
+	if(dy<dx){ //en bas
 
-			return tz+(da*dx+(dc-da)*dy);///2;
+	return tz+(da*dx+(dc-da)*dy);///2;
 
-		}else{
-			return tz+((dc-db)*dx+db*dy);///2;
-		}
-}else{//deuxième
+	}else{
+	return tz+((dc-db)*dx+db*dy);///2;
+	}
+	}else{//deuxième
 
-		if((1-dy)>dx ){//en bas
+	if((1-dy)>dx ){//en bas
 
-			return tz+(da*dx+db*dy);///2 ;
-		}else{
+	return tz+(da*dx+db*dy);///2 ;
+	}else{
 
-			return tz+((dc-db)*(dx)+abs(dc-da)*(dy));///2 ;
+	return tz+((dc-db)*(dx)+abs(dc-da)*(dy));///2 ;
 
-		}
+	}
 
-}
+	}
 
 
-}
-//ça serait cool que ça marche
-*/
+	}
+	//ça serait cool que ça marche
+	*/
 }
 
 
@@ -377,10 +377,10 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		}
 	}
 	/*
-	if(hmap->gettex(xx,yy)>TEXTURE_TER5 && hmap->gettex(xx,yy)<=TEXTURE_TER4_5){
-ret << endl << makeFace(x+tx/2,y+ty/2,z+tz+20,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
-    }
-	*/
+	   if(hmap->gettex(xx,yy)>TEXTURE_TER5 && hmap->gettex(xx,yy)<=TEXTURE_TER4_5){
+	   ret << endl << makeFace(x+tx/2,y+ty/2,z+tz+20,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+	   }
+	   */
 	return ret.str();
 }
 
@@ -400,7 +400,7 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 
 	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_SKYBOX,FACE_BOTTOM) << endl;
 
-/*Embalage caulk*/
+	/*Embalage caulk*/
 
 	ret  << makeFace(-13,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_RIGHT) << endl;
 	ret  << makeFace(-10,-13,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_REAR) << endl;
@@ -414,10 +414,10 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 
 
 
-/*Embalage caulk*/
-/*
- ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
-*//*
+	/*Embalage caulk*/
+	/*
+	   ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+	   *//*
 	for(double i=1;i<(w-1)*s;i++){
 
 		if((int)round(i)%500==0)
@@ -435,10 +435,10 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 		}
 
 	} */
-for(double i=10+hmap->getminalt()*255;i<max;i+=40){
-//fprintf(stderr,"%f %f\n",i,max);
- ret  << makeFace(-3,-3,i*sh,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
-}
+	for(double i=10+hmap->getminalt()*255;i<max;i+=40){
+		//fprintf(stderr,"%f %f\n",i,max);
+		ret  << makeFace(-3,-3,i*sh,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+	}
 	return ret.str();
 }
 
@@ -595,31 +595,31 @@ string makeWater(AltitudeMap * hmap, int sh){
 	}
 
 	for(int y=0; y < ysize; ++y){
-                fprintf(stderr,"%2d ",y);
-                for(int x=0; x < xsize; ++x){
+		fprintf(stderr,"%2d ",y);
+		for(int x=0; x < xsize; ++x){
 			int alt = (int) (hmap->getaltitude(x,y)*10/vmax);
 			alt = alt < 9 ? alt:9;
 			switch(hmap->getwater(x,y)){
-                                case CENTER:
-                                        fprintf(stderr,RED"%d"NORM,alt);
-                                        break;
-                                case TWATER:
-                                        fprintf(stderr,BLUE"%d"NORM,alt);
-                                        break;
-                                case TOP:
-                                case BOTTOM:
-                                case LEFT:
-                                case RIGHT:
-                                        fprintf(stderr,GREEN"%d"NORM,alt);
-                                        break;
-                                default:
-                                        fprintf(stderr,"%d",alt);
-                        }
+				case CENTER:
+					fprintf(stderr,RED"%d"NORM,alt);
+					break;
+				case TWATER:
+					fprintf(stderr,BLUE"%d"NORM,alt);
+					break;
+				case TOP:
+				case BOTTOM:
+				case LEFT:
+				case RIGHT:
+					fprintf(stderr,GREEN"%d"NORM,alt);
+					break;
+				default:
+					fprintf(stderr,"%d",alt);
+			}
 
-                }
+		}
 		fprintf(stderr,"\n");
-        }
-	
+	}
+
 	return ret.str();
 }
 
@@ -632,95 +632,96 @@ string makeGrid(AltitudeMap * hmap, int sh){
 	for(j=0; j < (h-1); j++)
 		for(i=0; i < (w-1); i++){
 			ret << endl << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC) << endl;
-	if(hmap->gettex(i,j)!= hmap->gettex(i,j+1)  || hmap->gettex(i+1,j)!= hmap->gettex(i,j)) {
-double x=i*TSIZE;
-double y=j*TSIZE;
-double tx,ty;
-tx=ty=TSIZE;
+			if(hmap->gettex(i,j)!= hmap->gettex(i,j+1)  || hmap->gettex(i+1,j)!= hmap->gettex(i,j)) {
+				double x=i*TSIZE;
+				double y=j*TSIZE;
+				double tx,ty;
+				tx=ty=TSIZE;
 
-ret << endl << makeFace(x+tx/2-10,y+ty/2-10,HINC*255*(hmap->getaltitude(i,j)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_0,FACE_ALL) << endl ;
-//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	
-}	
-	if(hmap->gettex(i,j)!= hmap->gettex(i,j+1) )
-	{
-double x=i*TSIZE;
-double y=j*TSIZE;
-double tx,ty;
-tx=ty=TSIZE;
+				ret << endl << makeFace(x+tx/2-10,y+ty/2-10,HINC*255*(hmap->getaltitude(i,j)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_0,FACE_ALL) << endl ;
+				//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
 
-//ret << endl << makeFace(x+tx-10,y,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,100,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+			}	
+			if(hmap->gettex(i,j)!= hmap->gettex(i,j+1) )
+			{
+				double x=i*TSIZE;
+				double y=j*TSIZE;
+				double tx,ty;
+				tx=ty=TSIZE;
 
-ret << endl << makeFace(x+tx/2,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	}
-	
-	
-	if(hmap->gettex(i+1,j)!= hmap->gettex(i,j) )
-	{
-double x=i*TSIZE;
-double y=j*TSIZE;
-double tx,ty;
-tx=ty=TSIZE;
+				//ret << endl << makeFace(x+tx-10,y,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,100,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
 
-ret << endl << makeFace(x+tx-10,y+ty/2,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-//ret << endl << makeFace(x,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,100,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				ret << endl << makeFace(x+tx/2,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+			}
 
-//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	}
-	
-/*	
-	if(hmap->gettex(i,j)!= hmap->gettex(i-1,j) )
-	{
-double x=i*TSIZE;
-double y=j*TSIZE;
-double tx,ty;
-tx=ty=TSIZE;
 
-ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
-//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	}
-	
-	
+			if(hmap->gettex(i+1,j)!= hmap->gettex(i,j) )
+			{
+				double x=i*TSIZE;
+				double y=j*TSIZE;
+				double tx,ty;
+				tx=ty=TSIZE;
 
-	if(hmap->gettex(i,j)!= hmap->gettex(i,-1) )
-	{
-double x=i*TSIZE;
-double y=j*TSIZE;
-double tx,ty;
-tx=ty=TSIZE;
+				ret << endl << makeFace(x+tx-10,y+ty/2,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				//ret << endl << makeFace(x,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,100,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
 
-ret << endl << makeFace(x,y+ty/2,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
-//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-	}
-	
-	
-	
+				//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+			}
+
+			/*	
+				if(hmap->gettex(i,j)!= hmap->gettex(i-1,j) )
+				{
+				double x=i*TSIZE;
+				double y=j*TSIZE;
+				double tx,ty;
+				tx=ty=TSIZE;
+
+				ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+			//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+			}
+
+
+
+			if(hmap->gettex(i,j)!= hmap->gettex(i,-1) )
+			{
+			double x=i*TSIZE;
+			double y=j*TSIZE;
+			double tx,ty;
+			tx=ty=TSIZE;
+
+			ret << endl << makeFace(x,y+ty/2,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+			//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+			}
+
+
+
 */	
-	
-
-	
-	
-	
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		}
 	return ret.str();
 }
 
-void  plantForest(double cx, double cy,int numTree,AltitudeMap * hmap, Entities_group * egp)
+void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entities_group * egp)
 {
 
+	stringstream buf;
 	Entity * etmp;
 	double k;
 	k=hmap->xsize+hmap->ysize;
@@ -729,50 +730,57 @@ void  plantForest(double cx, double cy,int numTree,AltitudeMap * hmap, Entities_
 	bool flag=false;
 	for(int i=numTree; i > 0; i--){
 		if(round(random()*100)>5 && !flag ){
-		double r,theta,lxx,lyy;
-		int lx,ly;
-		int stop=1000;
-		do{
-			r=(-pow(random(),2)+1)*k;
-			theta=round(random()*36000)/100.0;
-			lxx=cx+r*cos(rad(theta));
-			lyy=cy+r*sin(rad(theta));
-			lx=(int)floor(lxx);
-			ly=(int)floor(lyy);
-			stop--;
-		if(stop==0){ flag=true; 
-		fprintf(stderr,"Bye Bye Forest!\n");
-		 break;}
+			double r,theta,lxx,lyy;
+			int lx,ly;
+			int stop=1000;
+			do{
+				r=(-pow(random(),2)+1)*k;
+				theta=round(random()*36000)/100.0;
+				lxx=cx+r*cos(rad(theta));
+				lyy=cy+r*sin(rad(theta));
+				lx=(int)floor(lxx);
+				ly=(int)floor(lyy);
+				stop--;
+				if(stop==0){ flag=true; 
+					fprintf(stderr,"Bye Bye Forest!\n");
+					break;}
 
-		}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-1) || lyy>=(hmap->ysize-1) || lxx<=0 || lyy <= 0);
-		if(flag){
-		continue;
-		}
+			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-1) || lyy>=(hmap->ysize-1) || lxx<=0 || lyy <= 0);
+			if(flag){
+				continue;
+			}
 
-		//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
-		
-		egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)-10));// -10 pour enfoncage dans sol 
-		if((etmp = egp->misc.entityAt(-1)) != NULL){
-			etmp->attrAdd("model","models/mapobjects/ctftree/ctftree1.md3");
-			etmp->attrAdd("spawnflags",2);
-			etmp->attrAdd("modelscale",2.0);
-		}
-	}else{//changement de foret
-	double ncx,ncy;
+			//fprintf(stderr,"%d %d %d\n",lx,ly,hmap->getwater(lx,ly));
+
+			egp->misc.entityAdd(Entity("misc_model",lxx*TSIZE,lyy*TSIZE,real(lxx*TSIZE,lyy*TSIZE)-10));// -10 pour enfoncage dans sol 
+			if((etmp = egp->misc.entityAt(-1)) != NULL){
+				buf.str("");
+				buf << "models/mapobjects/ctftree/ctftree" << round(random()*2+1) << ".md3";
+				etmp->attrAdd("model",buf.str());
+				etmp->attrAdd("spawnflags",2);
+				etmp->attrAdd("modelscale",2.0+0.6*r/k);
+				etmp->attrAdd("angle",round(random()*36000)/100.0);
+			}
+		}else{//changement de foret
+			double ncx,ncy;
 			ncx =  round((hmap->xsize-1)*random()*100)/100.0;
 			ncy =  round((hmap->ysize-1)*random()*100)/100.0;
-int temp=i;
-if(!flag){
-	temp/=2;
-}else{
-temp=0;
-flag = false;
+			int temp=i;
+			if(!flag){
+				temp/=2;
+			}else{
+				temp=0;
+				flag = false;
+			}
+			plantForest(ncx,ncy,i-temp,hmap,egp);
+			i=temp;
+		}
+
+	}
+
 }
-plantForest(ncx,ncy,i-temp,hmap,egp);
-	i=temp;
-	}
-	
-	}
+
+void  dropThings(AltitudeMap * hmap, Entities_group * egp){
 
 }
 
@@ -781,7 +789,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 	double w = (MAPSIZE-1)*TSIZE;
 	double h = (MAPSIZE-1)*TSIZE;
-	
+
 
 
 	egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
@@ -804,11 +812,11 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 
 	double cx,cy;
-			cx=cy=(hmap->xsize-1)/4.0;
-			cx +=  round((hmap->xsize-1)/2.0*random()*100)/100.0;
-			cy +=  round((hmap->ysize-1)/2.0*random()*100)/100.0;
+	cx=cy=(hmap->xsize-1)/4.0;
+	cx +=  round((hmap->xsize-1)/2.0*random()*100)/100.0;
+	cy +=  round((hmap->ysize-1)/2.0*random()*100)/100.0;
 
-plantForest(cx,cy,150,hmap,egp);
+	plantForest(cx,cy,150,hmap,egp);
 }
 
 
@@ -831,9 +839,9 @@ int main(int argc,char **argv)
 	cout << makeSkybox(&hmap,HINC);
 	cout << makeGrid(&hmap,HINC);
 	cout << makeWater(&hmap,HINC);
-	
+
 	makeBasicEntities(&hmap,&egp);
-	
+
 	cout << getFoot(&egp);
 
 	return 0;
