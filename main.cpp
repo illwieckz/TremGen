@@ -49,8 +49,7 @@
 
 #define random() ((double)rand()/RAND_MAX)
 #define real(x,y) (getRealAlt(hmap,x,y,TSIZE,TSIZE,HINC)+30)
-
-
+#define notinarena(lx,ly,lxx,lyy)  (hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0)
 using namespace std;
 
 typedef struct tagEntities_group{
@@ -789,41 +788,125 @@ double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
 {
 
 double al=real(x,y);
-al=al*2;
-return 0.5;
 
+int lx=(int)floor(x);
+int ly=(int)floor(y);
+al+=hmap->getaltitude(lx-1,ly);
+al+=hmap->getaltitude(lx,ly-1);
+al+=hmap->getaltitude(lx+1,ly);
+al+=hmap->getaltitude(lx,ly+1);
+
+if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
+return 0;
+//fprintf(stderr,"--%f\n",al/(max*HINC));
+return 1-((al/5.0)/(max*HINC));
+}
+
+
+double mesureHuman(double x, double y,double dist,double max,AltitudeMap * hmap)
+{
+
+double al=real(x,y);
+
+int lx=(int)floor(x);
+int ly=(int)floor(y);
+al+=hmap->getaltitude(lx-1,ly);
+al+=hmap->getaltitude(lx,ly-1);
+al+=hmap->getaltitude(lx+1,ly);
+al+=hmap->getaltitude(lx,ly+1);
+
+if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
+return 0;
+double moy=(hmap->xsize+hmap->ysize)/2.0;
+//fprintf(stderr,"--%f %f\n",moy,dist);
+return (((al/5.0)/(max*HINC))+dist/moy)/2.0; //we j'approx faudrait la diag et pas lamoyenne
 }
 
 void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	double max = hmap->getmaxalt() * 255 + 50 / HINC;
 
-	double w = (MAPSIZE-2)*TSIZE; /*Attention -2*/
-	double h = (MAPSIZE-2)*TSIZE;
-/*
+
+	double w = (MAPSIZE-2); /*Attention -2*/
+	double h = (MAPSIZE-2);
 	double px,py;
+	egp->infos.entityAdd(Entity("info_player_intermission",w*TSIZE/2.0,h*TSIZE/2.0,max*HINC));
+	
+	float seuil=0.8;
+	int stop=50;
 	do
 	{
-	px=random()*w;
-	py=random()*h;
+	px=1+random()*w;
+	py=1+random()*h;
 
 
-	}while(mesureAlien(px,py,max,hmap)<0.8);
-	*/
-	egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
-	egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
-	egp->infos.entityAdd(Entity("info_player_intermission",w/2.0,h/2.0,max*HINC));
+	fprintf(stderr,"%f %f %f\n",px,py,mesureAlien(px,py,max,hmap));
+	stop--;
+	if(stop==0)
+	{
+	stop=50;
+	seuil-=seuil/10;
+	fprintf(stderr,"Descente seuil Alien : %f \n",seuil);
+	}
+	
+	}while(mesureAlien(px,py,max,hmap)<seuil);
+
+	px*=TSIZE;
+	py*=TSIZE;
+	
+	hmap->setAlienPos(px,py);
+
+	egp->infos.entityAdd(Entity("info_alien_intermission",px,py,real(px,py)+200,8.33));
+
+	egp->aliens.entityAdd(Entity("team_alien_spawn",px+150,py-100,real(px-100,py+150)+150));
+	egp->aliens.entityAdd(Entity("team_alien_overmind",px,py,real(px,py)+50));
+	egp->aliens.entityAdd(Entity("team_alien_acid_tube",px+100,py+100,real(px+100,py+100)+150));
+	egp->aliens.entityAdd(Entity("team_alien_acid_tube",px+140,py+140,real(px+140,py+140)+150));
+	double tmp;
+
+	seuil=0.8;
+	stop=50;
+	do
+	{
+	px=1+random()*w;
+	py=1+random()*h;
 
 
-	egp->humans.entityAdd(Entity("team_human_spawn",w-100,h-200,max*HINC));
-	egp->humans.entityAdd(Entity("team_human_mgturret",w-200,h-200,max*HINC));
-	egp->humans.entityAdd(Entity("team_human_reactor",w-100,h-100,max*HINC));
-	egp->humans.entityAdd(Entity("team_human_armoury",w-200,h-100,max*HINC));
 
 
-	egp->aliens.entityAdd(Entity("team_alien_spawn",150,300,max*HINC));
-	egp->aliens.entityAdd(Entity("team_alien_overmind",150,150,max*HINC));
-	egp->aliens.entityAdd(Entity("team_alien_acid_tube",300,300,max*HINC));
-	egp->aliens.entityAdd(Entity("team_alien_acid_tube",240,240,max*HINC));
+	tmp=hmap->getHumanPosX()-px;
+	tmp*=tmp;
+
+	double tmp2=hmap->getHumanPosY()-py;
+	tmp2*=tmp2;
+	
+	tmp+=tmp2;
+	tmp=sqrt(tmp);
+
+	fprintf(stderr,"%f %f %f\n",px,py,mesureHuman(px,py,tmp,max,hmap));
+	stop--;
+	if(stop==0)
+	{
+	stop=50;
+	seuil-=seuil/10;
+	fprintf(stderr,"Descente seuil Human : %f \n",seuil);
+	}
+	
+	}while(mesureHuman(px,py,tmp,max,hmap)<seuil);
+
+	px*=TSIZE;
+	py*=TSIZE;
+	
+
+
+	egp->infos.entityAdd(Entity("info_human_intermission",px,py,real(px,py)+200,180));
+
+	egp->humans.entityAdd(Entity("team_human_spawn",px+150,py,real(px+150,py)+150));
+	egp->humans.entityAdd(Entity("team_human_mgturret",px,py,real(px,py)+150));
+	egp->humans.entityAdd(Entity("team_human_reactor",px+150,py+150,real(px+150,py+150)+150));
+	egp->humans.entityAdd(Entity("team_human_armoury",px,py+150,real(px,py+150)+150));
+
+
+
 
 
 
