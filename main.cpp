@@ -50,6 +50,9 @@
 #define random() ((double)rand()/RAND_MAX)
 #define real(x,y) (getRealAlt(hmap,x,y,TSIZE,TSIZE,HINC)+30)
 #define notinarena(lx,ly,lxx,lyy)  (hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0)
+
+#define distance(x,y,X,Y) (sqrt((x-X)*(x-X)+(y-Y)*(y-Y)))
+
 using namespace std;
 
 typedef struct tagEntities_group{
@@ -727,6 +730,13 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 	k/=2.0;
 	k/=10;//1/10ème rayon de la foret
 	bool flag=false;
+	double phx,phy,pax,pay;
+	phx=hmap->getHumanPosX()/TSIZE;
+	phy=hmap->getHumanPosY()/TSIZE;
+	pax=hmap->getAlienPosX()/TSIZE;
+	pay=hmap->getAlienPosY()/TSIZE;
+
+
 	for(int i=numTree; i > 0; i--){
 		if(round(random()*100)>5 && !flag ){
 			double r,theta,lxx,lyy;
@@ -743,8 +753,9 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 				if(stop==0){ flag=true; 
 					fprintf(stderr,"Bye Bye Forest!\n");
 					break;}
+	//fprintf(stderr,"))%f\n",distance(pax,pay,lxx,lyy));
 
-			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0);
+			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0 || distance(pax,pay,lxx,lyy)<=1.5 || distance(phx,phy,lxx,lyy)<=1.5);
 			if(flag){
 				continue;
 			}
@@ -855,7 +866,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	
 	hmap->setAlienPos(px,py);
 
-	egp->infos.entityAdd(Entity("info_alien_intermission",px,py,real(px,py)+200,8.33));
+	egp->infos.entityAdd(Entity("info_alien_intermission",px-100,py-100,real(px-100,py-100)+200,8.33));
 
 	egp->aliens.entityAdd(Entity("team_alien_spawn",px+150,py-100,real(px-100,py+150)+150));
 	egp->aliens.entityAdd(Entity("team_alien_overmind",px,py,real(px,py)+50));
@@ -896,6 +907,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	px*=TSIZE;
 	py*=TSIZE;
 	
+	hmap->setHumanPos(px,py);
 
 
 	egp->infos.entityAdd(Entity("info_human_intermission",px,py,real(px,py)+200,180));
