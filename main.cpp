@@ -745,7 +745,7 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 					fprintf(stderr,"Bye Bye Forest!\n");
 					break;}
 
-			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-1) || lyy>=(hmap->ysize-1) || lxx<=0 || lyy <= 0);
+			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0);
 			if(flag){
 				continue;
 			}
@@ -785,14 +785,30 @@ void  dropThings(AltitudeMap * hmap, Entities_group * egp){
 
 }
 
+double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
+{
+
+double al=real(x,y);
+al=al*2;
+return 0.5;
+
+}
+
 void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	double max = hmap->getmaxalt() * 255 + 50 / HINC;
 
-	double w = (MAPSIZE-1)*TSIZE;
-	double h = (MAPSIZE-1)*TSIZE;
+	double w = (MAPSIZE-2)*TSIZE; /*Attention -2*/
+	double h = (MAPSIZE-2)*TSIZE;
+/*
+	double px,py;
+	do
+	{
+	px=random()*w;
+	py=random()*h;
 
 
-
+	}while(mesureAlien(px,py,max,hmap)<0.8);
+	*/
 	egp->infos.entityAdd(Entity("info_alien_intermission",200,200,max*HINC,8.33));
 	egp->infos.entityAdd(Entity("info_human_intermission",w-200,h-200,max*HINC,180));
 	egp->infos.entityAdd(Entity("info_player_intermission",w/2.0,h/2.0,max*HINC));
@@ -817,7 +833,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	cx +=  round((hmap->xsize-1)/2.0*random()*100)/100.0;
 	cy +=  round((hmap->ysize-1)/2.0*random()*100)/100.0;
 
-	plantForest(cx,cy,150,hmap,egp);
+	plantForest(cx,cy,300,hmap,egp);
 }
 
 
