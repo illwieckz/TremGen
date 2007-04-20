@@ -12,7 +12,10 @@
 #define TSIZE 300 // Taille d'un dalle
 
 //#define MAPSIZE 20 //2-3h to compil
-#define MAPSIZE 26
+#define MAPSIZE 20
+
+#define NUMTREES 300
+#define NUMBOXES 100
 
 #define t(a,b,c)  "( " << round(a) << " " << round(b) << " " << round(c) << " ) "
 
@@ -591,6 +594,8 @@ string makeWater(AltitudeMap * hmap, int sh){
 					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,minalt - mvect.depth);
 
 					ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+					// fog of war
+					//ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
 				}
 			}
 		}
@@ -753,7 +758,7 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 				if(stop==0){ flag=true; 
 					fprintf(stderr,"Bye Bye Forest!\n");
 					break;}
-	//fprintf(stderr,"))%f\n",distance(pax,pay,lxx,lyy));
+					//fprintf(stderr,"))%f\n",distance(pax,pay,lxx,lyy));
 
 			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0 || distance(pax,pay,lxx,lyy)<=1.5 || distance(phx,phy,lxx,lyy)<=1.5);
 			if(flag){
@@ -791,46 +796,73 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 }
 
 
-void  dropThings(AltitudeMap * hmap, Entities_group * egp){
+void  dropBox(AltitudeMap * hmap, Entities_group * egp){
+	double ncx,ncy;
+	int lx,ly;
+	Entity * etmp;
+	double phx,phy,pax,pay;
 
+	phx=hmap->getHumanPosX()/TSIZE;
+	phy=hmap->getHumanPosY()/TSIZE;                                                                                                              pax=hmap->getAlienPosX()/TSIZE;
+	pay=hmap->getAlienPosY()/TSIZE;
+	for(int i=0; i < NUMBOXES; i++){
+		do{
+			ncx =  round((hmap->xsize-1)*random()*100)/100.0;
+			ncy =  round((hmap->ysize-1)*random()*100)/100.0;
+
+			lx=(int)floor(ncx);
+			ly=(int)floor(ncy);
+
+		//}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || ncx>=(hmap->xsize-2) || ncy>=(hmap->ysize-2) || ncx<=0 || ncy <= 0 || distance(pax,pay,ncx,ncy)<=1.5 || distance(phx,phy,ncx,ncy)<=1.5);
+		}while(hmap->getaltitude(lx,ly)==0 || ncx>=(hmap->xsize-2) || ncy>=(hmap->ysize-2) || ncx<=0 || ncy <= 0 || distance(pax,pay,ncx,ncy)<=1.5 || distance(phx,phy,ncx,ncy)<=1.5);
+
+		egp->misc.entityAdd(Entity("misc_model",ncx*TSIZE,ncy*TSIZE,real(ncx*TSIZE,ncy*TSIZE)-60+random()*25));// -10 pour enfoncage dans sol 
+
+		if((etmp = egp->misc.entityAt(-1)) != NULL){
+			etmp->attrAdd("model","models/mapobjects/box.md3");
+			etmp->attrAdd("spawnflags",2);
+			etmp->attrAdd("modelscale",3);
+			etmp->attrAdd("angle",round(random()*36000)/100.0);
+		}
+	}
 }
 
 double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
 {
 
-double al=real(x,y);
+	double al=real(x,y);
 
-int lx=(int)floor(x);
-int ly=(int)floor(y);
-al+=hmap->getaltitude(lx-1,ly);
-al+=hmap->getaltitude(lx,ly-1);
-al+=hmap->getaltitude(lx+1,ly);
-al+=hmap->getaltitude(lx,ly+1);
+	int lx=(int)floor(x);
+	int ly=(int)floor(y);
+	al+=hmap->getaltitude(lx-1,ly);
+	al+=hmap->getaltitude(lx,ly-1);
+	al+=hmap->getaltitude(lx+1,ly);
+	al+=hmap->getaltitude(lx,ly+1);
 
-if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
-return 0;
-//fprintf(stderr,"--%f\n",al/(max*HINC));
-return 1-((al/5.0)/(max*HINC));
+	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
+		return 0;
+	//fprintf(stderr,"--%f\n",al/(max*HINC));
+	return 1-((al/5.0)/(max*HINC));
 }
 
 
 double mesureHuman(double x, double y,double dist,double max,AltitudeMap * hmap)
 {
 
-double al=real(x,y);
+	double al=real(x,y);
 
-int lx=(int)floor(x);
-int ly=(int)floor(y);
-al+=hmap->getaltitude(lx-1,ly);
-al+=hmap->getaltitude(lx,ly-1);
-al+=hmap->getaltitude(lx+1,ly);
-al+=hmap->getaltitude(lx,ly+1);
+	int lx=(int)floor(x);
+	int ly=(int)floor(y);
+	al+=hmap->getaltitude(lx-1,ly);
+	al+=hmap->getaltitude(lx,ly-1);
+	al+=hmap->getaltitude(lx+1,ly);
+	al+=hmap->getaltitude(lx,ly+1);
 
-if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
-return 0;
-double moy=(hmap->xsize+hmap->ysize)/2.0;
-//fprintf(stderr,"--%f %f\n",moy,dist);
-return (((al/5.0)/(max*HINC))+dist/moy)/2.0; //we j'approx faudrait la diag et pas lamoyenne
+	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
+		return 0;
+	double moy=(hmap->xsize+hmap->ysize)/2.0;
+	//fprintf(stderr,"--%f %f\n",moy,dist);
+	return (((al/5.0)/(max*HINC))+dist/moy)/2.0; //we j'approx faudrait la diag et pas lamoyenne
 }
 
 void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
@@ -841,29 +873,29 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	double h = (MAPSIZE-2);
 	double px,py;
 	egp->infos.entityAdd(Entity("info_player_intermission",w*TSIZE/2.0,h*TSIZE/2.0,max*HINC));
-	
+
 	float seuil=0.8;
 	int stop=50;
 	do
 	{
-	px=1+random()*w;
-	py=1+random()*h;
+		px=1+random()*w;
+		py=1+random()*h;
 
 
-	fprintf(stderr,"%f %f %f\n",px,py,mesureAlien(px,py,max,hmap));
-	stop--;
-	if(stop==0)
-	{
-	stop=50;
-	seuil-=seuil/10;
-	fprintf(stderr,"Descente seuil Alien : %f \n",seuil);
-	}
-	
+		fprintf(stderr,"%f %f %f\n",px,py,mesureAlien(px,py,max,hmap));
+		stop--;
+		if(stop==0)
+		{
+			stop=50;
+			seuil-=seuil/10;
+			fprintf(stderr,"Descente seuil Alien : %f \n",seuil);
+		}
+
 	}while(mesureAlien(px,py,max,hmap)<seuil);
 
 	px*=TSIZE;
 	py*=TSIZE;
-	
+
 	hmap->setAlienPos(px,py);
 
 	egp->infos.entityAdd(Entity("info_alien_intermission",px-100,py-100,real(px-100,py-100)+200,8.33));
@@ -878,35 +910,35 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	stop=50;
 	do
 	{
-	px=1+random()*w;
-	py=1+random()*h;
+		px=1+random()*w;
+		py=1+random()*h;
 
 
 
 
-	tmp=hmap->getHumanPosX()-px;
-	tmp*=tmp;
+		tmp=hmap->getHumanPosX()-px;
+		tmp*=tmp;
 
-	double tmp2=hmap->getHumanPosY()-py;
-	tmp2*=tmp2;
-	
-	tmp+=tmp2;
-	tmp=sqrt(tmp);
+		double tmp2=hmap->getHumanPosY()-py;
+		tmp2*=tmp2;
 
-	fprintf(stderr,"%f %f %f\n",px,py,mesureHuman(px,py,tmp,max,hmap));
-	stop--;
-	if(stop==0)
-	{
-	stop=50;
-	seuil-=seuil/10;
-	fprintf(stderr,"Descente seuil Human : %f \n",seuil);
-	}
-	
+		tmp+=tmp2;
+		tmp=sqrt(tmp);
+
+		fprintf(stderr,"%f %f %f\n",px,py,mesureHuman(px,py,tmp,max,hmap));
+		stop--;
+		if(stop==0)
+		{
+			stop=50;
+			seuil-=seuil/10;
+			fprintf(stderr,"Descente seuil Human : %f \n",seuil);
+		}
+
 	}while(mesureHuman(px,py,tmp,max,hmap)<seuil);
 
 	px*=TSIZE;
 	py*=TSIZE;
-	
+
 	hmap->setHumanPos(px,py);
 
 
@@ -928,7 +960,10 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	cx +=  round((hmap->xsize-1)/2.0*random()*100)/100.0;
 	cy +=  round((hmap->ysize-1)/2.0*random()*100)/100.0;
 
-	plantForest(cx,cy,300,hmap,egp);
+	plantForest(cx,cy,NUMTREES,hmap,egp);
+
+	dropBox(hmap,egp);
+
 }
 
 
