@@ -12,7 +12,7 @@
 #define TSIZE 300 // Taille d'un dalle
 
 //#define MAPSIZE 20 //2-3h to compil
-#define MAPSIZE 20
+#define MAPSIZE 26
 
 #define NUMTREES 300
 #define NUMBOXES 100
