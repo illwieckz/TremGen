@@ -898,10 +898,10 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 	hmap->setAlienPos(px,py);
 
-	egp->infos.entityAdd(Entity("info_alien_intermission",px-100,py-100,real(px-100,py-100)+200,8.33));
+	egp->infos.entityAdd(Entity("info_alien_intermission",px-110,py-110,real(px-100,py-100)+200,8.33));
 
 	egp->aliens.entityAdd(Entity("team_alien_spawn",px+150,py-100,real(px-100,py+150)+150));
-	egp->aliens.entityAdd(Entity("team_alien_overmind",px,py,real(px,py)+50));
+	egp->aliens.entityAdd(Entity("team_alien_overmind",px,py,real(px,py)+150));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",px+100,py+100,real(px+100,py+100)+150));
 	egp->aliens.entityAdd(Entity("team_alien_acid_tube",px+140,py+140,real(px+140,py+140)+150));
 	double tmp;
