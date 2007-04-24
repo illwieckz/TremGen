@@ -26,7 +26,6 @@
 
 #define TEXTURE_WATER 80 
 
-
 string getTexture(int);
 
 #endif // TEXTURES_H 

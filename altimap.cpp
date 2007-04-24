@@ -1,5 +1,5 @@
 #include "main.h"
-#include "textures.h"
+
 #include "altimap.h"
 
 AltitudeMap::AltitudeMap(int _xsize, int _ysize):xsize(_xsize),ysize(_ysize),sealevel(0.0){
