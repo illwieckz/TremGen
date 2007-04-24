@@ -5,6 +5,8 @@
 #include "meshes.h"
 #include "envgen.h"
 
+#define real(x,y) (getRealAlt(hmap,x,y,TSIZE,TSIZE,HINC)+30)
+
 typedef struct tagEntities_group{
 	Entities aliens;
 	Entities humans;
