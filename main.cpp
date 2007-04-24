@@ -1,35 +1,10 @@
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <cstring>
-
-#include "altimap.hpp"
-#include "entity.hpp"
-
+#include "main.h"
 #include "textures.h"
+#include "meshes.h"
 
-#define HINC 10 //5 // Increment de hauteur
-#define TSIZE 300 // Taille d'un dalle
+#include "entity.h"
 
-//#define MAPSIZE 20 //2-3h to compil
-#define MAPSIZE 26
-
-#define NUMTREES 300
-#define NUMBOXES 100
-
-#define t(a,b,c)  "( " << round(a) << " " << round(b) << " " << round(c) << " ) "
-
-#define FACE_BOTTOM 1
-#define FACE_FRONT 2
-#define FACE_RIGHT 4
-#define FACE_REAR 8
-#define FACE_LEFT 16
-#define FACE_UP 32
-
-#define GREEN "\033[32m"
-#define RED "\033[31m"
-#define BLUE "\033[34m"
-#define NORM "\033[0m"
+#include "math.h"
 
 #define CENTER 1 
 #define TWATER 6 
@@ -38,23 +13,11 @@
 #define RIGHT 4
 #define LEFT 5
 
-
 #define WALL_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 #define FACE_ALL (FACE_UP+FACE_BOTTOM+FACE_RIGHT+FACE_LEFT+FACE_REAR+FACE_FRONT)
 
 #define WATERL 2 // Variable qui definit la hauteur des lacs et leur etendu
 //#define WATER(x,y) (water[(x)*ysize+(y)])
-
-#define rad(x) (x*M_PI/180)
-#define deg(x) (x*180/M_PI)
-
-#define maxabs(x,y,z) ((abs(x)>abs(y)?(abs(x)>abs(z)?x:z):(abs(y)>abs(z)?y:z)))
-
-#define random() ((double)rand()/RAND_MAX)
-#define real(x,y) (getRealAlt(hmap,x,y,TSIZE,TSIZE,HINC)+30)
-#define notinarena(lx,ly,lxx,lyy)  (hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0)
-
-#define distance(x,y,X,Y) (sqrt((x-X)*(x-X)+(y-Y)*(y-Y)))
 
 using namespace std;
 
@@ -79,124 +42,6 @@ typedef struct tagWATERCUBE{
 	double depth;	
 	char modflag;
 }WATERCUBE; 
-
-
-
-string getTexture(int i){
-
-	stringstream end,ret;
-	int j=0;
-	for(j=0;j<8;j++){
-		if(j<3 || j>4){
-			if(j<2){ //offsets
-				end << 16*round(5*random()) << " ";
-			}else if(j==2){//rot
-				end << round(360*random()) << " ";
-			}else{ //autres
-
-				end << 20*random() << " ";
-			}
-		}else{
-			end << 0 << " ";
-		}
-	}
-	switch(i){
-		case TEXTURE_SKYBOX:
-			return "example2/skybox 0 0 0 0.5 0.5 0 0 0";
-		case TEXTURE_ALPHA_50:
-			return "example2/alpha_050 0 0 0 0.5 0.5 0 0 0";
-		case TEXTURE_ALPHA_0:
-			return "example2/alpha_0 0 0 0 0.5 0.5 0 0 0";
-		case TEXTURE_ALPHA_100:
-			return "example2/alpha_100 0 0 0 0.5 0.5 0 0 0";
-		case TEXTURE_CAULK:
-			return "common/caulk 0 0 0 0 0 0 0 0";
-		case TEXTURE_HINT:
-			return "common/hint 0 0 0 0 0 0 0 0";
-		case TEXTURE_SKIP: //dans trem c'est toujours hint
-			return "common/hint 0 0 0 0 0 0 0 0";
-		case TEXTURE_TER1:
-			ret << "example2/ter_moss_mud ";
-			break;
-		case TEXTURE_TER2:
-			ret << "example2/ter_dirt_mud ";
-			break;
-		case TEXTURE_TER3:
-			ret << "example2/ter_srock_mud ";
-			break;
-		case TEXTURE_TER4:
-			ret << "example2/ter_rock_mud ";
-			break;
-		case TEXTURE_WATER:
-			return "example2/water 0 0 0 0.0 0.0 0 0 0";
-		case TEXTURE_WATER_CAULK:
-			return "example2/watercaulk 0 0 0 0.0 0.0 0 0 0";
-		default:
-			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
-			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
-	}
-	ret << end.str();
-	return ret.str();
-}
-
-/*string makeFace(double x, double y, double z, double tx, double ty, double tz, int texture){
-  stringstream ret;
-
-  ret << t(x+tx,y+ty,z+tz) << t(x+tx,y,z+tz) << t(x,y+ty,z+tz) << getTexture(texture) << endl; // iso-z
-  ret << t(x+tx,y+ty,z+tz) << t(x,y+ty,z+tz) << t(x+tx,y+ty,z) << getTexture(texture) << endl; // iso-y
-  ret << t(x+tx,y+ty,z+tz) << t(x+tx,y+ty,z) << t(x+tx,y,z+tz) << getTexture(texture) << endl; // iso-x
-
-  ret << t(x,y,z) << t(x+tx,y,z) << t(x,y+ty,z) << getTexture(texture) << endl; // iso-z
-  ret << t(x,y,z) << t(x,y,z+tz) << t(x+tx,y,z) << getTexture(texture) << endl; // iso-y
-  ret << t(x,y,z) << t(x,y+ty,z) << t(x,y,z+tz) << getTexture(texture) << endl; // iso-x
-  return ret.str();
-  }
-  */
-
-string makeFace(double x, double y, double z, double tx, double ty, double tz, double ax , double ay, double az, int texture, int face){
-	stringstream ret;
-	double  dz=tx*tan(rad(az));
-	double  dy=tx*tan(rad(ay));
-	double  dx=ty*tan(rad(ax));
-
-
-	//tx=abs(tx);
-	//ty=abs(ty);
-	//tz=abs(tz);
-	int tdef=0;
-
-	//	(texture==TEXTURE_HINT?TEXTURE_SKIP:TEXTURE_CAULK);
-	switch (texture)
-	{
-		case TEXTURE_HINT: /*Les autres faces des hint sont en skip*/
-			tdef=TEXTURE_SKIP;
-			break;
-
-		case TEXTURE_WATER: /*Les autres faces des haut sont en water_caulk*/
-			tdef=TEXTURE_WATER_CAULK;
-			break;
-
-		default: /* Par defaut caulk*/
-			tdef=TEXTURE_CAULK;
-
-	}
-
-
-
-	//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
-	ret << "{" << endl;
-
-	ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face & FACE_UP ? texture: tdef)) << 
-		endl; // iso-z
-	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x-dx,y+ty,z+tz) << t(x+tx-dx,y+ty+dy,z) << getTexture((face & FACE_REAR ? texture: tdef)) << endl; // iso-y
-	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x+tx-dx,y+ty+dy,z) << t(x+tx,y+dy,z+tz) << getTexture((face & FACE_RIGHT ? texture: tdef)) << endl; // iso-x
-
-	ret << t(x,y,z) << t(x+tx,y+dy,z+dz) << t(x-dx,y+ty,z) << getTexture((face & FACE_BOTTOM ? texture: tdef)) << endl; // iso-z
-	ret << t(x,y,z) << t(x,y,z+tz) << t(x+tx,y+dy,z) << getTexture((face & FACE_FRONT ? texture: tdef)) << endl; // iso-y
-	ret << t(x,y,z) << t(x-dx,y+ty,z) << t(x,y,z+tz) << getTexture((face & FACE_LEFT ? texture: tdef)) << endl; // iso-x
-	ret << "}" << endl;
-	return ret.str();
-}
 
 string getHeader(int xsize, int ysize){
 	stringstream ret;
@@ -317,76 +162,6 @@ double getRealAlt(AltitudeMap * hmap ,double x, double y,double tx,double ty, do
 	}
 	//ça serait cool que ça marche
 	*/
-}
-
-
-string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double ty, double itz){
-	stringstream ret;
-
-	int w = hmap->xsize;
-	int h = hmap->ysize;
-	double x=xx*tx;
-	double y=yy*ty;
-	double tz=itz*hmap->getaltitude(xx,yy)*255+20;
-
-	if((xx+1) < w && (yy+1) < h){
-		double da=(itz*hmap->getaltitude(xx+1,yy)*255+20)-tz;
-		double db=(itz*hmap->getaltitude(xx,yy+1)*255+20)-tz;
-		double dc=(itz*hmap->getaltitude(xx+1,yy+1)*255+20)-tz;
-		double ds = min(0.0,min(da,min(db,dc)));
-
-		ret << "//c " << xx << " " << yy << "\n{\n";
-		if(da==db && da == dc && da == 0 )
-			ret << "// null " << endl;
-
-
-		if( (da+db)/2.0 < (dc/2.0 +0.3)){ // condition de concavite
-
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
-
-			ret << t(x+tx,y+ty,z+tz+dc-10) << t(x,y+ty,z+tz+db-10) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
-			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; 
-			ret << "}\n";
-
-			ret << "{\n";
-			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; 
-
-			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
-			ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+da+tz-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-			ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
-			ret << "}\n";
-
-		}else{ if(dc - da !=db ){
-
-
-			ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y,z+tz+da) << t(x,y+ty,z+tz+db) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-		}
-		else{
-
-			ret << "//pave" << endl;
-		}
-		ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
-		ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-		ret << t(x+tx,y+ty,z+tz+dc) << t(x+tx,y+ty,z+tz+dc-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
-
-		//carre 
-		ret << t(x,y,z+tz+ds-10) << t(x+tx,y,z+tz+ds-10) << t(x,y+ty,z+tz+ds-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
-
-		ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-		ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
-		ret  <<  "}\n";
-
-		}
-	}
-	/*
-	   if(hmap->gettex(xx,yy)>TEXTURE_TER5 && hmap->gettex(xx,yy)<=TEXTURE_TER4_5){
-	   ret << endl << makeFace(x+tx/2,y+ty/2,z+tz+20,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
-	   }
-	   */
-	return ret.str();
 }
 
 string makeSkybox(AltitudeMap * hmap, int sh){
@@ -758,9 +533,9 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 				if(stop==0){ flag=true; 
 					fprintf(stderr,"Bye Bye Forest!\n");
 					break;}
-					//fprintf(stderr,"))%f\n",distance(pax,pay,lxx,lyy));
+					//fprintf(stderr,"))%f\n",mdistance(pax,pay,lxx,lyy));
 
-			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0 || distance(pax,pay,lxx,lyy)<=1.5 || distance(phx,phy,lxx,lyy)<=1.5);
+			}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || lxx>=(hmap->xsize-2) || lyy>=(hmap->ysize-2) || lxx<=0 || lyy <= 0 || mdistance(pax,pay,lxx,lyy)<=1.5 || mdistance(phx,phy,lxx,lyy)<=1.5);
 			if(flag){
 				continue;
 			}
@@ -813,18 +588,18 @@ void  dropBox(AltitudeMap * hmap, Entities_group * egp){
 			lx=(int)floor(ncx);
 			ly=(int)floor(ncy);
 
-		//}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || ncx>=(hmap->xsize-2) || ncy>=(hmap->ysize-2) || ncx<=0 || ncy <= 0 || distance(pax,pay,ncx,ncy)<=1.5 || distance(phx,phy,ncx,ncy)<=1.5);
-		}while(hmap->getaltitude(lx,ly)==0 || ncx>=(hmap->xsize-2) || ncy>=(hmap->ysize-2) || ncx<=0 || ncy <= 0 || distance(pax,pay,ncx,ncy)<=1.5 || distance(phx,phy,ncx,ncy)<=1.5);
+			//}while(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || hmap->getaltitude(lx,ly)==0 || ncx>=(hmap->xsize-2) || ncy>=(hmap->ysize-2) || ncx<=0 || ncy <= 0 || mdistance(pax,pay,ncx,ncy)<=1.5 || mdistance(phx,phy,ncx,ncy)<=1.5);
+	}while(hmap->getaltitude(lx,ly)==0 || ncx>=(hmap->xsize-2) || ncy>=(hmap->ysize-2) || ncx<=0 || ncy <= 0 || mdistance(pax,pay,ncx,ncy)<=1.5 || mdistance(phx,phy,ncx,ncy)<=1.5);
 
-		egp->misc.entityAdd(Entity("misc_model",ncx*TSIZE,ncy*TSIZE,real(ncx*TSIZE,ncy*TSIZE)-60+random()*25));// -10 pour enfoncage dans sol 
+	egp->misc.entityAdd(Entity("misc_model",ncx*TSIZE,ncy*TSIZE,real(ncx*TSIZE,ncy*TSIZE)-60+random()*25));// -10 pour enfoncage dans sol 
 
-		if((etmp = egp->misc.entityAt(-1)) != NULL){
-			etmp->attrAdd("model","models/mapobjects/box.md3");
-			etmp->attrAdd("spawnflags",2);
-			etmp->attrAdd("modelscale",3);
-			etmp->attrAdd("angle",round(random()*36000)/100.0);
-		}
+	if((etmp = egp->misc.entityAt(-1)) != NULL){
+		etmp->attrAdd("model","models/mapobjects/box.md3");
+		etmp->attrAdd("spawnflags",2);
+		etmp->attrAdd("modelscale",3);
+		etmp->attrAdd("angle",round(random()*36000)/100.0);
 	}
+}
 }
 
 double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
@@ -980,7 +755,6 @@ int main(int argc,char **argv)
 	hmap.randomize(0.2);
 	hmap.erosion(2,1);
 	hmap.normalize();
-
 
 	cout << getHeader(MAPSIZE,MAPSIZE);
 	cout << makeSkybox(&hmap,HINC);

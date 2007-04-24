@@ -1,2 +1,25 @@
-all:
-	g++ -g -Wall main.cpp -o altimap
+CC = g++
+CFLAGS = -Wall -g 
+CLIBS = 
+BIN = tremgen
+
+$(BIN): textures.o meshes.o altimap.o entity.o main.o
+	$(CC) $(CFLAGS) main.o textures.o meshes.o altimap.o entity.o -o $(BIN) $(CLIBS)
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) -o main.o -c main.cpp
+
+textures.o: textures.cpp
+	$(CC) $(CFLAGS) -o textures.o -c textures.cpp 
+
+meshes.o: meshes.cpp
+	$(CC) $(CFLAGS) -o meshes.o -c meshes.cpp 
+
+altimap.o: altimap.cpp
+	$(CC) $(CFLAGS) -o altimap.o -c altimap.cpp 
+
+entity.o: entity.cpp
+	$(CC) $(CFLAGS) -o entity.o -c entity.cpp 
+
+clean: 
+	rm -f *.o *.core $(BIN)
