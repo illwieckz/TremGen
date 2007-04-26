@@ -1,4 +1,5 @@
 #include "main.h"
+#include "math.h"
 
 string getTexture(int i){
                 
