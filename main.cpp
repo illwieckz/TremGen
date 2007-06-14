@@ -386,6 +386,14 @@ int main(int argc,char **argv)
 
 	AltitudeMap hmap(MAPSIZE,MAPSIZE);
 
+	if(argc>1)
+	{
+	
+	srand(atoi(argv[1]));
+	}else{
+	srand(time(NULL));
+	}
+
 	hmap.randomize(0.5);
 	hmap.subdivision(0.85,random(),random(),random(),random());
 	hmap.randomize(0.2);

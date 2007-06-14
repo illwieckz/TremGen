@@ -3,7 +3,7 @@
 #include "altimap.h"
 
 AltitudeMap::AltitudeMap(int _xsize, int _ysize):xsize(_xsize),ysize(_ysize),sealevel(0.0){
-	srandom(time(NULL));
+//	srandom(time(NULL));
 	xsize+=3;
 	ysize+=3;
 	map = new double[xsize*ysize];
@@ -223,7 +223,7 @@ void AltitudeMap::subdivision(double coeff, double lt, double rt, double lb, dou
 	ALT(0,ysize-1) = lb;
 	ALT(xsize-1,ysize-1) = rb;
 
-	srand(time(NULL));
+//	srand(time(NULL));
 
 	subdiv_private(coeff,3,3,xsize-4,ysize-4);
 	for(int x=0; x < xsize; ++x)
