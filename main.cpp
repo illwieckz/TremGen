@@ -166,8 +166,10 @@ void  plantForest(double cx, double cy, int numTree, AltitudeMap * hmap, Entitie
 				lx=(int)floor(lxx);
 				ly=(int)floor(lyy);
 				stop--;
-				if(stop==0){ flag=true; 
+				if(stop==0){ flag=true;
+#ifdef DEBUG				
 					fprintf(stderr,"Bye Bye Forest!\n");
+#endif					
 					break;}
 					//fprintf(stderr,"))%f\n",mdistance(pax,pay,lxx,lyy));
 
@@ -291,9 +293,9 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 	{
 		px=1+random()*w;
 		py=1+random()*h;
-
-
+#ifdef DEBUG
 		fprintf(stderr,"%f %f %f\n",px,py,mesureAlien(px,py,max,hmap));
+#endif		
 		stop--;
 		if(stop==0)
 		{
@@ -335,8 +337,9 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 		tmp+=tmp2;
 		tmp=sqrt(tmp);
-
+#ifdef DEBUG
 		fprintf(stderr,"%f %f %f\n",px,py,mesureHuman(px,py,tmp,max,hmap));
+#endif		
 		stop--;
 		if(stop==0)
 		{
