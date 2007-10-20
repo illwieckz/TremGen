@@ -312,14 +312,15 @@ double mesureHuman(double x, double y,double dist,double max,AltitudeMap * hmap)
 	al+=hmap->getaltitude(lx,ly-1);
 	al+=hmap->getaltitude(lx+1,ly);
 	al+=hmap->getaltitude(lx,ly+1);
-//fprintf(stderr,"p:%f\n",dist);
-	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y) || normal(x*TSIZE,y*TSIZE)<0.95f || dist<(MAPSIZE/4.0)){ //dans l'eau ou hors map
+//fprintf(stderr,"dist:%f\n",dist);
+//fprintf(stderr,"p:%f %f\n",dist*TSIZE,(MAPSIZE/4.0)*TSIZE);
+	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y) || normal(x*TSIZE,y*TSIZE)<0.95f || dist<(MAPSIZE/4.0)*TSIZE){ //dans l'eau ou hors map
 //fprintf(stderr,"norm :%f\n",normal(x*TSIZE,y*TSIZE));
 
 		return 0;
 
 }
-//fprintf(stderr,"p:%f %f\n",dist,(MAPSIZE/4.0));
+//fprintf(stderr,"p:%f %f\n",dist,(MAPSIZE/4.0)*TSIZE);
 	double moy=(hmap->xsize+hmap->ysize)/2.0;
 	//fprintf(stderr,"--%f %f\n",moy,dist);
 	return (((al/5.0)/(max*HINC))+dist/moy)/2.0; //we j'approx faudrait la diag et pas lamoyenne
@@ -376,10 +377,10 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 
 
-		tmp=hmap->getHumanPosX()-px;
+		tmp=hmap->getAlienPosX()-px;
 		tmp*=tmp;
 
-		double tmp2=hmap->getHumanPosY()-py;
+		double tmp2=hmap->getAlienPosY()-py;
 		tmp2*=tmp2;
 
 		tmp+=tmp2;
