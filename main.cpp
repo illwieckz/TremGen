@@ -314,7 +314,7 @@ double mesureHuman(double x, double y,double dist,double max,AltitudeMap * hmap)
 	al+=hmap->getaltitude(lx,ly+1);
 //fprintf(stderr,"dist:%f\n",dist);
 //fprintf(stderr,"p:%f %f\n",dist*TSIZE,(MAPSIZE/4.0)*TSIZE);
-	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y) || normal(x*TSIZE,y*TSIZE)<0.95f || dist<(MAPSIZE/4.0)*TSIZE){ //dans l'eau ou hors map
+	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y) || normal(x*TSIZE,y*TSIZE)<0.95f || dist<(MAPSIZE/3.0)*TSIZE){ //dans l'eau ou hors map
 //fprintf(stderr,"norm :%f\n",normal(x*TSIZE,y*TSIZE));
 
 		return 0;
@@ -377,10 +377,10 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 
 
-		tmp=hmap->getAlienPosX()-px;
+		tmp=hmap->getAlienPosX()-px*TSIZE;
 		tmp*=tmp;
 
-		double tmp2=hmap->getAlienPosY()-py;
+		double tmp2=hmap->getAlienPosY()-py*TSIZE;
 		tmp2*=tmp2;
 
 		tmp+=tmp2;
@@ -401,6 +401,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 //		fprintf(stderr,"final %f %f\n",normal(px*TSIZE,py*TSIZE),mesureHuman(px,py,tmp,max,hmap));
 	px*=TSIZE;
 	py*=TSIZE;
+ //fprintf(stderr,"final dist %f %f %f %f %f \n",tmp,px,py,hmap->getAlienPosX(),hmap->getAlienPosY());
 
 	hmap->setHumanPos(px,py);
 
