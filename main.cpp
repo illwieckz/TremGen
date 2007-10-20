@@ -4,8 +4,12 @@
 #include "entity.h"
 #include "meshes.h"
 #include "envgen.h"
+#ifndef MESSAGE
+#define MESSAGE "http://labs.esiea.fr"
+#endif
 
 #define real(x,y) (getRealAlt(hmap,x,y,TSIZE,TSIZE,HINC)+30)
+#define normal(x,y) (getNormalDiff(hmap,x,y,TSIZE,TSIZE,HINC))
 
 typedef struct tagEntities_group{
 	Entities aliens;
@@ -20,7 +24,7 @@ string getHeader(int xsize, int ysize){
 	ret << "//entity 0\n";
 	ret << "{\n\"classname\" \"worldspawn\"\n";
 	ret << "\"_blocksize\" \"16384 16384 16384\"\n"; //seemingly useless
-	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << "\"\n";
+	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << " "<< MESSAGE<<"\"\n";
 
 	return ret.str();
 }
@@ -37,7 +41,45 @@ string getFoot(Entities_group * egp){
 
 	return ret.str();
 }
+float getNormalDiff(AltitudeMap * hmap ,double x, double y,double tx,double ty, double itz)
+{
+        //fprintf(stderr,"--%f %f\n",tx,ty);
+        int xx=(int)floor(x/tx);
+        int yy=(int)floor(y/ty);
 
+        double tz=itz*hmap->getaltitude(xx,yy)*255+20; //hauteur de base
+        double dx=x-xx*tx;
+        dx/=tx;
+        double dy=y-yy*ty; //rajout en %
+        dy/=ty;
+        //fprintf(stderr,"%f %f\n",dx,dy);
+        double da=(itz*hmap->getaltitude(xx+1,yy)*255+20)-tz;
+        double db=(itz*hmap->getaltitude(xx,yy+1)*255+20)-tz;
+        double dc=(itz*hmap->getaltitude(xx+1,yy+1)*255+20)-tz;
+
+	if(dy<dx)
+	{//en bas
+	//cf schema en dessous
+	//(tx,0,db)
+	//(0,ty,da)
+	//Vect=(-ty*db,-tx*da,tx*ty)
+	//N0=(0,0,tx*ty)
+	//cos=adj/hy
+	
+//        fprintf(stderr,"t:%f %f %f %f %f\n",(float)sqrt((ty*db*db*ty+tx*da*tx*da+tx*ty*ty*tx)),db,da*tx,tx*tx*ty*ty,ty*db*db*ty);
+	return (float)sqrt((tx*ty*tx*ty)/(float)(ty*db*db*ty+tx*da*tx*da+tx*ty*ty*tx));
+	
+	}else{
+	//(-tx,0,db-dc)
+	//(0,-ty,da-dc)
+	//Vect=((db-dc) *ty ,(da-dc)*tx,tx*ty)
+	//N0=(0,0,tx*ty)
+	
+	return (float)sqrt((tx*ty*ty*tx)/(float)(ty*(db-dc)*(db-dc)*ty+tx*(da-dc)*tx*(da-dc)+tx*ty*ty*tx));
+
+	}
+
+}
 
 double getRealAlt(AltitudeMap * hmap ,double x, double y,double tx,double ty, double itz)
 {
@@ -243,7 +285,7 @@ void  dropBox(AltitudeMap * hmap, Entities_group * egp){
 double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
 {
 
-	double al=real(x,y);
+	double al=real(x*TSIZE,y*TSIZE);
 
 	int lx=(int)floor(x);
 	int ly=(int)floor(y);
@@ -252,7 +294,7 @@ double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
 	al+=hmap->getaltitude(lx+1,ly);
 	al+=hmap->getaltitude(lx,ly+1);
 
-	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
+	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y) || normal(x*TSIZE,y*TSIZE)<0.95f ) //dans l'eau ou hors map
 		return 0;
 	//fprintf(stderr,"--%f\n",al/(max*HINC));
 	return 1-((al/5.0)/(max*HINC));
@@ -262,17 +304,22 @@ double mesureAlien(double x, double y,double max,AltitudeMap * hmap)
 double mesureHuman(double x, double y,double dist,double max,AltitudeMap * hmap)
 {
 
-	double al=real(x,y);
-
+	double al=real(x*TSIZE,y*TSIZE);
+//fprintf(stderr,"xy %f %f\n",x,y);
 	int lx=(int)floor(x);
 	int ly=(int)floor(y);
 	al+=hmap->getaltitude(lx-1,ly);
 	al+=hmap->getaltitude(lx,ly-1);
 	al+=hmap->getaltitude(lx+1,ly);
 	al+=hmap->getaltitude(lx,ly+1);
+//fprintf(stderr,"p:%f\n",dist);
+	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y) || normal(x*TSIZE,y*TSIZE)<0.95f || dist<(MAPSIZE/4.0)){ //dans l'eau ou hors map
+//fprintf(stderr,"norm :%f\n",normal(x*TSIZE,y*TSIZE));
 
-	if(hmap->getwater(lx,ly) == TWATER || hmap->getwater(lx,ly) == CENTER || notinarena(lx,ly,x,y)) //dans l'eau ou hors map
 		return 0;
+
+}
+//fprintf(stderr,"p:%f %f\n",dist,(MAPSIZE/4.0));
 	double moy=(hmap->xsize+hmap->ysize)/2.0;
 	//fprintf(stderr,"--%f %f\n",moy,dist);
 	return (((al/5.0)/(max*HINC))+dist/moy)/2.0; //we j'approx faudrait la diag et pas lamoyenne
@@ -350,6 +397,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 	}while(mesureHuman(px,py,tmp,max,hmap)<seuil);
 
+//		fprintf(stderr,"final %f %f\n",normal(px*TSIZE,py*TSIZE),mesureHuman(px,py,tmp,max,hmap));
 	px*=TSIZE;
 	py*=TSIZE;
 
