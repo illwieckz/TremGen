@@ -1,7 +1,29 @@
 #/bin/sh
-a=`./generate.sh  | grep -P "^map_[0-9]+"` || exit 1
+#a=`./generate.sh  | grep -P "^map_[0-9]+"` || exit 1
+##Generate.sh
+seed=`date +%N`
+echo "seed is " $seed  "saving in map_"$seed".map";
+./tremgen $seed > "map_"$seed".map"; 
+a="map_"$seed
+##
 echo "working on "$a
-./compil.sh $a.map || exit 2
+#./compil.sh $a.map || exit 2
+##compil.sh
+f=$a".map"
+if [ ${f:0:1} == "/" ] 
+then 
+#f=$1;
+echo "";
+else
+f=`pwd`/$f;
+fi
+
+echo "Compiling "$f
+"/opt/gtkradiant/q3map2.x86" -v -game tremulous -fs_basepath "/usr/share/games/tremulous/" -fs_game base -custinfoparms -meta $f > "compile.txt"
+"/opt/gtkradiant/q3map2.x86" -v -game tremulous -fs_basepath "/usr/share/games/tremulous/" -fs_game base -vis -saveprt -fast $f >> "compile.txt"
+"/opt/gtkradiant/q3map2.x86" -v -game tremulous -fs_basepath "/usr/share/games/tremulous/" -fs_game base -light -fast  -super 2 -filter -custinfoparms $f  >> "compile.txt"
+##
+
 tmp=`mktemp -td tremgen.XXXXXX` || exit 3
 echo "tempdir is "$tmp
 mkdir $tmp"/levelshots"
