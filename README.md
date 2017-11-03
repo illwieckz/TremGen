@@ -49,7 +49,7 @@ Documentation
 - [official school project intermediat report by students [french/pdf]](docs/RapportMi.pdf)
 - [official school project final report by students [french/pdf]](docs/RapportFinal.pdf)
 - [official slides by students for final report presentation at school [french/pdf]](docs/soutenance.pdf)
-- [official school project presentation by teacher to newer students for project continuation [french/pdf]](docs/Resume et mots cles du PSI.pdf)
+- [official school project presentation by teacher to newer students for project continuation [french/pdf]](docs/Resume_et_mots_cles_du_PSI.pdf)
 
 Some historical videos
 ----------------------
