@@ -1,3 +1,9 @@
 *.o
 minimap
 tremgen
+compile.txt
+levelshot.tga
+map_*.bsp
+map_*.map
+map_*.prt
+map_*.srf
