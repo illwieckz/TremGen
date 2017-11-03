@@ -23,6 +23,26 @@ License
 
 TremGen is covered by the [GNU General Public License version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
 
+
+How-to
+------
+
+```sh
+# Compile TremGen:
+make
+
+# Generate a random map:
+./generate.sh
+
+# It will print the name for the generated map, for example: map_418018295
+# You use that name on the next parts
+
+# Build the map (use the previously generated map name):
+./compil.sh map_418018295
+
+# Test the map (use the previously generated map name):
+./test.sh map_418018295
+```
 Documentation
 -------------
 
