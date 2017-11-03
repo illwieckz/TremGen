@@ -1,4 +1,4 @@
-#!/bin/sh 
+#! /usr/bin/env bash
 
 f=$1
 if [ ${f:0:1} == "/" ] 
