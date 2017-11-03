@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "main.h" 
 #include "entity.h"
 
