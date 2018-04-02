@@ -1,9 +1,10 @@
 TremGen
 =======
 
-TremGen is a software that randomly generate maps for the free and open-source game Tremulous.
+TremGen is a software that randomly generates maps for the free and open-source game Tremulous.
 
 TremGen started in the year 2007 as a “_Projet de Sciences de l’Ingénieur_” (engineering science project) by some third year students at _[esiea](https://en.esiea.fr/)_ university. It was developped within a student club named _esiea-labs_ as an official school project mentored by the computer science teacher.
+
 
 Initial team
 ------------
@@ -17,6 +18,7 @@ Initial team
   - development (map structure: terrain generation, corridors…)
 - _Hubert Wassner_
   - mentoring teacher
+
 
 License
 -------
@@ -43,6 +45,8 @@ make
 # Test the map (use the previously generated map name):
 ./test.sh map_418018295
 ```
+
+
 Documentation
 -------------
 
@@ -51,11 +55,13 @@ Documentation
 - [official slides by students for final report presentation at school [french/pdf]](docs/soutenance.pdf)
 - [official school project presentation by teacher to newer students for project continuation [french/pdf]](docs/Resume_et_mots_cles_du_PSI.pdf)
 
+
 Some historical videos
 ----------------------
 
 - [official TremGen presentation video [french/youtube]](https://www.youtube.com/watch?v=bR4Np6bmLm8)
 - [official TremGen video showcasing the project with in-game footage from the LAN party played at school [french/youtube]](https://www.youtube.com/watch?v=LiqX1YRxJ1A)
+
 
 Some historical web pages
 -------------------------
@@ -73,6 +79,3 @@ Some historical web pages
 - [nezetic's developer blog: official TremGen presentation [french/webarchive]](https://web.archive.org/web/20160317004249/http://nezetic.net/projects/tremgen/)
 - [Tremulous forum: thread about the project [english/webarchive]](https://web.archive.org/web/20171021024248/http://tremulous.net/forum/index.php?topic=4268.0), [2nd page [english/webarchive]](https://web.archive.org/web/20171021024400/http://tremulous.net/forum/index.php?topic=4268.30)
 - [Tremulous forum: another thread about the project [english/webarchive]](https://web.archive.org/web/20171021024400/http://tremulous.net/forum/index.php?topic=4268.30)
-
-
-
