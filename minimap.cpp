@@ -33,7 +33,7 @@ int main(int argc, char ** argv){
 	hmap.erosion(2,1);
 	hmap.normalize();
 
-	cout << "generating levelshot";
+	cout << "generating levelshot" << endl;
 	CImg<double> img(10*MAPSIZE,10*MAPSIZE,1,3);
 //	img.fill(158);
 
