@@ -1,0 +1,58 @@
+#! /bin/sh
+
+# Author: Thomas Debesse
+# License: CC0 1.0
+# https://creativecommons.org/publicdomain/zero/1.0/
+
+writeArenaFile () {
+	cat > "${2}" <<-EOF
+	{
+	  map "${1}"
+	  longname "TremGen: ${1}"
+	  type "tremulous"
+	}
+	EOF
+}
+
+writePakConfFile () {
+	cat > "${2}" <<-EOF
+	[config]
+	name = "map-${1}"
+	version = "0"
+	game = "unvanquished"
+	EOF
+}
+
+writeDepsFile () {
+	cat > "${1}" <<-EOF
+	res-tremgen
+	EOF
+}
+
+seed="$(date +%N)"
+
+source_dpkdir="set/src/map-${seed}_src.dpkdir"
+deps_file="${source_dpkdir}/DEPS"
+
+maps_dir="${source_dpkdir}/maps"
+map_file="${maps_dir}/${seed}.map"
+
+meta_dir="${source_dpkdir}/meta/${seed}"
+levelshot_file="${meta_dir}/${seed}.tga"
+arena_file="${meta_dir}/${seed}.arena"
+
+pakinfo_dir="${source_dpkdir}/.pakinfo"
+pakconf_file="${pakinfo_dir}/pak.conf"
+
+mkdir -p "${maps_dir}"
+./tremgen "${seed}" "${map_file}"
+writeDepsFile "${deps_file}"
+
+mkdir -p "${meta_dir}"
+./minimap "${seed}" "${levelshot_file}"
+writeArenaFile "${seed}" "${arena_file}"
+
+mkdir -p "${pakinfo_dir}"
+writePakConfFile "${seed}" "${pakconf_file}"
+
+#EOF
