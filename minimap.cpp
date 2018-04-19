@@ -6,7 +6,7 @@
 using namespace cimg_library;
 
 int main(int argc, char ** argv){
-
+	char *filename;
 
 	AltitudeMap hmap(MAPSIZE,MAPSIZE);
 
@@ -17,6 +17,13 @@ int main(int argc, char ** argv){
 		cout << "using seed " << argv[1]<< endl; 
 	}else{
 		srand(time(NULL));
+	}
+
+	if (argc > 2)
+	{
+		filename = argv[2];
+	} else {
+		filename = "levelshot.tga";
 	}
 
 	cout << "generating map" << endl;
@@ -42,8 +49,8 @@ int main(int argc, char ** argv){
 
 	img.HSVtoRGB().blur(3);	
 
-cout << "Saving as levelshot.tga"<< endl;
-	img.save_imagemagick("levelshot.tga");
+cout << "Saving levelshot as " << filename << endl;
+	img.save_imagemagick(filename);
 #ifdef DEBUG
 	img.display("HeightMap");
 #endif

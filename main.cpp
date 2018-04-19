@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "main.h"
 #include "math.h"
 
@@ -435,6 +437,7 @@ void makeBasicEntities(AltitudeMap * hmap, Entities_group * egp){
 
 int main(int argc,char **argv)
 {
+	char *filename;
 	Entities_group egp;	
 
 	AltitudeMap hmap(MAPSIZE,MAPSIZE);
@@ -447,20 +450,40 @@ int main(int argc,char **argv)
 	srand(time(NULL));
 	}
 
+	if (argc > 2)
+	{
+		filename = (char*) malloc(sizeof(char) * strlen(argv[2]));
+		strcpy(filename, argv[2]);
+	} else if (argc > 1) {
+		filename = (char*) malloc(sizeof(char) * (strlen(argv[1]) + strlen(".map")) * sizeof(char));
+		strcpy(filename, argv[1]);
+		strcpy(filename + strlen(argv[1]), ".map");
+	} else {
+		filename = (char*) malloc(sizeof(char) * strlen("generated.map"));
+		strcpy(filename, "generated.map");
+	}
+
+	std::ofstream mapfile(filename, std::ofstream::out);
+
+	cout << "Generating map as " << filename << endl;
+
 	hmap.randomize(0.5);
 	hmap.subdivision(0.85,random(),random(),random(),random());
 	hmap.randomize(0.2);
 	hmap.erosion(2,1);
 	hmap.normalize();
 
-	cout << getHeader(MAPSIZE,MAPSIZE);
-	cout << makeSkybox(&hmap,HINC);
-	cout << makeGrid(&hmap,HINC);
-	cout << makeWater(&hmap,HINC);
+	mapfile << getHeader(MAPSIZE,MAPSIZE);
+	mapfile << makeSkybox(&hmap,HINC);
+	mapfile << makeGrid(&hmap,HINC);
+	mapfile << makeWater(&hmap,HINC);
 
 	makeBasicEntities(&hmap,&egp);
 
-	cout << getFoot(&egp);
+	mapfile << getFoot(&egp);
+
+	mapfile.close();
+	free(filename);
 
 	return 0;
 }
