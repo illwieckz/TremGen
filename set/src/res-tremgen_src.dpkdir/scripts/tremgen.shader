@@ -183,8 +183,7 @@ textures/tremgen/alpha_0      // Perfect mix of both Primary + Secondary
         qer_trans 0.75
 }
 
-
-textures/system/caulk_water 
+textures/system/watercaulk 
 { 
 	qer_editorimage textures/common/caulk 
 	surfaceparm nomarks 
