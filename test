@@ -1,0 +1,17 @@
+#! /bin/sh
+
+# Author: Thomas Debesse
+# License: CC0 1.0
+# https://creativecommons.org/publicdomain/zero/1.0/
+
+if [ -z "${1}" ]
+then
+	printf 'ERROR: missing seed\n' >&2
+	exit 1
+fi
+
+map_name="${1}"
+
+unvanquished -pakpath set/build/test +devmap "${map_name}"
+
+#EOF
