@@ -1,7 +1,7 @@
 TremGen
 =======
 
-TremGen is a software that randomly generates maps for the free and open-source game Tremulous.
+TremGen is a software that randomly generates maps for the free and open-source Unvanquished game. It was created for the Tremulous game before being ported to Unvanquished, hence the _TremGen_ name.
 
 TremGen started in the year 2007 as a “_Projet de Sciences de l’Ingénieur_” (engineering science project) by some third year students at _[esiea](https://en.esiea.fr/)_ university. It was developped within a student club named _esiea-labs_ as an official school project mentored by the computer science teacher.
 
@@ -34,23 +34,27 @@ How-to
 make
 
 # Generate a random map:
-./generate.sh
+./generate
 
-# It will print the name for the generated map, for example: map_418018295
-# You use that name on the next parts
+# It will print the seed for the generated map, for example: 418018295
+# You use that seed for other actions
 
-# Build the map (use the previously generated map name):
-./compil.sh map_418018295
+# Build the map using the seed as argument:
+./compile 418018295
 
-# Test the map (use the previously generated map name):
-./test.sh map_418018295
+# Test the map using the seed as argument:
+./test 418018295
+
+# If needed, you can regenerate the map using the seed as argument:
+./generate 418018295
+
 ```
 
 
 Documentation
 -------------
 
-- [official school project intermediat report by students [french/pdf]](docs/RapportMi.pdf)
+- [official school project intermediate report by students [french/pdf]](docs/RapportMi.pdf)
 - [official school project final report by students [french/pdf]](docs/RapportFinal.pdf)
 - [official slides by students for final report presentation at school [french/pdf]](docs/soutenance.pdf)
 - [official school project presentation by teacher to newer students for project continuation [french/pdf]](docs/Resume_et_mots_cles_du_PSI.pdf)
