@@ -11,37 +11,37 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 	int h = hmap->ysize;
 	double max = (hmap->getmaxalt() ) * 255 + 160 / sh; //+0.5 (dans axalt)bon bootstrap pour lan
 
-	ret  << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_RIGHT) << endl;
-	ret  << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_REAR) << endl;
+	ret << makeFace(-3,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_RIGHT);
+	ret << makeFace(0,-3,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_REAR);
 
-	ret  << makeFace((w-1)*s-10+5,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_LEFT) << endl;
-	ret  << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_FRONT) << endl;
+	ret << makeFace((w-1)*s-10+5,0,0,10,(h-1)*s+5,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_LEFT);
+	ret << makeFace(0,(h-1)*s-5,0,(w-1)*s+5,10,max*sh,0,0,0,TEXTURE_SKYBOX,FACE_FRONT);
 
-	ret  << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_SKYBOX,FACE_BOTTOM) << endl;
+	ret << makeFace(-3,-3,sh*max-10,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_SKYBOX,FACE_BOTTOM);
 
 	/*Embalage caulk*/
 
-	ret  << makeFace(-13,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_RIGHT) << endl;
-	ret  << makeFace(-10,-13,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_REAR) << endl;
+	ret << makeFace(-13,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_RIGHT);
+	ret << makeFace(-10,-13,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_REAR);
 
-	ret  << makeFace((w-1)*s-10+5+10,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_LEFT) << endl;
-	ret  << makeFace(-10,(h-1)*s-5+10,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_SKYBOX,FACE_FRONT) << endl;
+	ret << makeFace((w-1)*s-10+5+10,-10,-10,10,(h-1)*s+5+20,max*sh+20,0,0,0,TEXTURE_CAULK,FACE_LEFT);
+	ret << makeFace(-10,(h-1)*s-5+10,-10,(w-1)*s+5+20,10,max*sh+20,0,0,0,TEXTURE_SKYBOX,FACE_FRONT);
 
-	ret  << makeFace(-13,-13,sh*max-10+10,(w-1)*s+5+20,(h-1)*s+5+20,16,0,0,0,TEXTURE_CAULK,FACE_BOTTOM) << endl;
-	ret  << makeFace(-13,-13,-10,(w-1)*s+5+20,(h-1)*s+5+20,16,0,0,0,TEXTURE_CAULK,FACE_BOTTOM) << endl;
+	ret << makeFace(-13,-13,sh*max-10+10,(w-1)*s+5+20,(h-1)*s+5+20,16,0,0,0,TEXTURE_CAULK,FACE_BOTTOM);
+	ret << makeFace(-13,-13,-10,(w-1)*s+5+20,(h-1)*s+5+20,16,0,0,0,TEXTURE_CAULK,FACE_BOTTOM);
 
 
 
 
 	/*Embalage caulk*/
 	/*
-	   ret  << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+	   ret << makeFace(-3,-3,sh*hmap->getmaxalt()*255,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM);
 	   *//*
 	for(double i=1;i<(w-1)*s;i++){
 
 		if((int)round(i)%500==0)
 		{
-			ret << 	makeFace(i,-3,0,10,(h-1)*s+5,max*sh-160,0,0,0,TEXTURE_HINT,FACE_RIGHT) << endl;
+			ret << makeFace(i,-3,0,10,(h-1)*s+5,max*sh-160,0,0,0,TEXTURE_HINT,FACE_RIGHT);
 		}
 
 	}
@@ -50,13 +50,13 @@ string makeSkybox(AltitudeMap * hmap, int sh){
 
 		if((int)round(i)%500==0)
 		{
-			ret <<	makeFace(0,i,0,(w-1)*s+5,10,max*sh-160,0,0,0,TEXTURE_HINT,FACE_FRONT) << endl;
+			ret << makeFace(0,i,0,(w-1)*s+5,10,max*sh-160,0,0,0,TEXTURE_HINT,FACE_FRONT);
 		}
 
 	} */
 	for(double i=10+hmap->getminalt()*255;i<max;i+=40){
 		//fprintf(stderr,"%f %f\n",i,max);
-		ret  << makeFace(-3,-3,i*sh,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM) << endl;
+		ret << makeFace(-3,-3,i*sh,(w-1)*s+5,(h-1)*s+5,16,0,0,0,TEXTURE_HINT,FACE_BOTTOM);
 	}
 	return ret.str();
 }
@@ -207,9 +207,9 @@ string makeWater(AltitudeMap * hmap, int sh){
 #ifdef DEBUG
 					fprintf(stderr,"DEBUG: Water Positions: \n (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) (%d,%d,%g) | Depth: %g\n",mvect.lt.x,mvect.lt.y,minalt,mvect.rt.x,mvect.rt.y,minalt,mvect.lb.x,mvect.lb.y,minalt,mvect.rb.x,mvect.rb.y,minalt,minalt - mvect.depth);
 #endif
-					ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+					ret << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP);
 					// fog of war
-					//ret  << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP) << endl;
+					// ret << makeFace(mvect.rb.x*s,mvect.rb.y*s,mvect.depth*sh,(mvect.lt.x-mvect.rb.x)*s,(mvect.rt.y-mvect.lb.y)*s,(minalt - mvect.depth)*sh,0,0,0,TEXTURE_WATER,FACE_UP);
 				}
 			}
 		}
@@ -252,15 +252,15 @@ string makeGrid(AltitudeMap * hmap, int sh){
 
 	for(j=0; j < (h-1); j++)
 		for(i=0; i < (w-1); i++){
-			ret << endl << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC) << endl;
+			ret << makeTile(hmap,i,j,30,TSIZE,TSIZE,HINC);
 			if(hmap->gettex(i,j)!= hmap->gettex(i,j+1)  || hmap->gettex(i+1,j)!= hmap->gettex(i,j)) {
 				double x=i*TSIZE;
 				double y=j*TSIZE;
 				double tx,ty;
 				tx=ty=TSIZE;
 
-				ret << endl << makeFace(x+tx/2-10,y+ty/2-10,HINC*255*(hmap->getaltitude(i,j)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_0,FACE_ALL) << endl ;
-				//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				ret << makeFace(x+tx/2-10,y+ty/2-10,HINC*255*(hmap->getaltitude(i,j)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_0,FACE_ALL);
+				// ret << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 
 			}	
 			if(hmap->gettex(i,j)!= hmap->gettex(i,j+1) )
@@ -270,10 +270,10 @@ string makeGrid(AltitudeMap * hmap, int sh){
 				double tx,ty;
 				tx=ty=TSIZE;
 
-				//ret << endl << makeFace(x+tx-10,y,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,100,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				// ret << makeFace(x+tx-10,y,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,100,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 
-				ret << endl << makeFace(x+tx/2,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-				//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				ret << makeFace(x+tx/2,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
+				// ret << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 			}
 
 
@@ -284,10 +284,10 @@ string makeGrid(AltitudeMap * hmap, int sh){
 				double tx,ty;
 				tx=ty=TSIZE;
 
-				ret << endl << makeFace(x+tx-10,y+ty/2,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
-				//ret << endl << makeFace(x,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,100,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				ret << makeFace(x+tx-10,y+ty/2,HINC*255*(hmap->getaltitude(i,j+1)+hmap->getaltitude(i+1,j+1))/2.0-20,20,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
+				// ret << makeFace(x,y+ty-10,HINC*255*(hmap->getaltitude(i+1,j)+hmap->getaltitude(i+1,j+1))/2+20,100,20,100,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 
-				//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				// ret << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 			}
 
 			/*	
@@ -298,8 +298,8 @@ string makeGrid(AltitudeMap * hmap, int sh){
 				double tx,ty;
 				tx=ty=TSIZE;
 
-				ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
-			//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+				ret << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL);
+			    // ret << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 			}
 
 
@@ -311,8 +311,8 @@ string makeGrid(AltitudeMap * hmap, int sh){
 			double tx,ty;
 			tx=ty=TSIZE;
 
-			ret << endl << makeFace(x,y+ty/2,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
-			//ret << endl << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL) << endl ;
+			ret << makeFace(x,y+ty/2,HINC*255*hmap->getaltitude(i,j)+30,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL);
+			// ret << makeFace(x+tx/2,y,HINC*255*hmap->getaltitude(i,j)+150,10,10,10,0,0,0,TEXTURE_ALPHA_100,FACE_ALL);
 			}
 
 

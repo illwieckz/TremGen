@@ -38,8 +38,7 @@ string makeFace(double x, double y, double z, double tx, double ty, double tz, d
 	//        ret << "// "<< x<<" "<<y<<" "<<z<<" "<<tx<<" "<<ty<<" "<< tz << " "<<ax<<" "<<ay<<" "<<az<<" "<< texture<<" " << face << endl;
 	ret << "{" << endl;
 
-	ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face & FACE_UP ? texture: tdef)) << 
-		endl; // iso-z
+	ret << t(x+tx-dx,y+ty+dy,z+tz+dz) << t(x+tx,y+dy,z+tz+dz) << t(x-dx,y+ty,z+tz) << getTexture((face & FACE_UP ? texture: tdef)) << endl; // iso-z
 	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x-dx,y+ty,z+tz) << t(x+tx-dx,y+ty+dy,z) << getTexture((face & FACE_REAR ? texture: tdef)) << endl; // iso-y
 	ret << t(x+tx-dx,y+ty+dy,z+tz) << t(x+tx-dx,y+ty+dy,z) << t(x+tx,y+dy,z+tz) << getTexture((face & FACE_RIGHT ? texture: tdef)) << endl; // iso-x
 
@@ -65,7 +64,8 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		double dc=(itz*hmap->getaltitude(xx+1,yy+1)*255+20)-tz;
 		double ds = min(0.0,min(da,min(db,dc)));
 
-		ret << "//c " << xx << " " << yy << "\n{\n";
+		ret << "// c " << xx << " " << yy << endl;
+		ret << "{" << endl;
 		if(da==db && da == dc && da == 0 )
 			ret << "// null " << endl;
 
@@ -78,16 +78,16 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 
 			ret << t(x+tx,y+ty,z+tz+dc-10) << t(x,y+ty,z+tz+db-10) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
 			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; 
-			ret << "}\n";
+			ret << "}" << endl;
 
-			ret << "{\n";
+			ret << "{" << endl;
 			ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
 			ret << t(x,y+ty,z+da) << t(x+tx,y,z+tz+da-10) << t(x+tx,y,z+tz+da) << getTexture(TEXTURE_CAULK) << endl; 
 
 			ret << t(x,y,z+tz-10) << t(x+tx,y,z+tz+da-10) << t(x,y+ty,z+tz+db-10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
 			ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+da+tz-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
 			ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
-			ret << "}\n";
+			ret << "}" << endl;
 
 		}else{ if(dc - da !=db ){
 
@@ -96,7 +96,7 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 		}
 		else{
 
-			ret << "//pave" << endl;
+			ret << "// pave" << endl;
 		}
 		ret << t(x,y,z+tz) << t(x,y+ty,z+tz+db) << t(x+tx,y,z+tz+da) << getTexture(hmap->gettex(xx,yy)) << endl; // iso-z
 		ret << t(x+tx,y+ty,z+tz+dc) << t(x,y+ty,z+tz+db) << t(x+tx,y+ty,z+tz+dc-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
@@ -107,13 +107,13 @@ string makeTile(AltitudeMap * hmap, int xx, int yy, double z, double tx, double 
 
 		ret << t(x,y,z+tz-10) << t(x,y,z+tz) << t(x+tx,y,z+tz+da-10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
 		ret << t(x,y,z+tz-10) << t(x,y+ty,z+tz+db-10) << t(x,y,z+tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
-		ret  <<  "}\n";
+		ret  <<  "}" << endl;
 
 		}
 	}
 	/*
 	   if(hmap->gettex(xx,yy)>TEXTURE_TER5 && hmap->gettex(xx,yy)<=TEXTURE_TER4_5){
-	   ret << endl << makeFace(x+tx/2,y+ty/2,z+tz+20,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL) << endl ;
+	   ret << makeFace(x+tx/2,y+ty/2,z+tz+20,10,10,10,0,0,0,TEXTURE_ALPHA_50,FACE_ALL);
 	   }
 	   */
 	return ret.str();

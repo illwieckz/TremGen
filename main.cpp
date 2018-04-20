@@ -23,10 +23,11 @@ typedef struct tagEntities_group{
 
 string getHeader(int xsize, int ysize){
 	stringstream ret;
-	ret << "//entity 0\n";
-	ret << "{\n\"classname\" \"worldspawn\"\n";
-	ret << "\"_blocksize\" \"16384 16384 16384\"\n"; //seemingly useless
-	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << " "<< MESSAGE<<"\"\n";
+	ret << "//entity 0" << endl;
+	ret << "{" << endl;
+	ret << "\"classname\" \"worldspawn\"" << endl;
+	ret << "\"_blocksize\" \"16384 16384 16384\"" << endl; // seemingly useless
+	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << " "<< MESSAGE << "\"" << endl;
 
 	return ret.str();
 }
@@ -34,7 +35,7 @@ string getHeader(int xsize, int ysize){
 string getFoot(Entities_group * egp){
 	stringstream ret;
 
-	ret << "\n}\n";
+	ret << "}" << endl;
 
 	ret << egp->aliens.entitiesDump();
 	ret << egp->humans.entitiesDump();
