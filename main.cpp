@@ -23,7 +23,7 @@ typedef struct tagEntities_group{
 
 string getHeader(int xsize, int ysize){
 	stringstream ret;
-	ret << "//entity 0" << endl;
+	ret << "// entity 0" << endl;
 	ret << "{" << endl;
 	ret << "\"classname\" \"worldspawn\"" << endl;
 	ret << "\"_blocksize\" \"16384 16384 16384\"" << endl; // seemingly useless
