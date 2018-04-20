@@ -19,9 +19,11 @@ main(int argc, char **argv) {
 	}
 
 	if (argc > 2) {
-		filename = argv[2];
+		filename = (char *) malloc(sizeof(char) * strlen(argv[2]));
+		strcpy(filename, argv[2]);
 	} else {
-		filename = "levelshot.tga";
+		filename = (char *) malloc(sizeof(char) * strlen("levelshot.tga"));
+		strcpy(filename, "levelshot.tga");
 	}
 
 	cout << "generating map" << endl;
@@ -48,6 +50,8 @@ main(int argc, char **argv) {
 
 	cout << "Saving levelshot as " << filename << endl;
 	img.save_imagemagick(filename);
+	free(filename);
+
 #ifdef DEBUG
 	img.display("HeightMap");
 #endif
