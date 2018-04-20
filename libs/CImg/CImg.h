@@ -3307,7 +3307,7 @@ namespace cimg_library {
 
 #define cimg_test_temporary_path(p) \
       if (!path_found) { \
-	std::sprintf(st_temporary_path,p); \
+	std::sprintf(st_temporary_path,"%s",p); \
 	std::sprintf(tmp,"%s%s%s",st_temporary_path,cimg_OS==2?"\\":"/",filetmp); \
 	if ((file=std::fopen(tmp,"wb"))!=0) { std::fclose(file); std::remove(tmp); path_found = true; } \
       }
@@ -3488,9 +3488,8 @@ namespace cimg_library {
       }
       if (name) {
 	if (argc>0) {
-	  int k=0,i;
+	  int k=0;
 	  while (k<argc && cimg::strcmp(argv[k],name)) k++;
-	  i=k;
 	  res=(k++==argc?defaut:(k==argc?argv[--k]:argv[k]));
 	} else res = defaut;
 	if (visu && usage) std::fprintf(stderr,"    %s%-8s%s = %-12s : %s%s%s\n",
@@ -5334,12 +5333,12 @@ namespace cimg_library {
 	  const unsigned int M = 248;
 	  if (cimg::X11attr().byte_order) for (unsigned int xy=0; xy<xymax; xy++) {
 	    const unsigned char G = (unsigned char)*(data2++)>>2;
-	    *(ptrd++) = (unsigned char)*(data1++)&M | (G>>3);
+	    *(ptrd++) = ((unsigned char)*(data1++)&M) | (G>>3);
 	    *(ptrd++) = (G<<5) | ((unsigned char)*(data3++)>>3);
 	  } else for (unsigned int xy=0; xy<xymax; xy++) {
 	    const unsigned char G = (unsigned char)*(data2++)>>2;
 	    *(ptrd++) = (G<<5) | ((unsigned char)*(data3++)>>3);
-	    *(ptrd++) = (unsigned char)*(data1++)&M | (G>>3);
+	    *(ptrd++) = ((unsigned char)*(data1++)&M) | (G>>3);
 	  }
 	  if (ndata!=data) { _render_resize(ndata,img.width,img.height,(unsigned short*)data,width,height); delete[] ndata; }
 	} break;
@@ -5399,12 +5398,12 @@ namespace cimg_library {
 	  const unsigned int M = 248;
 	  if (cimg::X11attr().byte_order) for (unsigned int xy=0; xy<xymax; xy++) {
 	    const unsigned char G = (unsigned char)(255*(*(data2++)-min)/mm)>>2;
-	    *(ptrd++) = (unsigned char)(255*(*(data1++)-min)/mm)&M | (G>>3);
+	    *(ptrd++) = ((unsigned char)(255*(*(data1++)-min)/mm)&M) | (G>>3);
 	    *(ptrd++) = (G<<5) | ((unsigned char)(255*(*(data3++)-min)/mm)>>3);
 	  } else for (unsigned int xy=0; xy<xymax; xy++) {
 	    const unsigned char G = (unsigned char)(255*(*(data2++)-min)/mm)>>2;
 	    *(ptrd++) = (G<<5) | ((unsigned char)(255*(*(data3++)-min)/mm)>>3);
-	    *(ptrd++) = (unsigned char)(255*(*(data1++)-min)/mm)&M | (G>>3);
+	    *(ptrd++) = ((unsigned char)(255*(*(data1++)-min)/mm)&M) | (G>>3);
 	  }
 	  if (ndata!=data) { _render_resize(ndata,img.width,img.height,(unsigned short*)data,width,height); delete[] ndata; }
 	} break;
@@ -10401,7 +10400,8 @@ namespace cimg_library {
 	cimg_forXYZ(*this,x,y,z) {
 	  restype n=0; cimg_forV(*this,v) {
 	    const restype tmp = (restype)cimg::abs((*this)(x,y,z,v));
-	    if (tmp>n) n=tmp; res(x,y,z) = n;
+	    if (tmp>n) n=tmp;
+		res(x,y,z) = n;
 	  }
 	}
       } break;
@@ -16561,10 +16561,21 @@ namespace cimg_library {
 	  }
 	}
 
-	if (X0<0) X0 = 0; if (X0>=(int)width) X0 = (int)width-1; if (Y0<0) Y0 = 0; if (Y0>=(int)height) Y0 = (int)height-1;
-	if (Z0<0) Z0 = 0; if (Z0>=(int)depth) Z0 = (int)depth-1;
-	if (X1<1) X1 = 0; if (X1>=(int)width) X1 = (int)width-1; if (Y1<0) Y1 = 0; if (Y1>=(int)height) Y1 = (int)height-1;
-	if (Z1<0) Z1 = 0; if (Z1>=(int)depth) Z1 = (int)depth-1;
+	if (X0<0) X0 = 0;
+	if (X0>=(int)width) X0 = (int)width-1;
+	if (Y0<0) Y0 = 0;
+	if (Y0>=(int)height) Y0 = (int)height-1;
+
+	if (Z0<0) Z0 = 0;
+	if (Z0>=(int)depth) Z0 = (int)depth-1;
+
+	if (X1<1) X1 = 0;
+	if (X1>=(int)width) X1 = (int)width-1;
+	if (Y1<0) Y1 = 0;
+	if (Y1>=(int)height) Y1 = (int)height-1;
+
+	if (Z1<0) Z1 = 0;
+	if (Z1>=(int)depth) Z1 = (int)depth-1;
 
 	// Draw visualization image on the display
 	if (oX!=X || oY!=Y || oZ!=Z || !visu0) {
@@ -18415,8 +18426,8 @@ namespace cimg_library {
     static CImg get_load_pandore(std::FILE *const file, const char *const filename=0) {
       std::FILE *const nfile = file?file:cimg::fopen(filename,"rb");
       typedef unsigned char uchar;
-      typedef unsigned short ushort;
-      typedef unsigned int uint;
+      // typedef unsigned short ushort;
+      // typedef unsigned int uint;
       typedef unsigned long ulong;
       CImg dest;
       char tmp[32];
