@@ -1,0 +1,26 @@
+#! /bin/sh
+
+# Author: Thomas Debesse
+# License: CC0 1.0
+# https://creativecommons.org/publicdomain/zero/1.0/
+
+if [ -z "${1}" ]
+then
+	printf 'ERROR: missing seed\n' >&2
+	exit 1
+fi
+
+base_name="${1}"
+source_dpkdir="src/map-${base_name}_src.dpkdir"
+
+cd set
+
+if [ ! -d "${source_dpkdir}" ]
+then
+	printf 'ERROR: not a directory: %s\n' "${source_dpkdir}" >&2
+	exit 1
+fi
+
+urcheon build -mp test "${source_dpkdir}"
+
+#EOF
