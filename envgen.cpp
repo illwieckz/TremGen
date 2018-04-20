@@ -242,16 +242,16 @@ makeWater(AltitudeMap *hmap, int sh) {
 			alt = alt < 9 ? alt : 9;
 			switch (hmap->getwater(x, y)) {
 			case CENTER:
-				fprintf(stderr, RED "%d"NORM, alt);
+				fprintf(stderr, RED "%d" NORM, alt);
 				break;
 			case TWATER:
-				fprintf(stderr, BLUE "%d"NORM, alt);
+				fprintf(stderr, BLUE "%d" NORM, alt);
 				break;
 			case TOP:
 			case BOTTOM:
 			case LEFT:
 			case RIGHT:
-				fprintf(stderr, GREEN "%d"NORM, alt);
+				fprintf(stderr, GREEN "%d" NORM, alt);
 				break;
 			default:
 				fprintf(stderr, "%d", alt);
