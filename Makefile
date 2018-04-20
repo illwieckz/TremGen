@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := all
 
 CC = g++
-CFLAGS = -Wall -g 
+CFLAGS = -Wall -Werror -pedantic -g 
 CLIBS = 
 BIN = tremgen
 
