@@ -12,6 +12,7 @@ fi
 
 base_name="${1}"
 source_dpkdir="src/map-${base_name}_src.dpkdir"
+resource_dpkdir='src/res-tremgen_src.dpkdir'
 
 cd set
 
@@ -21,6 +22,6 @@ then
 	exit 1
 fi
 
-urcheon build -mp test "${source_dpkdir}"
+urcheon build -cm -mp test "${resource_dpkdir}" "${source_dpkdir}"
 
 #EOF
