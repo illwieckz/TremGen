@@ -1,5 +1,6 @@
 ctftrunk
 {
+	qer_editorimage models/mapobjects/ctftree/ctftree
 	{
 		map models/mapobjects/ctftree/ctftree.tga
 		rgbGen Vertex
@@ -7,6 +8,7 @@ ctftrunk
 }
 ctfleaves
 {
+	qer_editorimage models/mapobjects/ctftree/ctftree
 	surfaceparm nonsolid
 	surfaceparm nomarks
 	surfaceparm noimpact
