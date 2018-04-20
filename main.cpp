@@ -53,10 +53,10 @@ getNormalDiff(AltitudeMap *hmap, double x, double y, double tx, double ty, doubl
 	int xx = (int)floor(x / tx);
 	int yy = (int)floor(y / ty);
 
-	double tz = itz * hmap->getaltitude(xx, yy) * 255 + 20; //hauteur de base
+	double tz = itz * hmap->getaltitude(xx, yy) * 255 + 20; // hauteur de base
 	double dx = x - xx * tx;
 	dx /= tx;
-	double dy = y - yy * ty; //rajout en %
+	double dy = y - yy * ty; // rajout en %
 	dy /= ty;
 	// fprintf(stderr,"%f %f\n",dx,dy);
 	double da = (itz * hmap->getaltitude(xx + 1, yy) * 255 + 20) - tz;
