@@ -22,7 +22,7 @@ string getTexture(int i){
                 case TEXTURE_ALPHA_50:
                         return TEXTURES_ROOT"/alpha_050 0 0 0 0.5 0.5 0 0 0";
                 case TEXTURE_ALPHA_0:
-                        return TEXTURES_ROOT"/alpha_0 0 0 0 0.5 0.5 0 0 0";
+                        return TEXTURES_ROOT"/alpha_000 0 0 0 0.5 0.5 0 0 0";
                 case TEXTURE_ALPHA_100:
                         return TEXTURES_ROOT"/alpha_100 0 0 0 0.5 0.5 0 0 0";
                 case TEXTURE_CAULK:

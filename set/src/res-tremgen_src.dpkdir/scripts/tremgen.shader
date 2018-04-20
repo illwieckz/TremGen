@@ -153,34 +153,64 @@ textures/tremgen/ter_rock_mud
 	}
 }
 //ancient remains
-textures/tremgen/alpha_050      // Perfect mix of both Primary + Secondary
+textures/tremgen/alpha_000	// Primary texture ONLY
 {
-        q3map_alphaMod volume
-        q3map_alphaMod set 0.50
-        surfaceparm nodraw
-        surfaceparm nonsolid
-        surfaceparm trans
-        qer_trans 0.75
+	q3map_alphaMod volume
+	q3map_alphaMod set 0
+	surfaceparm nodraw
+	surfaceparm nonsolid
+	surfaceparm trans
+	qer_trans 0.75
 }
 
-textures/tremgen/alpha_100      // Perfect mix of both Primary + Secondary
+textures/tremgen/alpha_025
 {
-        q3map_alphaMod volume
-        q3map_alphaMod set 1.00
-        surfaceparm nodraw
-        surfaceparm nonsolid
-        surfaceparm trans
-        qer_trans 0.75
+	q3map_alphaMod volume
+	q3map_alphaMod set 0.25
+	surfaceparm nodraw
+	surfaceparm nonsolid
+	surfaceparm trans
+	qer_trans 0.75
 }
 
-textures/tremgen/alpha_0      // Perfect mix of both Primary + Secondary
+textures/tremgen/alpha_050	// Perfect mix of both Primary + Secondary
 {
-        q3map_alphaMod volume
-        q3map_alphaMod set 0.0
-        surfaceparm nodraw
-        surfaceparm nonsolid
-        surfaceparm trans
-        qer_trans 0.75
+	q3map_alphaMod volume
+	q3map_alphaMod set 0.50
+	surfaceparm nodraw
+	surfaceparm nonsolid
+	surfaceparm trans
+	qer_trans 0.75
+}
+
+textures/tremgen/alpha_075
+{
+	q3map_alphaMod volume
+	q3map_alphaMod set 0.75
+	surfaceparm nodraw
+	surfaceparm nonsolid
+	surfaceparm trans
+	qer_trans 0.75
+}
+
+textures/tremgen/alpha_085
+{
+	q3map_alphaMod volume
+	q3map_alphaMod set 0.85
+	surfaceparm nodraw
+	surfaceparm nonsolid
+	surfaceparm trans
+	qer_trans 0.75
+}
+
+textures/tremgen/alpha_100	// Secondary texture ONLY
+{
+	q3map_alphaMod volume
+	q3map_alphaMod set 1.0
+	surfaceparm nodraw
+	surfaceparm nonsolid
+	surfaceparm trans
+	qer_trans 0.75
 }
 
 textures/system/watercaulk 
