@@ -29,7 +29,12 @@ writeDepsFile () {
 	EOF
 }
 
-seed="$(date +%N)"
+if [ -z "${1}" ]
+then
+	seed="$(date +%N)"
+else
+	seed="${1}"
+fi
 
 source_dpkdir="set/src/map-${seed}_src.dpkdir"
 deps_file="${source_dpkdir}/DEPS"
