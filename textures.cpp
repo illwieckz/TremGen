@@ -7,21 +7,14 @@
 
 string getTexture(int i){
                 
-        stringstream end,ret;
+        stringstream coord, ret;
         int j=0;
-        for(j=0;j<8;j++){
-                if(j<3 || j>4){
+        for(j=0; j<=3; j++) {
                         if(j<2){ //offsets
-                                end << 16*round(5*random()) << " ";
+                                coord << 16*round(5*random()) << " ";
                         }else if(j==2){//rot
-                                end << round(360*random()) << " ";
-                        }else{ //autres
-
-                                end << 20*random() << " ";
+                                coord << round(360*random()) << " ";
                         }
-                }else{
-                        end << 0 << " ";
-                }
         }
    switch(i){
                 case TEXTURE_SKYBOX:
@@ -39,17 +32,17 @@ string getTexture(int i){
                 case TEXTURE_SKIP: //dans trem c'est toujours hint
                         return "common/hint 0 0 0 0 0 0 0 0";
                 case TEXTURE_TER1:
-                        ret << TEXTURES_ROOT"/ter_moss_mud ";
-                        break;
+                        ret << TEXTURES_ROOT"/ter_moss_mud " << coord.str() << "0 0 0 0 0";
+                        return ret.str();
                 case TEXTURE_TER2:
-                        ret << TEXTURES_ROOT"/ter_dirt_mud ";
-                        break;
+                        ret << TEXTURES_ROOT"/ter_dirt_mud " << coord.str() << "0 0 0 0 0";
+                        return ret.str();
                 case TEXTURE_TER3:
-                        ret << TEXTURES_ROOT"/ter_srock_mud ";
-                        break;
+                        ret << TEXTURES_ROOT"/ter_srock_mud " << coord.str() << "0 0 0 0 0";
+                        return ret.str();
                 case TEXTURE_TER4:
-                        ret << TEXTURES_ROOT"/ter_rock_mud ";
-                        break;
+                        ret << TEXTURES_ROOT"/ter_rock_mud " << coord.str() << "0 0 0 0 0";
+                        return ret.str();
                 case TEXTURE_WATER:
                         return TEXTURES_ROOT"/water 0 0 0 0.0 0.0 0 0 0";
                 case TEXTURE_WATER_CAULK:
@@ -58,7 +51,5 @@ string getTexture(int i){
 			return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 			//return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
         }
-        ret << end.str();
-        return ret.str();
 }
 
