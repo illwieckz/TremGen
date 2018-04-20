@@ -38,7 +38,7 @@ minimap.o: minimap.cpp
 	$(CC) $(CFLAGS) -o minimap.o -c minimap.cpp -I libs/CImg/
 
 clean: 
-	rm -f *.o *.core $(BIN)
+	rm -f *.o *.core $(BIN) minimap
 
 uncrustify:
 	uncrustify -c uncrustify.cfg --replace --no-backup -l CPP *.cpp *.h
