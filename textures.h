@@ -8,7 +8,7 @@
 #define FACE_LEFT 16
 #define FACE_UP 32
 
-// definition des constantes des texutres
+// definition des constantes des textures
 
 #define TEXTURE_SKYBOX (-10)
 #define TEXTURE_ALPHA_100 (-13)
@@ -24,8 +24,8 @@
 #define TEXTURE_TER3 4
 #define TEXTURE_TER4 8
 
-#define TEXTURE_WATER 80 
+#define TEXTURE_WATER 80
 
 string getTexture(int);
 
-#endif // TEXTURES_H 
+#endif // TEXTURES_H

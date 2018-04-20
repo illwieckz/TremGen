@@ -1,10 +1,12 @@
+.PHONY: all clean uncrustify
+.DEFAULT_GOAL := all
+
 CC = g++
 CFLAGS = -Wall -g 
 CLIBS = 
 BIN = tremgen
 
 CIMGFLAGS = -O2 -lm -lpthread $(shell pkg-config --libs x11)
-
 
 all: $(BIN) minimap
 
@@ -37,3 +39,6 @@ minimap.o: minimap.cpp
 
 clean: 
 	rm -f *.o *.core $(BIN)
+
+uncrustify:
+	uncrustify -c uncrustify.cfg --replace --no-backup -l CPP *.cpp *.h

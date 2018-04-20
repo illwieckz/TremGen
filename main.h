@@ -17,10 +17,8 @@ using namespace std;
 #define BLUE "\033[34m"
 #define NORM "\033[0m"
 
-
-typedef struct tagVECTOR2D{
-        int x, y;
-}VECTOR2D;
-
+typedef struct tagVECTOR2D {
+	int x, y;
+} VECTOR2D;
 
 #endif // MAIN_H
