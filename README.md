@@ -23,7 +23,7 @@ Initial team
 License
 -------
 
-TremGen is covered by the [GNU General Public License version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
+TremGen is covered by the [GNU General Public License version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) or (at your option) any later version.
 
 
 How-to
