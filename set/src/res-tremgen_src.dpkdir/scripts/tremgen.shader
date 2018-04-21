@@ -213,7 +213,7 @@ textures/tremgen/alpha_100	// Secondary texture ONLY
 	qer_trans 0.75
 }
 
-textures/system/watercaulk 
+textures/tremgen/watercaulk
 { 
 	qer_editorimage textures/common/caulk 
 	surfaceparm nomarks 
