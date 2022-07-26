@@ -81,5 +81,6 @@ Some historical web pages
 - [teacher's blog: some more news about TremGen with a video [french/webarchive]](https://web.archive.org/web/20071012185017/http://professeurs.esiea.fr:80/wassner/?2007/05/12/70-derniere-video-du-projet-de-creation-de-map-pour-tremulous)
 - [teacher's blog: official TremGen presentation to new students for project continuation [french/webarchive]](https://web.archive.org/web/20080125015431/http://professeurs.esiea.fr:80/wassner/?2007/11/20/100-proposition-de-projet-psi-tremgen-)
 - [nezetic's developer blog: official TremGen presentation [french/webarchive]](https://web.archive.org/web/20160317004249/http://nezetic.net/projects/tremgen/)
+- [lesjeuxvideos.com: an article about the project written by a student [french/webarchive]](https://web.archive.org/web/20220726162617/http://www.lesjeuxvideo.com/dossiers/maps-tremulous-gratuites-automatiques.html)
 - [Tremulous forum: thread about the project [english/webarchive]](https://web.archive.org/web/20171021024248/http://tremulous.net/forum/index.php?topic=4268.0), [2nd page [english/webarchive]](https://web.archive.org/web/20171021024400/http://tremulous.net/forum/index.php?topic=4268.30)
 - [Tremulous forum: another thread about the project [english/webarchive]](https://web.archive.org/web/20171021024400/http://tremulous.net/forum/index.php?topic=4268.30)
