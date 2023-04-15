@@ -24,6 +24,6 @@ then
 	exit 1
 fi
 
-urcheon build -cm "${resource_dpkdir}" "${source_dpkdir}"
+urcheon build -cm -mp fast "${resource_dpkdir}" "${source_dpkdir}"
 
 #EOF
