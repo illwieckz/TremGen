@@ -26,7 +26,7 @@ makeSkybox(AltitudeMap *hmap, int sh) {
 	ret << makeFace(-10, -13, -10, (w - 1) * s + 5 + 20, 10, max * sh + 20, 0, 0, 0, TEXTURE_CAULK, FACE_REAR);
 
 	ret << makeFace((w - 1) * s - 10 + 5 + 10, -10, -10, 10, (h - 1) * s + 5 + 20, max * sh + 20, 0, 0, 0, TEXTURE_CAULK, FACE_LEFT);
-	ret << makeFace(-10, (h - 1) * s - 5 + 10, -10, (w - 1) * s + 5 + 20, 10, max * sh + 20, 0, 0, 0, TEXTURE_SKYBOX, FACE_FRONT);
+	ret << makeFace(-10, (h - 1) * s - 5 + 10, -10, (w - 1) * s + 5 + 20, 10, max * sh + 20, 0, 0, 0, TEXTURE_CAULK, FACE_FRONT);
 
 	ret << makeFace(-13, -13, sh * max - 10 + 10, (w - 1) * s + 5 + 20, (h - 1) * s + 5 + 20, 16, 0, 0, 0, TEXTURE_CAULK, FACE_BOTTOM);
 	ret << makeFace(-13, -13, -10, (w - 1) * s + 5 + 20, (h - 1) * s + 5 + 20, 16, 0, 0, 0, TEXTURE_CAULK, FACE_BOTTOM);
