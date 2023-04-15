@@ -23,8 +23,8 @@ makeFace(double x, double y, double z, double tx, double ty, double tz, double a
 		tdef = TEXTURE_HINTSKIP;
 		break;
 
-	case TEXTURE_WATER: // les autres faces des haut sont en water_caulk
-		tdef = TEXTURE_WATER_CAULK;
+	case TEXTURE_WATER: // les autres faces des haut sont en nondrawnonsolid
+		tdef = TEXTURE_NONDRAWNONSOLID;
 		break;
 
 	default: // par defaut caulk

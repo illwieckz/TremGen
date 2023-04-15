@@ -49,8 +49,8 @@ getTexture(int i) {
 		return ret.str();
 	case TEXTURE_WATER:
 		return TREMGEN_TEXTURES_ROOT "/water 0 0 0 1 1 0 0 0";
-	case TEXTURE_WATER_CAULK:
-		return TREMGEN_TEXTURES_ROOT "/watercaulk 0 0 0 1 1 0 0 0";
+	case TEXTURE_NONDRAWNONSOLID:
+		return COMMON_TEXTURES_ROOT "/nodrawnonsolid 0 0 0 1 1 0 0 0";
 	default:
 		return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 		// return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
