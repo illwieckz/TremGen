@@ -10,8 +10,10 @@ then
 	exit 1
 fi
 
-base_name="${1}"
-source_dpkdir="src/map-${base_name}_src.dpkdir"
+seed="${1}"
+map_name="tremgen-${seed}"
+
+source_dpkdir="src/map-${map_name}_src.dpkdir"
 resource_dpkdir='src/res-tremgen_src.dpkdir'
 
 cd set

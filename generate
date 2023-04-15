@@ -5,17 +5,17 @@
 # https://creativecommons.org/publicdomain/zero/1.0/
 
 writeArenaFile () {
-	cat > "${2}" <<-EOF
+	sed -e 's/\\t/\t/g' > "${3}" <<-EOF
 	{
-	  map "${1}"
-	  longname "TremGen: ${1}"
-	  type "tremulous"
+	\tmap "${2}"
+	\tlongname "TremGen#${1}"
+	\ttype "tremulous"
 	}
 	EOF
 }
 
 writeGameFile () {
-	cat > "${2}" <<-EOF
+	cat > "${1}" <<-EOF
 	unvanquished
 	EOF
 }
@@ -33,15 +33,17 @@ else
 	seed="${1}"
 fi
 
-source_dpkdir="set/src/map-${seed}_src.dpkdir"
+map_name="tremgen-${seed}"
+
+source_dpkdir="set/src/map-${map_name}_src.dpkdir"
 deps_file="${source_dpkdir}/DEPS"
 
 maps_dir="${source_dpkdir}/maps"
-map_file="${maps_dir}/${seed}.map"
+map_file="${maps_dir}/${map_name}.map"
 
-meta_dir="${source_dpkdir}/meta/${seed}"
-levelshot_file="${meta_dir}/${seed}.tga"
-arena_file="${meta_dir}/${seed}.arena"
+meta_dir="${source_dpkdir}/meta/${map_name}"
+levelshot_file="${meta_dir}/${map_name}.tga"
+arena_file="${meta_dir}/${map_name}.arena"
 
 urcheon_dir="${source_dpkdir}/.urcheon"
 game_file="${urcheon_dir}/game.txt"
@@ -51,10 +53,10 @@ mkdir -p "${maps_dir}"
 writeDepsFile "${deps_file}"
 
 mkdir -p "${meta_dir}"
-./minimap "${seed}" "${levelshot_file}"
-writeArenaFile "${seed}" "${arena_file}"
+./minimap "${map_name}" "${levelshot_file}"
+writeArenaFile "${seed}" "${map_name}" "${arena_file}"
 
 mkdir -p "${urcheon_dir}"
-writeGameFile "${seed}" "${game_file}"
+writeGameFile "${game_file}"
 
 #EOF
