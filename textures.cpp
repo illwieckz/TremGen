@@ -30,27 +30,27 @@ getTexture(int i) {
 	case TEXTURE_ALPHA_100:
 		return COMMON_TEXTURES_ROOT "/alpha_100 0 0 0 0.5 0.5 0 0 0";
 	case TEXTURE_CAULK:
-		return COMMON_TEXTURES_ROOT "/caulk 0 0 0 0 0 0 0 0";
+		return COMMON_TEXTURES_ROOT "/caulk 0 0 0 1 1 0 0 0";
 	case TEXTURE_HINT:
-		return COMMON_TEXTURES_ROOT "/hint 0 0 0 0 0 0 0 0";
+		return COMMON_TEXTURES_ROOT "/hint 0 0 0 1 1 0 0 0";
 	case TEXTURE_SKIP: // dans trem c'est toujours hint
-		return COMMON_TEXTURES_ROOT "/hint 0 0 0 0 0 0 0 0";
+		return COMMON_TEXTURES_ROOT "/hint 0 0 0 1 1 0 0 0";
 	case TEXTURE_TER1:
-		ret << TREMGEN_TEXTURES_ROOT "/ter_moss_mud " << coord.str() << "0 0 0 0 0";
+		ret << TREMGEN_TEXTURES_ROOT "/ter_moss_mud " << coord.str() << "1 1 0 0 0";
 		return ret.str();
 	case TEXTURE_TER2:
-		ret << TREMGEN_TEXTURES_ROOT "/ter_dirt_mud " << coord.str() << "0 0 0 0 0";
+		ret << TREMGEN_TEXTURES_ROOT "/ter_dirt_mud " << coord.str() << "1 1 0 0 0";
 		return ret.str();
 	case TEXTURE_TER3:
-		ret << TREMGEN_TEXTURES_ROOT "/ter_srock_mud " << coord.str() << "0 0 0 0 0";
+		ret << TREMGEN_TEXTURES_ROOT "/ter_srock_mud " << coord.str() << "1 1 0 0 0";
 		return ret.str();
 	case TEXTURE_TER4:
-		ret << TREMGEN_TEXTURES_ROOT "/ter_rock_mud " << coord.str() << "0 0 0 0 0";
+		ret << TREMGEN_TEXTURES_ROOT "/ter_rock_mud " << coord.str() << "1 1 0 0 0";
 		return ret.str();
 	case TEXTURE_WATER:
-		return TREMGEN_TEXTURES_ROOT "/water 0 0 0 0.0 0.0 0 0 0";
+		return TREMGEN_TEXTURES_ROOT "/water 0 0 0 1 1 0 0 0";
 	case TEXTURE_WATER_CAULK:
-		return TREMGEN_TEXTURES_ROOT "/watercaulk 0 0 0 0.0 0.0 0 0 0";
+		return TREMGEN_TEXTURES_ROOT "/watercaulk 0 0 0 1 1 0 0 0";
 	default:
 		return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
 		// return "arachnid2/dirt_1 0 0 0 0.5 0.5 0 0 0";
