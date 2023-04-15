@@ -17,10 +17,10 @@ makeFace(double x, double y, double z, double tx, double ty, double tz, double a
 	// tz = abs(tz);
 	int tdef = 0;
 
-	// (texture == TEXTURE_HINT ? TEXTURE_SKIP : TEXTURE_CAULK);
+	// (texture == TEXTURE_HINT ? TEXTURE_HINTSKIP : TEXTURE_CAULK);
 	switch (texture) {
 	case TEXTURE_HINT: // les autres faces des hint sont en skip
-		tdef = TEXTURE_SKIP;
+		tdef = TEXTURE_HINTSKIP;
 		break;
 
 	case TEXTURE_WATER: // les autres faces des haut sont en water_caulk

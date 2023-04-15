@@ -33,8 +33,8 @@ getTexture(int i) {
 		return COMMON_TEXTURES_ROOT "/caulk 0 0 0 1 1 0 0 0";
 	case TEXTURE_HINT:
 		return COMMON_TEXTURES_ROOT "/hint 0 0 0 1 1 0 0 0";
-	case TEXTURE_SKIP: // dans trem c'est toujours hint
-		return COMMON_TEXTURES_ROOT "/hint 0 0 0 1 1 0 0 0";
+	case TEXTURE_HINTSKIP: // dans trem c'est toujours hint
+		return COMMON_TEXTURES_ROOT "/hintskip 0 0 0 1 1 0 0 0";
 	case TEXTURE_TER1:
 		ret << TREMGEN_TEXTURES_ROOT "/ter_moss_mud " << coord.str() << "1 1 0 0 0";
 		return ret.str();
