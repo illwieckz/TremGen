@@ -12,6 +12,6 @@ fi
 
 map_name="tremgen-${1}"
 
-unvanquished -pakpath set/build/test +devmap "${map_name}"
+unvanquished -pakpath "$(realpath set/build/test)" +devmap "${map_name}"
 
 #EOF
