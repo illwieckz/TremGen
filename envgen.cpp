@@ -50,10 +50,15 @@ makeSkybox(AltitudeMap *hmap, int sh) {
 	    }
 	   }
 	 */
+
+// Disable hints for now, they very likely don't help done this way.
+#if 0
 	for (double i = 10 + hmap->getminalt() * 255; i < max; i += 40) {
 		//fprintf(stderr, "%f %f\n", i, max);
 		ret << makeFace(-3, -3, i * sh, (w - 1) * s + 5, (h - 1) * s + 5, 16, 0, 0, 0, TEXTURE_HINT, FACE_BOTTOM);
 	}
+#endif
+
 	return ret.str();
 }
 
