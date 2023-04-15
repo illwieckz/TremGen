@@ -14,7 +14,7 @@ textures/tremgen/rockground_grass
 {
 	q3map_nonplanar
 	q3map_shadeangle 180
-	qer_editorimage textures/atcs/rockground.tga
+	qer_editorimage textures/atcs/rockground
 
 	q3map_surfaceModel models/mapobjects/multiplant/multiplant_b.md3 128 0.1 0.05 0.25 0 360 1
 	{
@@ -22,25 +22,25 @@ textures/tremgen/rockground_grass
 		rgbGen identity
 	}
 	{
-		map textures/atcs/rockground.tga
+		map textures/atcs/rockground
 		blendFunc filter
 	}
 }
 
 textures/tremgen/force_field_s
 	{
-	qer_editorimage textures/tremgen/force_field_gtk.tga
+	qer_editorimage textures/tremgen/force_field_gtk
 	surfaceparm trans
 	surfaceparm nomarks
 	surfaceparm nolightmap
 	cull none
 	{
-		map textures/tremgen/force_field.tga
+		map textures/tremgen/force_field
 		tcMod Scroll .1 0
 		blendFunc add
 	}
 	{
-		map textures/tremgen/force_grid.tga
+		map textures/tremgen/force_grid
 		tcMod Scroll -.01 0
 		blendFunc add
 		rgbgen wave sin .2 .2 0 .4
@@ -49,101 +49,109 @@ textures/tremgen/force_field_s
 
 textures/tremgen/ter_moss_mud
 {
-	qer_editorimage textures/tremgen/ter_mossmud.tga
+	qer_editorimage textures/tremgen/ter_mossmud
+
 	q3map_nonplanar
 	q3map_shadeangle 180
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
+
 	{
-	map textures/tremgen/ter_moss1.tga
-	rgbGen identity
+		map textures/tremgen/ter_moss1
+		rgbGen identity
 	}
 	{
-	map textures/tremgen/ter_mud1.tga
-	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
-	alphaFunc GE128
-	rgbGen identity
-	alphaGen vertex
+		map textures/tremgen/ter_mud1
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		alphaFunc GE128
+		rgbGen identity
+		alphaGen vertex
 	}
 	{
-	map $lightmap
-	blendFunc GL_DST_COLOR GL_ZERO
-	rgbGen identity
+		map $lightmap
+		blendFunc GL_DST_COLOR GL_ZERO
+		rgbGen identity
 	}
 }
 
 textures/tremgen/ter_dirt_mud
 {
+	qer_editorimage textures/tremgen/ter_mossmud
+
 	q3map_nonplanar
-	qer_editorimage textures/tremgen/ter_mossmud.tga
 	q3map_shadeangle 180
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
+
 	{
-	map textures/tremgen/ter_dirt1.tga
-	rgbGen identity
+		map textures/tremgen/ter_dirt1
+		rgbGen identity
 	}
 	{
-	map textures/tremgen/ter_mud1.tga
-	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
-	alphaFunc GE128
-	rgbGen identity
-	alphaGen vertex
+		map textures/tremgen/ter_mud1
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		alphaFunc GE128
+		rgbGen identity
+		alphaGen vertex
 	}
 	{
-	map $lightmap
-	blendFunc GL_DST_COLOR GL_ZERO
-	rgbGen identity
+		map $lightmap
+		blendFunc GL_DST_COLOR GL_ZERO
+		rgbGen identity
 	}
 }
 
 textures/tremgen/ter_srock_mud
 {
-	qer_editorimage textures/tremgen/ter_mossmud.tga
+	qer_editorimage textures/tremgen/ter_mossmud
+
 	q3map_nonplanar
 	q3map_shadeangle 180
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
+
 	{
-	map textures/tremgen/ter_rock3.tga
-	rgbGen identity
+		map textures/tremgen/ter_rock3
+		rgbGen identity
 	}
 	{
-	map textures/tremgen/ter_mud1.tga
-	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
-	alphaFunc GE128
-	rgbGen identity
-	alphaGen vertex
+		map textures/tremgen/ter_mud1
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		alphaFunc GE128
+		rgbGen identity
+		alphaGen vertex
 	}
 	{
-	map $lightmap
-	blendFunc GL_DST_COLOR GL_ZERO
-	rgbGen identity
+		map $lightmap
+		blendFunc GL_DST_COLOR GL_ZERO
+		rgbGen identity
 	}
 }
 
 textures/tremgen/ter_rock_mud
 {
-	qer_editorimage textures/tremgen/ter_mossmud.tga
+	qer_editorimage textures/tremgen/ter_mossmud
+
 	q3map_nonplanar
 	q3map_shadeangle 180
 	q3map_tcGen ivector ( 256 0 0 ) ( 0 256 0 )
 	q3map_alphaMod dotproduct2 ( 0.0 0.0 0.75 )
+
 	{
-	map textures/tremgen/ter_rock2.tga
-	rgbGen identity
+		map textures/tremgen/ter_rock2
+		rgbGen identity
 	}
 	{
-	map textures/tremgen/ter_mud1.tga
-	blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
-	alphaFunc GE128
-	rgbGen identity
-	alphaGen vertex
+		map textures/tremgen/ter_mud1
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		alphaFunc GE128
+		rgbGen identity
+		alphaGen vertex
 	}
 	{
-	map $lightmap
-	blendFunc GL_DST_COLOR GL_ZERO
-	rgbGen identity
+		map $lightmap
+		blendFunc GL_DST_COLOR GL_ZERO
+		rgbGen identity
 	}
 }
 
@@ -159,6 +167,7 @@ textures/tremgen/watercaulk
 textures/tremgen/water
 {
 	qer_editorimage textures/tremgen/water.jpg 
+
 	qer_trans .5 
 	q3map_lightimage textures/tremgen/water.jpg 
 	//q3map_surfacelight 10000 
@@ -169,6 +178,7 @@ textures/tremgen/water
 	surfaceparm water 
 
 	cull disable 
+
 	deformVertexes wave 64 sin .25 .25 0 .5
 	{
 		map textures/tremgen/water.jpg 
