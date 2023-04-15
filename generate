@@ -14,12 +14,9 @@ writeArenaFile () {
 	EOF
 }
 
-writePakConfFile () {
+writeGameFile () {
 	cat > "${2}" <<-EOF
-	[config]
-	name = "map-${1}"
-	version = "0"
-	game = "unvanquished"
+	unvanquished
 	EOF
 }
 
@@ -46,8 +43,8 @@ meta_dir="${source_dpkdir}/meta/${seed}"
 levelshot_file="${meta_dir}/${seed}.tga"
 arena_file="${meta_dir}/${seed}.arena"
 
-pakinfo_dir="${source_dpkdir}/.pakinfo"
-pakconf_file="${pakinfo_dir}/pak.conf"
+urcheon_dir="${source_dpkdir}/.urcheon"
+game_file="${urcheon_dir}/game.txt"
 
 mkdir -p "${maps_dir}"
 ./tremgen "${seed}" "${map_file}"
@@ -57,7 +54,7 @@ mkdir -p "${meta_dir}"
 ./minimap "${seed}" "${levelshot_file}"
 writeArenaFile "${seed}" "${arena_file}"
 
-mkdir -p "${pakinfo_dir}"
-writePakConfFile "${seed}" "${pakconf_file}"
+mkdir -p "${urcheon_dir}"
+writeGameFile "${seed}" "${game_file}"
 
 #EOF
