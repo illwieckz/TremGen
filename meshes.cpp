@@ -49,16 +49,22 @@ string
 makeTile(AltitudeMap *hmap, int xx, int yy, double z, double tx, double ty, double itz) {
 	stringstream ret;
 
+	// The greater the value, the thickest the brushes for convexes surfaces are.
+	const int thickness = 200;
+	/* The greater the value, the highest the floor is.
+	20 is the original value from original code, may not be the better one. */
+	const int offset = 20;
+
 	int w = hmap->xsize;
 	int h = hmap->ysize;
 	double x = xx * tx;
 	double y = yy * ty;
-	double tz = itz * hmap->getaltitude(xx, yy) * 255 + 20;
+	double tz = itz * hmap->getaltitude(xx, yy) * 255 + offset;
 
 	if ((xx + 1) < w && (yy + 1) < h) {
-		double da = (itz * hmap->getaltitude(xx + 1, yy) * 255 + 20) - tz;
-		double db = (itz * hmap->getaltitude(xx, yy + 1) * 255 + 20) - tz;
-		double dc = (itz * hmap->getaltitude(xx + 1, yy + 1) * 255 + 20) - tz;
+		double da = (itz * hmap->getaltitude(xx + 1, yy) * 255 + offset) - tz;
+		double db = (itz * hmap->getaltitude(xx, yy + 1) * 255 + offset) - tz;
+		double dc = (itz * hmap->getaltitude(xx + 1, yy + 1) * 255 + offset) - tz;
 		double ds = min(0.0, min(da, min(db, dc)));
 
 		ret << "// c " << xx << " " << yy << endl;
@@ -69,20 +75,20 @@ makeTile(AltitudeMap *hmap, int xx, int yy, double z, double tx, double ty, doub
 
 		if ((da + db) / 2.0 < (dc / 2.0 + 0.3)) { // condition de concavite
 			ret << t(x + tx, y + ty, z + tz + dc) << t(x + tx, y, z + tz + da) << t(x, y + ty, z + tz + db) << getTexture(hmap->gettex(xx, yy)) << endl; // iso-z
-			ret << t(x + tx, y + ty, z + tz + dc) << t(x, y + ty, z + tz + db) << t(x + tx, y + ty, z + tz + dc - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-			ret << t(x + tx, y + ty, z + tz + dc) << t(x + tx, y + ty, z + tz + dc - 10) << t(x + tx, y, z + tz + da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
+			ret << t(x + tx, y + ty, z + tz + dc) << t(x, y + ty, z + tz + db) << t(x + tx, y + ty, z + tz + dc - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+			ret << t(x + tx, y + ty, z + tz + dc) << t(x + tx, y + ty, z + tz + dc - thickness) << t(x + tx, y, z + tz + da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 
-			ret << t(x + tx, y + ty, z + tz + dc - 10) << t(x, y + ty, z + tz + db - 10) << t(x + tx, y, z + tz + da - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
-			ret << t(x, y + ty, z + da) << t(x + tx, y, z + tz + da) << t(x + tx, y, z + tz + da - 10) << getTexture(TEXTURE_CAULK) << endl;
+			ret << t(x + tx, y + ty, z + tz + dc - thickness) << t(x, y + ty, z + tz + db - thickness) << t(x + tx, y, z + tz + da - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-z
+			ret << t(x, y + ty, z + da) << t(x + tx, y, z + tz + da) << t(x + tx, y, z + tz + da - thickness) << getTexture(TEXTURE_CAULK) << endl;
 			ret << "}" << endl;
 
 			ret << "{" << endl;
 			ret << t(x, y, z + tz) << t(x, y + ty, z + tz + db) << t(x + tx, y, z + tz + da) << getTexture(hmap->gettex(xx, yy)) << endl; // iso-z
-			ret << t(x, y + ty, z + da) << t(x + tx, y, z + tz + da - 10) << t(x + tx, y, z + tz + da) << getTexture(TEXTURE_CAULK) << endl;
+			ret << t(x, y + ty, z + da) << t(x + tx, y, z + tz + da - thickness) << t(x + tx, y, z + tz + da) << getTexture(TEXTURE_CAULK) << endl;
 
-			ret << t(x, y, z + tz - 10) << t(x + tx, y, z + tz + da - 10) << t(x, y + ty, z + tz + db - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
-			ret << t(x, y, z + tz - 10) << t(x, y, z + tz) << t(x + tx, y, z + da + tz - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-			ret << t(x, y, z + tz - 10) << t(x, y + ty, z + tz + db - 10) << t(x, y, z + tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
+			ret << t(x, y, z + tz - thickness) << t(x + tx, y, z + tz + da - thickness) << t(x, y + ty, z + tz + db - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-z
+			ret << t(x, y, z + tz - thickness) << t(x, y, z + tz) << t(x + tx, y, z + da + tz - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+			ret << t(x, y, z + tz - thickness) << t(x, y + ty, z + tz + db - thickness) << t(x, y, z + tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 			ret << "}" << endl;
 		} else {
 			if (dc - da != db) {
@@ -91,20 +97,20 @@ makeTile(AltitudeMap *hmap, int xx, int yy, double z, double tx, double ty, doub
 				ret << "// pave" << endl;
 			}
 			ret << t(x, y, z + tz) << t(x, y + ty, z + tz + db) << t(x + tx, y, z + tz + da) << getTexture(hmap->gettex(xx, yy)) << endl; // iso-z
-			ret << t(x + tx, y + ty, z + tz + dc) << t(x, y + ty, z + tz + db) << t(x + tx, y + ty, z + tz + dc - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-			ret << t(x + tx, y + ty, z + tz + dc) << t(x + tx, y + ty, z + tz + dc - 10) << t(x + tx, y, z + tz + da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
+			ret << t(x + tx, y + ty, z + tz + dc) << t(x, y + ty, z + tz + db) << t(x + tx, y + ty, z + tz + dc - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+			ret << t(x + tx, y + ty, z + tz + dc) << t(x + tx, y + ty, z + tz + dc - thickness) << t(x + tx, y, z + tz + da) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 
 			//carre
-			ret << t(x, y, z + tz + ds - 10) << t(x + tx, y, z + tz + ds - 10) << t(x, y + ty, z + tz + ds - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-z
+			ret << t(x, y, z + tz + ds - thickness) << t(x + tx, y, z + tz + ds - thickness) << t(x, y + ty, z + tz + ds - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-z
 
-			ret << t(x, y, z + tz - 10) << t(x, y, z + tz) << t(x + tx, y, z + tz + da - 10) << getTexture(TEXTURE_CAULK) << endl; // iso-y
-			ret << t(x, y, z + tz - 10) << t(x, y + ty, z + tz + db - 10) << t(x, y, z + tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
+			ret << t(x, y, z + tz - thickness) << t(x, y, z + tz) << t(x + tx, y, z + tz + da - thickness) << getTexture(TEXTURE_CAULK) << endl; // iso-y
+			ret << t(x, y, z + tz - thickness) << t(x, y + ty, z + tz + db - thickness) << t(x, y, z + tz) << getTexture(TEXTURE_CAULK) << endl; // iso-x
 			ret <<  "}" << endl;
 		}
 	}
 	/*
 	   if (hmap->gettex(xx, yy) > TEXTURE_TER5 && hmap->gettex(xx, yy) <= TEXTURE_TER4_5){
-	    ret << makeFace(x+tx/2, y+ty/2, z+tz+20, 10, 10, 10, 0, 0, 0, TEXTURE_ALPHA_50, FACE_ALL);
+	    ret << makeFace(x+tx/2, y+ty/2, z+tz+offset, thickness, thickness, thickness, 0, 0, 0, TEXTURE_ALPHA_50, FACE_ALL);
 	   }
 	 */
 	return ret.str();
