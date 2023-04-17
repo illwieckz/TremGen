@@ -34,20 +34,29 @@ How-to
 make
 
 # Generate a random map:
-./generate
+./do generate new
 
 # It will print the seed for the generated map, for example: 418018295
-# You use that seed for other actions
 
-# Build the map using the seed as argument:
-./compile 418018295
+# Optionnally, edit the map in NetRadiant:
+./do edit
 
-# Test the map using the seed as argument:
-./test 418018295
+# Build the map
+./do build
 
-# If needed, you can regenerate the map using the seed as argument:
+# Load the map in the game:
+./do load
+
+# By default the current seed is always reused, for example:
+./do generate
+./do build
+
+# If needed, you can generate the map using the seed as argument:
 ./generate 418018295
+./build
 
+# Or build an already generated map from a known seed:
+./build 418018295
 ```
 
 
