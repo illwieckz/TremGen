@@ -20,6 +20,8 @@ makeSkybox(AltitudeMap *hmap, int sh) {
 
 	ret << makeFace(-3, -3, sh * max - 10, (w - 1) * s + 5, (h - 1) * s + 5, 16, 0, 0, 0, TEXTURE_SKYBOX, FACE_BOTTOM);
 
+// Disable caulk enveloppe as map is expected to now be properly sealed.
+#if 0
 	// embalage caulk
 
 	ret << makeFace(-13, -10, -10, 10, (h - 1) * s + 5 + 20, max * sh + 20, 0, 0, 0, TEXTURE_CAULK, FACE_RIGHT);
@@ -50,6 +52,7 @@ makeSkybox(AltitudeMap *hmap, int sh) {
 	    }
 	   }
 	 */
+#endif
 
 // Disable hints for now, they very likely don't help done this way.
 #if 0
