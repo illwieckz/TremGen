@@ -177,6 +177,9 @@ plantForest(double cx, double cy, int numTree, AltitudeMap *hmap, Entities_group
 	pax = hmap->getAlienPosX() / TSIZE;
 	pay = hmap->getAlienPosY() / TSIZE;
 
+	// Sink the model in the floor
+	const int sink = 40;
+
 	for (int i = numTree; i > 0; i--) {
 		if (round(random() * 100) > 5 && !flag) {
 			double r, theta, lxx, lyy;
@@ -205,7 +208,7 @@ plantForest(double cx, double cy, int numTree, AltitudeMap *hmap, Entities_group
 
 			// fprintf(stderr, "%d %d %d\n", lx, ly, hmap->getwater(lx, ly));
 
-			egp->misc.entityAdd(Entity("misc_model", lxx * TSIZE, lyy * TSIZE, real(lxx * TSIZE, lyy * TSIZE) - 10));// -10 pour enfoncage dans sol
+			egp->misc.entityAdd(Entity("misc_model", lxx * TSIZE, lyy * TSIZE, real(lxx * TSIZE, lyy * TSIZE) - sink));
 			if ((etmp = egp->misc.entityAt(-1)) != NULL) {
 				buf.str("");
 				buf << "models/mapobjects/ctftree/ctftree" << round(random() * 2 + 1) << ".md3";
@@ -242,6 +245,10 @@ dropBox(AltitudeMap *hmap, Entities_group *egp) {
 	phy = hmap->getHumanPosY() / TSIZE;
 	pax = hmap->getAlienPosX() / TSIZE;
 	pay = hmap->getAlienPosY() / TSIZE;
+
+	// Sink the model in the floor
+	const int sink = 60;
+
 	for (int i = 0; i < NUMBOXES; i++) {
 		do {
 			ncx =  round((hmap->xsize - 1) * random() * 100) / 100.0;
@@ -253,7 +260,7 @@ dropBox(AltitudeMap *hmap, Entities_group *egp) {
 			// } while(hmap->getwater(lx, ly) == TWATER || hmap->getwater(lx, ly) == CENTER || hmap->getaltitude(lx, ly) == 0 || ncx >= (hmap->xsize-2) || ncy >= (hmap->ysize-2) || ncx <= 0 || ncy <= 0 || mdistance(pax, pay, ncx, ncy) <= 1.5 || mdistance(phx, phy, ncx, ncy) <= 1.5);
 		} while (hmap->getaltitude(lx, ly) == 0 || ncx >= (hmap->xsize - 2) || ncy >= (hmap->ysize - 2) || ncx <= 0 || ncy <= 0 || mdistance(pax, pay, ncx, ncy) <= 1.5 || mdistance(phx, phy, ncx, ncy) <= 1.5);
 
-		egp->misc.entityAdd(Entity("misc_model", ncx * TSIZE, ncy * TSIZE, real(ncx * TSIZE, ncy * TSIZE) - 60 + random() * 25));// -10 pour enfoncage dans sol
+		egp->misc.entityAdd(Entity("misc_model", ncx * TSIZE, ncy * TSIZE, real(ncx * TSIZE, ncy * TSIZE) - sink + random() * 25));
 
 		if ((etmp = egp->misc.entityAt(-1)) != NULL) {
 			etmp->attrAdd("model", "models/mapobjects/box.md3");
