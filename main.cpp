@@ -413,14 +413,14 @@ main(int argc, char **argv) {
 	}
 
 	if (argc > 2) {
-		filename = (char *) malloc(sizeof(char) * strlen(argv[2]));
+		filename = (char *) malloc(sizeof(char) * (1 + strlen(argv[2])));
 		strcpy(filename, argv[2]);
 	} else if (argc > 1) {
-		filename = (char *) malloc(sizeof(char) * (strlen(argv[1]) + strlen(".map")) * sizeof(char));
+		filename = (char *) malloc(sizeof(char) * (1 + strlen(argv[1]) + strlen(".map")));
 		strcpy(filename, argv[1]);
 		strcpy(filename + strlen(argv[1]), ".map");
 	} else {
-		filename = (char *) malloc(sizeof(char) * strlen("generated.map"));
+		filename = (char *) malloc(sizeof(char) * (1 + strlen("generated.map")));
 		strcpy(filename, "generated.map");
 	}
 

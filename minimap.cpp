@@ -19,10 +19,10 @@ main(int argc, char **argv) {
 	}
 
 	if (argc > 2) {
-		filename = (char *) malloc(sizeof(char) * strlen(argv[2]));
+		filename = (char *) malloc(sizeof(char) * (1 + strlen(argv[2])));
 		strcpy(filename, argv[2]);
 	} else {
-		filename = (char *) malloc(sizeof(char) * strlen("levelshot.tga"));
+		filename = (char *) malloc(sizeof(char) * (1 + strlen("levelshot.tga")));
 		strcpy(filename, "levelshot.tga");
 	}
 
