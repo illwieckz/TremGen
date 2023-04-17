@@ -35,7 +35,7 @@ envgen.o: envgen.cpp
 	$(CC) $(CFLAGS) -o envgen.o -c envgen.cpp
 
 minimap.o: minimap.cpp
-	$(CC) $(CFLAGS) -o minimap.o -c minimap.cpp -I libs/CImg/
+	$(CC) $(CFLAGS) -Wno-error -o minimap.o -c minimap.cpp -I libs/CImg/
 
 clean:
 	rm -f *.o *.core $(BIN) minimap
