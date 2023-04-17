@@ -6,9 +6,6 @@
 #include "entity.h"
 #include "meshes.h"
 #include "envgen.h"
-#ifndef MESSAGE
-	#define MESSAGE "http://labs.esiea.fr"
-#endif
 
 #define real(x, y) (getRealAlt(hmap, x, y, TSIZE, TSIZE, HINC) + 30)
 #define normal(x, y) (getNormalDiff(hmap, x, y, TSIZE, TSIZE, HINC))
@@ -28,7 +25,7 @@ getHeader(int xsize, int ysize) {
 	ret << "{" << endl;
 	ret << "\"classname\" \"worldspawn\"" << endl;
 	ret << "\"_blocksize\" \"16384 16384 16384\"" << endl; // seemingly useless
-	ret << "\"message\" \"map from heightmap " << xsize << "x" << ysize << " " << MESSAGE << "\"" << endl;
+	ret << "\"message\" \"TremGen" << xsize << "x" << ysize << " " "\"" << endl;
 
 	return ret.str();
 }
