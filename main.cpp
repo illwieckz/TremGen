@@ -25,7 +25,7 @@ getHeader(int xsize, int ysize) {
 	ret << "{" << endl;
 	ret << "\"classname\" \"worldspawn\"" << endl;
 	ret << "\"_blocksize\" \"16384 16384 16384\"" << endl; // seemingly useless
-	ret << "\"message\" \"TremGen" << xsize << "x" << ysize << " " "\"" << endl;
+	ret << "\"message\" \"TremGen " << xsize << "x" << ysize << " " "\"" << endl;
 
 	return ret.str();
 }
