@@ -63,7 +63,7 @@ _build () {
 }
 
 _load () {
-	unvanquished -pakpath "$(realpath set/build/test)" +devmap "${map_name}"
+	unvanquished -pakpath "$(realpath data/build/test)" +devmap "${map_name}"
 }
 
 if [ -n "${1:-}" ]
@@ -100,7 +100,7 @@ printf "${seed}" > 'seed.txt'
 
 map_name="tremgen-${seed}"
 
-tremgen_pakpath='set/src'
+tremgen_pakpath='data/src'
 
 resource_dpkdir="${tremgen_pakpath}/res-tremgen_src.dpkdir"
 

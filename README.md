@@ -29,7 +29,7 @@ To generate a map, all you need is this repository and maybe some dependencies (
 
 To build the map, you need [Urcheon](https://github.com/DaemonEngine/Urcheon) and it's dependencies like the `q3map2` map compiler. It is required to set the `PAKPATH` environment variable to the path of the directory containing the `tex-common` Unvanquished dpk or dpkdir package.
 
-To (optionnally) open the map in an editor, for modification or for inspection, you need the [NetRadiant](https://netradiant.gitlab.io/) level editor, with the `netradiant` binary in path and configure NetRadiant to use the `set/` repository subfolder as a pakpath.
+To (optionnally) open the map in an editor, for modification or for inspection, you need the [NetRadiant](https://netradiant.gitlab.io/) level editor, with the `netradiant` binary in path and configure NetRadiant to use the `data/src` repository subfolder as a pakpath.
 
 The [DaemonMediaAuthoringKit](https://github.com/DaemonEngine/DaemonMediaAuthoringKit) makes possible to build the NetRadiant editor, the `q3map2` map compiler and other tools in one go. The [Unvanquished updater](https://github.com/Unvanquished/updater/releases/latest) makes possible to install the game.
 
